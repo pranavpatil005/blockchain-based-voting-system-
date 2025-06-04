@@ -1,0 +1,111 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', sans-serif;
+  /* background: linear-gradient(to right, #0f2027, #203a43, #2c5364); */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+.login-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.login-card {
+  background: white;
+  padding: 2rem;
+  border-radius: 10px;
+  width: 350px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.25);
+  text-align: center;
+}
+
+.icon-container {
+  margin-bottom: 1rem;
+}
+
+.icon-shield {
+  font-size: 2rem;
+  color: #2c5364;
+}
+
+h2 {
+  margin: 0.5rem 0;
+}
+
+.subtitle {
+  font-size: 0.9rem;
+  color: #666;
+  margin-bottom: 1.5rem;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+label {
+  font-weight: 600;
+  margin: 0.5rem 0 0.25rem;
+}
+
+input {
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  margin-bottom: 0.25rem;
+  font-size: 1rem;
+}
+
+button {
+  background-color: #16a34a;
+  color: white;
+  padding: 0.75rem;
+  border: none;
+  border-radius: 6px;
+  margin-top: 1rem;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background 0.3s ease;
+  font-size: 1rem;
+}
+
+button:hover:not(:disabled) {
+  background-color: #15803d;
+}
+
+button:disabled {
+  background-color: #a5d6a7;
+  cursor: not-allowed;
+}
+
+/* Styling for the Send OTP button to have some margin */
+button[type="button"] {
+  margin-bottom: 1rem;
+}
+
+/* Error and Success message styling */
+.error {
+  color: red;
+  font-size: 0.85rem;
+  margin-top: 0.5rem;
+}
+
+.success {
+  color: green;
+  font-size: 0.85rem;
+  margin-top: 0.5rem;
+}
+
+.footer {
+  font-size: 0.75rem;
+  color: gray;
+  margin-top: 1rem;
+  text-transform: uppercase;
+}
