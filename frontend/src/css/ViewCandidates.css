@@ -1,0 +1,102 @@
+.view-container {
+  padding: 40px;
+  background-color: #f8fafc;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+h1 {
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 5px;
+}
+
+.subtitle {
+  font-size: 15px;
+  color: #555;
+  margin-bottom: 30px;
+}
+
+.candidate-card {
+  background-color: #fff;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 0 8px rgba(0,0,0,0.05);
+  margin-bottom: 25px;
+}
+
+.candidate-header {
+  display: flex;
+  gap: 25px;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.avatar {
+  width: 60px;
+  height: 60px;
+  background-color: #ddd;
+  border-radius: 50%;
+}
+
+.info h2 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.party {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 600;
+  color: #000;
+  background-color: #edf2ff;
+  border-radius: 6px;
+  padding: 2px 8px;
+  margin: 5px 0;
+}
+
+.tabs {
+  display: flex;
+  justify-content: space-between;
+  background-color: #f1f5f9;
+  padding: 10px;
+  border-radius: 6px;
+  font-weight: 600;
+  color: #555;
+  margin-top: 10px;
+}
+
+.policy-section {
+  margin-top: 20px;
+}
+
+.policy-section h4 {
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.policy-section ul {
+  list-style: none;
+  padding: 0;
+}
+
+.policy-section li {
+  margin-bottom: 6px;
+  color: #333;
+}
+
+.home-btn {
+  display: block;
+  margin: 40px auto 0;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  background-color: #1f2937;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.home-btn:hover {
+  background-color: #111827;
+}
