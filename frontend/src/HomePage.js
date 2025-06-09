@@ -10,8 +10,8 @@ function App() {
         navigate("/userlogin"); 
     };
     
-  const handleVote = () => alert("Redirecting to Vote page...");
-  const handleCandidates = () => alert("Viewing Candidates...");
+  const handleVote = ()=> {navigate("/vote");  };
+  const handleCandidates = () => {navigate("/candidates");  };
   const handleResults = () => alert("Showing Results...");
 
   return (
