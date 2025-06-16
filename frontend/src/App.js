@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import VoterLogin from './authentication/VoterLogin';
 import AdminLogin from './authentication/AdminLogin';
+import AdminSignup from './authentication/AdminSignup';
 import Welcome from './admin/Welcome';
 import PrivateRoute from './components/PrivateRoute';
 import HomePage from './HomePage';
@@ -12,17 +13,18 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<HomePage/>} />
+        <Route path="/" element={<HomePage />} />
         <Route path="/userlogin" element={<VoterLogin />} />
         <Route path="/adminlogin" element={<AdminLogin />} />
         <Route path="/vote" element={<Votepage />} />
-         <Route path="/candidates" element={<ViewCandidates />} />
+        <Route path="/candidates" element={<ViewCandidates />} />
+        <Route path="/adminsignup" element={<AdminSignup />} />
         <Route path="/welcome" element={
           <PrivateRoute>
             <Welcome />
           </PrivateRoute>
         } />
-        
+
         {/* Add more routes here  */}
       </Routes>
     </Router>
