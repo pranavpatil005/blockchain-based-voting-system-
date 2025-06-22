@@ -42,7 +42,7 @@ const AdminLogin = () => {
         }
 
         login();
-        navigate('/welcome');
+        navigate('/admin');
       } else {
         setError('Login failed');
       }
