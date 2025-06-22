@@ -1,0 +1,25 @@
+.tab-dashboard .overview-cards,
+.tab-voters .stats-cards,
+.tab-blockchain .stats-cards,
+.tab-security .stats-cards { display: flex; gap: 16px; flex-wrap: wrap; }
+.card { background: #fff; padding: 16px; border-radius: 8px; flex: 1; min-width: 180px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+.card h2, .card h4 { margin: 0 0 8px; font-weight: normal; }
+.tab-dashboard .recent-activity ul { list-style: none; padding: 0; }
+.tab-dashboard li { display: flex; align-items: center; margin-bottom: 8px; }
+.tab-dashboard li span { margin-right: 8px; }
+.status { margin-left: 8px; font-size: 0.9em; padding: 2px 6px; border-radius: 12px; background: #ddd; text-transform: capitalize;}
+.status.healthy { color: green; }
+.progress-bar { background: #eee; height: 8px; border-radius: 4px; overflow: hidden; margin: 10px 0; }
+.progress-bar div { height: 100%; background: #000; }
+.actions { display: flex; gap: 8px; }
+button { padding: 5px 10px; border: 1px solid #aaa; background: #fff; border-radius: 4px; cursor: pointer;}
+button:hover { background: #f5f5f5; }
+table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+table th, td { padding: 8px; border-bottom: 1px solid #eee; }
+.status.verified { color: green; }
+.status.pending { color: orange; }
+.status.confirmed { color: green; }
+.tab-voters .voter-table { overflow-x: auto; }
+.event-log { list-style: none; padding: 0; }
+.event-log li { display: flex; background: #eef; margin-bottom: 12px; border-radius: 8px; }
+.log-icon { font-size: 24px; margin: 12px; }
