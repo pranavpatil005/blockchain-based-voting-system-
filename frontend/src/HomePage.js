@@ -13,6 +13,7 @@ function App() {
   const handleVote = ()=> {navigate("/vote");  };
   const handleCandidates = () => {navigate("/candidates");  };
   const handleResults = () => alert("Showing Results...");
+  const handleAdmin = () => navigate("/admin");
 
   return (
     <div>
@@ -30,7 +31,7 @@ function App() {
         </ul>
         <div className="navbar-right">
           <button className="wallet-button">Connect Wallet</button>
-          <button className="admin-button">Admin</button>
+          <button className="admin-button" onClick={handleAdmin}>Admin</button>
         </div>
       </nav>
 
