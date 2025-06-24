@@ -1,0 +1,52 @@
+/* src/css/About.css */
+
+.about-container {
+  padding: 100px 40px 40px 40px; /* Top padding to offset navbar */
+  background-color: #f0f4f8;
+  text-align: center;
+  min-height: 100vh;
+}
+
+.about-title {
+  font-size: 2.5rem;
+  margin-top: 80px; /* 👈 Pushes title down from behind navbar */
+  margin-bottom: 50px;
+  color: #333;
+}
+
+
+.card-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 30px;
+}
+
+.about-card {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  padding: 25px;
+  max-width: 280px;
+  transition: transform 0.3s ease;
+}
+
+.about-card:hover {
+  transform: translateY(-10px);
+}
+
+.card-image {
+  width: 100px;
+  margin-bottom: 15px;
+}
+
+.card-title {
+  font-size: 1.4rem;
+  color: #222;
+  margin-bottom: 10px;
+}
+
+.card-description {
+  font-size: 1rem;
+  color: #555;
+}

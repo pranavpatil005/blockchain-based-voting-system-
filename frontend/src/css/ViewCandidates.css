@@ -1,102 +1,251 @@
-.view-container {
-  padding: 40px;
-  background-color: #f8fafc;
+/* ===== Base Styles ===== */
+body, html {
+  margin: 0;
+  padding: 0;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #fff;
+  color: #000;
+  overflow-x: hidden;
+  width: 100%;
 }
 
-h1 {
-  font-size: 32px;
+.navbar, .hero, .quick-links, div, section {
+  width: 100%;
+}
+
+
+/* ===== Navbar ===== */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 80px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  background-color: #fff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.logo {
+  font-size: 20px;
+  font-weight: 600;
+  margin-left: 50px;
+}
+
+.navbar-center {
+  list-style: none;
+  display: flex;
+  gap: 25px;
+  margin-right: 50px;
+  flex-wrap: nowrap;
+}
+
+.navbar-center li {
+  cursor: pointer;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.navbar-right button {
+  margin-left: 12px;
+  padding: 8px 14px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.wallet-button {
+  background-color: #2c5364;
+  border: 1px solid #aaa;
+  color: white;
+}
+
+.wallet-button:hover {
+  background-color: #0f2027;
+}
+
+.admin-button {
+  background-color: #2c5364;
+  border: none;
+  color: white;
+}
+
+.admin-button:hover {
+  background-color: #0f2027;
+}
+
+
+/* ===== Hero Section (Optional if used elsewhere) ===== */
+.hero {
+  text-align: center;
+  padding: 110px 20px 60px; /* Increased top padding to avoid fixed navbar */
+}
+
+.hero h1 {
+  font-size: 38px;
   font-weight: 700;
-  margin-bottom: 5px;
+  margin-bottom: 10px;
 }
 
-.subtitle {
-  font-size: 15px;
+.hero p {
+  font-size: 18px;
   color: #555;
   margin-bottom: 30px;
 }
 
-.candidate-card {
-  background-color: #fff;
-  padding: 25px;
-  border-radius: 12px;
-  box-shadow: 0 0 8px rgba(0,0,0,0.05);
-  margin-bottom: 25px;
-}
-
-.candidate-header {
+.hero-buttons {
   display: flex;
-  gap: 25px;
-  align-items: center;
+  justify-content: center;
+  gap: 15px;
   margin-bottom: 20px;
 }
 
-.avatar {
-  width: 60px;
-  height: 60px;
-  background-color: #ddd;
-  border-radius: 50%;
-}
-
-.info h2 {
-  margin: 0;
-  font-size: 20px;
-  font-weight: bold;
-}
-
-.party {
-  display: inline-block;
-  font-size: 12px;
-  font-weight: 600;
-  color: #000;
-  background-color: #edf2ff;
-  border-radius: 6px;
-  padding: 2px 8px;
-  margin: 5px 0;
-}
-
-.tabs {
-  display: flex;
-  justify-content: space-between;
-  background-color: #f1f5f9;
-  padding: 10px;
-  border-radius: 6px;
-  font-weight: 600;
-  color: #555;
-  margin-top: 10px;
-}
-
-.policy-section {
-  margin-top: 20px;
-}
-
-.policy-section h4 {
-  font-weight: 600;
-  margin-bottom: 10px;
-}
-
-.policy-section ul {
-  list-style: none;
-  padding: 0;
-}
-
-.policy-section li {
-  margin-bottom: 6px;
-  color: #333;
-}
-
-.home-btn {
-  display: block;
-  margin: 40px auto 0;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 6px;
-  background-color: #1f2937;
-  color: white;
+.register-button,
+.login-button,
+.card-button {
+  padding: 12px 18px;
+  border-radius: 5px;
+  font-weight: 500;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: background-color 0.3s, transform 0.2s;
 }
 
-.home-btn:hover {
-  background-color: #111827;
+.register-button {
+  background-color: #000;
+  color: #fff;
+  border: none;
+}
+
+.register-button:hover {
+  background-color: #222;
+  transform: translateY(-2px);
+}
+
+.login-button {
+  background-color: #000000;
+  color: white;
+}
+
+.login-button:hover {
+  background-color: #f0f0f0;
+  color: black;
+  transform: translateY(-2px);
+}
+
+.status {
+  margin-top: 15px;
+  font-size: 16px;
+}
+
+.ongoing {
+  font-weight: 600;
+  color: #e67e22;
+}
+
+
+/* ===== ViewCandidates Section ===== */
+.candidates-wrapper {
+  padding: 6rem 2rem 2rem; /* Top padding to account for fixed navbar */
+  text-align: center;
+  background-color: #f8f9fc;
+}
+
+.election-title {
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.subtitle {
+  font-size: 1.25rem;
+  color: #555;
+  margin-bottom: 0.5rem;
+}
+
+.election-day {
+  font-size: 1rem;
+  color: #666;
+  margin-bottom: 2rem;
+}
+
+.candidate-cards {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+
+.candidate-card {
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.05);
+  padding: 1.5rem;
+  width: 300px;
+  text-align: left;
+}
+
+.candidate-photo {
+  background-color: #eee;
+  border-radius: 50%;
+  width: 64px;
+  height: 64px;
+  margin-bottom: 1rem;
+}
+
+.position-tag,
+.party-tag {
+  display: inline-block;
+  font-size: 0.75rem;
+  padding: 4px 10px;
+  border-radius: 999px;
+  margin-right: 5px;
+  margin-bottom: 0.5rem;
+  background-color: #eee;
+}
+
+.party-tag.blue {
+  background-color: #cce0ff;
+  color: #1e40af;
+}
+
+.party-tag.red {
+  background-color: #fca5a5;
+  color: #7f1d1d;
+}
+
+.party-tag.purple {
+  background-color: #e9d5ff;
+  color: #6b21a8;
+}
+
+.slogan {
+  font-style: italic;
+  color: #1d4ed8;
+  font-weight: 500;
+}
+
+.bio {
+  margin: 0.75rem 0;
+  color: #444;
+}
+
+.policy-title {
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.policy-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.policy-tag {
+  background-color: #f1f5f9;
+  padding: 5px 10px;
+  border-radius: 999px;
+  font-size: 0.85rem;
 }
