@@ -26,15 +26,16 @@ function App() {
           <li>Candidates</li>
           <li>Vote</li>
           <li>Results</li>
-          <li>About</li>
+          <li onClick={() => navigate('/quicklinks')} style={{ cursor: 'pointer' }}>Quick Links</li>
+          <li onClick={() => navigate('/about')} style={{ cursor: 'pointer' }}>About</li>
+
+
         </ul>
         <div className="navbar-right">
           <button className="wallet-button">Connect Wallet</button>
           <button className="admin-button">Admin</button>
         </div>
       </nav>
-
-<div style={{ height: '500px' }}></div>
 
       {/* Hero Section */}
       <section className="hero">
@@ -56,43 +57,6 @@ function App() {
         </div>
       </section>
 
-      {/* Quick Links Section */}
-      <section className="quick-links">
-        <h2>Quick Links</h2>
-        <p>Access key features of our e-voting platform</p>
-        <div className="cards">
-          <div className="card">
-            <div className="card-icon">🗳</div>
-            <h3>Cast Your Vote</h3>
-            <p>
-              Securely vote for your preferred candidate using blockchain
-              technology. Your vote is encrypted and stored on the blockchain,
-              ensuring it cannot be tampered with.
-            </p>
-            <button className="card-button" onClick={handleVote}>Vote Now</button>
-          </div>
-          <div className="card">
-            <div className="card-icon">👥</div>
-            <h3>View Candidates</h3>
-            <p>
-              Browse the list of candidates participating in the current
-              election. Learn about each candidate's background, qualifications,
-              and proposed policies.
-            </p>
-            <button className="card-button" onClick={handleCandidates}>View Candidates</button>
-          </div>
-          <div className="card">
-            <div className="card-icon">📈</div>
-            <h3>Election Results</h3>
-            <p>
-              View real-time or final results of the election. Results are
-              calculated directly from the blockchain, ensuring complete
-              transparency.
-            </p>
-            <button className="card-button" onClick={handleResults}>View Results</button>
-          </div>
-        </div>
-      </section>
     </div>
   );
 }
