@@ -1,37 +1,20 @@
-/* Base Styles */
-body {
-  margin: 0;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #fff;
-  color: #000;
-   padding: 0;
-  overflow-x: hidden;
-  width:100%;
-}
+/* Quick Links Page Styles */
 
+/* Base Reset (Optional but useful for consistency) */
 body, html {
   margin: 0;
   padding: 0;
   overflow-x: hidden;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #fff;
+  color: #000;
 }
-
-
-.navbar, .hero, .quick-links {
-  width: 100%;
-}
-div, section {
-  width: 100%;
-}
-
-
 
 /* Navbar */
 .navbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-
-
   height: 80px;
   position: fixed;
   top: 0;
@@ -41,12 +24,10 @@ div, section {
   background-color: #fff;
 }
 
-
-
 .logo {
   font-size: 20px;
   font-weight: 600;
-  margin-left:50px;
+  margin-left: 50px;
 }
 
 .navbar-center {
@@ -54,17 +35,12 @@ div, section {
   display: flex;
   gap: 25px;
   margin-right: 50px;
-  flex-wrap: nowrap; /* Optional: Prevent wrapping of the entire navbar row */
 }
-
-
 
 .navbar-center li {
   cursor: pointer;
   font-weight: 500;
-  white-space: nowrap; /* ✅ This prevents breaking into two lines */
 }
-
 
 .navbar-right button {
   margin-left: 12px;
@@ -72,7 +48,6 @@ div, section {
   border-radius: 5px;
   cursor: pointer;
   transition: all 0.3s ease;
- 
 }
 
 .wallet-button {
@@ -93,70 +68,69 @@ div, section {
   background-color: #0f2027;
 }
 
-/* Hero Section */
-.hero {
+/* Quick Links */
+.quick-links {
   text-align: center;
-  padding: 30px 20px 60px; /* Top padding increased to push content below fixed navbar */
+  padding: 120px 20px 100px; /* Adjusted for fixed navbar */
+  background-color: #fafafa;
 }
 
+.quick-links h2 {
+  font-size: 28px;
+  margin-bottom: 8px;
+}
 
+.quick-links p {
+  font-size: 16px;
+  color: #777;
+  margin-bottom: 40px;
+}
 
-.hero h1 {
-  font-size: 38px;
-  font-weight: 700;
+.cards {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.card {
+  width: 280px;
+  background-color: #fff;
+  padding: 30px 20px;
+  border-radius: 10px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.06);
+  text-align: center;
+}
+
+.card-icon {
+  font-size: 32px;
+  margin-bottom: 12px;
+}
+
+.card h3 {
+  font-size: 20px;
   margin-bottom: 10px;
 }
 
-.hero p {
-  font-size: 18px;
+.card p {
+  font-size: 14px;
   color: #555;
-  margin-bottom: 30px;
-}
-
-.hero-buttons {
-  display: flex;
-  justify-content: center;
-  gap: 15px;
   margin-bottom: 20px;
 }
 
-.register-button,
-.login-button,
 .card-button {
   padding: 12px 18px;
   border-radius: 5px;
   font-weight: 500;
+  background-color: #000;
+  color: #fff;
+  border: none;
   cursor: pointer;
   transition: background-color 0.3s, transform 0.2s;
 }
 
-.register-button {
-  background-color: #000;
-  color: #fff;
-  border: none;
-}
-
-.register-button:hover {
+.card-button:hover {
   background-color: #222;
   transform: translateY(-2px);
-}
-
-.login-button {
-  background-color: #000000;
-
-}
-
-.login-button:hover {
-  background-color: #f0f0f0;
-  transform: translateY(-2px);
-}
-
-.status {
-  margin-top: 15px;
-  font-size: 16px;
-}
-
-.ongoing {
-  font-weight: 600;
-  color: #e67e22;
 }
