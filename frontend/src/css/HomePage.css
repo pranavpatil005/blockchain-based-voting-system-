@@ -53,13 +53,18 @@ div, section {
   list-style: none;
   display: flex;
   gap: 25px;
-  margin-right:50px;
+  margin-right: 50px;
+  flex-wrap: nowrap; /* Optional: Prevent wrapping of the entire navbar row */
 }
+
+
 
 .navbar-center li {
   cursor: pointer;
   font-weight: 500;
+  white-space: nowrap; /* ✅ This prevents breaking into two lines */
 }
+
 
 .navbar-right button {
   margin-left: 12px;
@@ -91,8 +96,9 @@ div, section {
 /* Hero Section */
 .hero {
   text-align: center;
-  padding: 120px 20px 60px; /* Top padding accounts for fixed navbar height */
+  padding: 30px 20px 60px; /* Top padding increased to push content below fixed navbar */
 }
+
 
 
 .hero h1 {
@@ -153,66 +159,4 @@ div, section {
 .ongoing {
   font-weight: 600;
   color: #e67e22;
-}
-
-/* Quick Links */
-.quick-links {
-  text-align: center;
-  padding: 70px 20px 100px;
-  background-color: #fafafa;
-}
-
-.quick-links h2 {
-  font-size: 28px;
-  margin-bottom: 8px;
-}
-
-.quick-links p {
-  font-size: 16px;
-  color: #777;
-  margin-bottom: 40px;
-}
-
-.cards {
-  display: flex;
-  justify-content: center;
-  gap: 30px;
-  flex-wrap: wrap;
-  width: 100%;
-}
-
-.card {
-  width: 280px;
-  background-color: #fff;
-  padding: 30px 20px;
-  border-radius: 10px;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.06);
-  text-align: center;
-}
-
-.card-icon {
-  font-size: 32px;
-  margin-bottom: 12px;
-}
-
-.card h3 {
-  font-size: 20px;
-  margin-bottom: 10px;
-}
-
-.card p {
-  font-size: 14px;
-  color: #555;
-  margin-bottom: 20px;
-}
-
-.card-button {
-  background-color: #000;
-  color: #fff;
-  border: none;
-}
-
-.card-button:hover {
-  background-color: #222;
-  transform: translateY(-2px);
 }

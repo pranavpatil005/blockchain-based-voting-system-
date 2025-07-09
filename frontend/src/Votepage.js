@@ -1,70 +1,155 @@
 import React, { useState } from 'react';
 import './css/Votepage.css';
+import { useNavigate } from 'react-router-dom';
 
 const candidates = [
   {
-    name: "Sarah Johnson",
-    party: "Progressive Party",
-    details: "Healthcare reform, Education funding, Climate action"
+    name: 'Sarah Johnson',
+    party: 'Democratic Party',
+    partyColor: 'blue',
+    slogan: 'Building Tomorrow Together',
+    experience: '8 years City Council',
+    bio: 'Experienced city council member focused on sustainable development and community engagement.',
+    policies: ['Green Infrastructure', 'Affordable Housing', 'Public Transportation'],
   },
   {
-    name: "Michael Chen",
-    party: "Unity Coalition",
-    details: "Economic growth, Infrastructure, Technology innovation"
+    name: 'Michael Chen',
+    party: 'Republican Party',
+    partyColor: 'red',
+    slogan: 'Safe Streets, Strong Economy',
+    experience: '12 years Law Enforcement',
+    bio: 'Small business owner and former police chief committed to public safety and economic growth.',
+    policies: ['Public Safety', 'Business Development', 'Infrastructure'],
   },
   {
-    name: "Elena Rodriguez",
-    party: "Democratic Alliance",
-    details: "Social justice, Affordable housing, Community development"
-  }
+    name: 'Elena Rodriguez',
+    party: 'Independent',
+    partyColor: 'purple',
+    slogan: 'Voice of the People',
+    experience: '6 years Community Organizing',
+    bio: 'Community organizer and education advocate fighting for equitable representation.',
+    policies: ['Education Reform', 'Healthcare Access', 'Social Justice'],
+  },
 ];
 
-const VotePage = () => {
+const Votepage = () => {
   const [selected, setSelected] = useState(null);
+  const [showConfirm, setShowConfirm] = useState(false);
+  const navigate = useNavigate();
+
+  const openConfirm = () => selected !== null && setShowConfirm(true);
+  const confirmVote = () => {
+    alert(`✅ Your vote for ${candidates[selected].name} has been recorded!`);
+    setShowConfirm(false);
+  };
 
   return (
     <div className="vote-page">
-      <h2>Cast Your Vote</h2>
-      <p>Select your preferred candidate and cast your vote securely on the blockchain.</p>
+      {/* Navbar */}
+      <nav className="navbar">
+        <div className="navbar-left">
+          <span className="logo">📊 VOTECHAIN</span>
+        </div>
+        <ul className="navbar-center">
+          <li onClick={() => navigate('/')}>Home</li>
+          <li onClick={() => navigate('/candidates')}>Candidates</li>
+          <li onClick={() => navigate('/vote')}>Vote</li>
+          <li onClick={() => alert('Showing Results...')}>Results</li>
+          <li onClick={() => navigate('/quicklinks')} style={{ cursor: 'pointer' }}>Quick Links</li>
+          <li onClick={() => navigate('/about')} style={{ cursor: 'pointer' }}>About</li>
+        </ul>
+        <div className="navbar-right">
+          <button className="wallet-button">Connect Wallet</button>
+          <button className="admin-button">Admin</button>
+        </div>
+      </nav>
 
-      <div className="candidate-list">
-        {candidates.map((candidate, index) => (
-          <label key={index} className={`candidate-box ${selected === index ? "selected" : ""}`}>
-            <input
-              type="radio"
-              name="candidate"
-              value={candidate.name}
-              onChange={() => setSelected(index)}
-            />
+      <h1 className="title">Cast Your Vote</h1>
+      <p className="subtitle">Mayor Election 2024</p>
+
+      <div className="instructions">
+        Select one candidate below and click <strong>“Cast Vote”</strong> to submit
+        your ballot. You can only vote once.
+      </div>
+
+      {/* Candidate list */}
+      {candidates.map((c, idx) => (
+        <label
+          key={idx}
+          className={`candidate-box ${selected === idx ? 'selected' : ''}`}
+        >
+          <input
+            type="radio"
+            name="candidate"
+            checked={selected === idx}
+            onChange={() => setSelected(idx)}
+          />
+
+          <div className="candidate-content">
+            <div className="avatar" />
             <div className="candidate-info">
-              <strong>{candidate.name}</strong>
-              <span className="party">{candidate.party}</span>
-              <p>{candidate.details}</p>
+              <h2 className="candidate-name">{c.name}</h2>
+              <span className={`party-tag ${c.partyColor}`}>{c.party}</span>
+
+              <p className="slogan">“{c.slogan}”</p>
+              <p className="experience">{c.experience}</p>
+              <p className="bio">{c.bio}</p>
+
+              <p className="policy-title">Key Policy Positions:</p>
+              <div className="policy-tags">
+                {c.policies.map((p, i) => (
+                  <span className="policy-tag" key={i}>{p}</span>
+                ))}
+              </div>
             </div>
-          </label>
-        ))}
-      </div>
+          </div>
+        </label>
+      ))}
 
-      <div className="security-boxes">
-        <div className="security encrypted">
-          <h4>Encrypted</h4>
-          <p>Your vote is encrypted and secure</p>
-        </div>
-        <div className="security immutable">
-          <h4>Immutable</h4>
-          <p>Cannot be altered or deleted</p>
-        </div>
-        <div className="security anonymous">
-          <h4>Anonymous</h4>
-          <p>Your identity remains private</p>
-        </div>
-      </div>
-
-      <button className="cast-btn" disabled={selected === null}>
-        🗳️ Cast Vote
+      <button
+        className="cast-button"
+        disabled={selected === null}
+        onClick={openConfirm}
+      >
+        🗳️ Cast Your Vote
       </button>
+
+      {selected !== null && (
+        <p className="selection-msg">
+          You have selected: <strong>{candidates[selected].name}</strong>
+        </p>
+      )}
+
+      {showConfirm && (
+        <div className="modal-backdrop">
+          <div className="modal">
+            <h3>Confirm Your Vote</h3>
+            <p>Are you sure you want to vote for:</p>
+
+            <div className="modal-candidate">
+              <span>{candidates[selected].name}</span>
+              <span className={`party-tag ${candidates[selected].partyColor}`}>
+                {candidates[selected].party}
+              </span>
+            </div>
+
+            <p className="warning">
+              ⚠️ This action cannot be undone. You can only vote once.
+            </p>
+
+            <div className="modal-actions">
+              <button className="confirm-btn" onClick={confirmVote}>
+                Yes, Cast My Vote
+              </button>
+              <button className="cancel-btn" onClick={() => setShowConfirm(false)}>
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
 
-export default VotePage;
+export default Votepage;
