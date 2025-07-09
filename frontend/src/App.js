@@ -6,6 +6,7 @@ import PrivateRoute from './components/PrivateRoute';
 import HomePage from './HomePage';
 import Votepage from './Votepage';
 import ViewCandidates from './ViewCandidates';
+import AdminDashboard from './admin/AdminDashboard';
 
 function App() {
   return (
@@ -16,9 +17,9 @@ function App() {
         <Route path="/adminlogin" element={<AdminLogin />} />
         <Route path="/vote" element={<Votepage />} />
          <Route path="/candidates" element={<ViewCandidates />} />
-        <Route path="/welcome" element={
+        <Route path="/admindashboard" element={
           <PrivateRoute>
-            <Welcome />
+            <AdminDashboard />
           </PrivateRoute>
         } />
         
