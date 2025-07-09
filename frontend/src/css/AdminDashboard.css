@@ -1,11 +1,94 @@
-.admin-container { padding: 20px; font-family: sans-serif; }
-.admin-header { display: flex; justify-content: space-between; align-items: baseline; }
-.admin-header h1 { margin: 0; }
-.admin-header p { color: #555; }
-.admin-actions button { margin-left: 10px; padding: 0.5em 1em; }
-.health-btn { border: 1px solid #2c8; color: #2c8; border-radius: 20px; background: #f0fdf4; }
-.new-election-btn { background: #000; color: #fff; border-radius: 4px; }
-.admin-tabs { display: flex; border-bottom: 1px solid #ddd; margin-top: 20px; }
-.admin-tabs button { background: none; border: none; padding: 10px 20px; cursor: pointer; border-bottom: 2px solid transparent; }
-.admin-tabs button.active { border-bottom-color: #000; font-weight: bold; }
-.admin-content { margin-top: 20px; }
+/* src/css/AdminDashboard.css */
+
+.admin-container {
+  padding: 24px;
+  background-color: #f9f9f9;
+  min-height: 100vh;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+/* Header section split into left and right */
+.admin-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.admin-header-left h1 {
+  font-size: 1.6rem;
+  margin: 0;
+}
+
+.admin-header-left p {
+  font-size: 0.95rem;
+  color: gray;
+  margin-top: 4px;
+}
+
+.admin-header-right {
+  display: flex;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.health-btn,
+.new-election-btn {
+  padding: 8px 14px;
+  border: none;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  background-color: black;
+  color: white;
+  transition: background 0.2s ease;
+}
+
+.health-btn:hover,
+.new-election-btn:hover {
+  background-color: #333;
+}
+
+/* Tabs section */
+.admin-tabs {
+  display: flex;
+  justify-content: flex-start;
+  background-color: #f1f1f1;
+  padding: 10px 0;
+  border-radius: 8px;
+  overflow-x: auto;
+  gap: 8px;
+}
+
+.tab-button {
+  padding: 12px 20px;
+  font-size: 1rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #333;
+  font-weight: 500;
+  border-bottom: 3px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.tab-button:hover {
+  background-color: #e4e4e4;
+}
+
+.tab-button.active {
+  border-bottom: 3px solid #000;
+  background-color: #fff;
+  border-radius: 6px 6px 0 0;
+  font-weight: 600;
+}
+
+/* Content area */
+.admin-content {
+  padding: 16px;
+  background: white;
+  border-radius: 8px;
+  margin-top: 10px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+}
