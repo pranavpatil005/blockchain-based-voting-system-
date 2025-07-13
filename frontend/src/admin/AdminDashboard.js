@@ -1,3 +1,4 @@
+// src/admin/AdminDashboard.js
 import React, { useState } from 'react';
 import '../css/AdminDashboard.css';
 
@@ -24,11 +25,13 @@ const AdminDashboard = () => {
 
   return (
     <div className="admin-container">
-      <header className="admin-header">
-        <h1>Blockchain Voting Admin</h1>
-        <p>Secure, transparent, and decentralized voting management</p>
-        <div className="admin-actions">
-          <button className="health-btn">Network healthy</button>
+      <div className="admin-header">
+        <div className="admin-header-left">
+          <h1>Blockchain Voting Admin</h1>
+          <p>Secure, transparent, and decentralized voting management</p>
+        </div>
+        <div className="admin-header-right">
+          <button className="health-btn">🟢 Network Healthy</button>
           <button className="new-election-btn">+ New Election</button>
           <button
             className="logout-button"
@@ -38,7 +41,7 @@ const AdminDashboard = () => {
             Logout
           </button>
         </div>
-      </header>
+      </div>
 
       <nav className="admin-tabs">
         {TABS.map((tab) => (
@@ -52,13 +55,14 @@ const AdminDashboard = () => {
         ))}
       </nav>
 
-      <section className="admin-content">
-        {active === 'Dashboard' && <DashboardTab />}
-        {active === 'Elections' && <ElectionsTab />}
-        {active === 'Voters' && <VotersTab />}
-        {active === 'Blockchain' && <BlockchainTab />}
-        {active === 'Security' && <SecurityTab />}
-      </section>
+     <section className="admin-content">
+  {active === 'Dashboard' && <DashboardTab />}
+  {active === 'Elections' && <ElectionsTab />}
+  {active === 'Voters' && <VotersTab />}
+  {active === 'Blockchain' && <BlockchainTab />}
+  {active === 'Security' && <SecurityTab />}
+</section>
+
     </div>
   );
 };
