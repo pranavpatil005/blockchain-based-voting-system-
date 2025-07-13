@@ -1,14 +1,21 @@
-// src/components/Quicklink.js
 import React from "react";
 import { useNavigate } from 'react-router-dom';
-import "./css/Quicklink.css";
+import { useUserAuth } from "../context/UserAuthContext";
 
-const Quicklink = () => {
+import "../css/VoterDashboard.css";
+
+const VoterDashboard = () => {
   const navigate = useNavigate();
+  const { userLogout } = useUserAuth(); // ✅ get userLogout
 
-  const handleVote = () => navigate("/vote");
+  const handleVote = () => navigate("/castvote");
   const handleCandidates = () => navigate("/candidates");
   const handleResults = () => alert("Showing Results...");
+
+  const handleLogout = () => {
+    userLogout(); // ✅ logout function
+    navigate("/"); // redirect to login
+  };
 
   return (
     <div>
@@ -18,15 +25,20 @@ const Quicklink = () => {
           <span className="logo">📊 VOTECHAIN</span>
         </div>
         <ul className="navbar-center">
-          <li onClick={() => navigate('/')}>Home</li>
+          <li onClick={() => navigate('/voter')}>Home</li>
           <li onClick={handleCandidates}>Candidates</li>
           <li onClick={handleVote}>Vote</li>
           <li onClick={handleResults}>Results</li>
-          <li onClick={() => navigate('/about')} style={{ cursor: 'pointer' }}>About</li>
         </ul>
         <div className="navbar-right">
           <button className="wallet-button">Connect Wallet</button>
-          <button className="admin-button">Admin</button>
+          <button 
+            className="logout-button" 
+            style={{ backgroundColor: '#e74c3c', color: '#fff', border: 'none' }}
+            onClick={handleLogout}
+          >
+            Logout
+          </button>
         </div>
       </nav>
 
@@ -73,4 +85,4 @@ const Quicklink = () => {
   );
 };
 
-export default Quicklink;
+export default VoterDashboard;
