@@ -7,16 +7,16 @@ const cardData = [
   {
     title: 'Our Mission',
     description: 'We are committed to delivering high-quality digital solutions that are secure, scalable, and user-friendly.',
-    image: 'https://img.icons8.com/clouds/100/mission.png',
+    image: 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png',
   },
   {
     title: 'Our Vision',
     description: 'To become a global leader in innovative software products and impactful digital transformation.',
-    image: 'https://img.icons8.com/clouds/100/vision.png',
+    image: 'https://cdn-icons-png.flaticon.com/512/3135/3135706.png',
   },
   {
     title: 'Our Team',
-    description: 'We are a passionate team of engineers, designers, and thinkers solving real-world problems.',
+
     image: 'https://img.icons8.com/clouds/100/conference-call.png',
   },
 ];
@@ -35,13 +35,7 @@ const About = () => {
         <div className="navbar-left">
           <span className="logo">📊 VOTECHAIN</span>
         </div>
-        <ul className="navbar-center">
-          <li onClick={() => navigate('/')}>Home</li>
-          <li onClick={() => navigate('/candidates')}>Candidates</li>
-          <li onClick={() => navigate('/vote')}>Vote</li>
-          <li onClick={handleResults}>Results</li>
-          <li onClick={() => navigate('/about')} style={{ cursor: 'pointer' }}>About</li>
-        </ul>
+        
         <div className="navbar-right">
           <button className="wallet-button">Connect Wallet</button>
           <button className="admin-button">Admin</button>
@@ -50,16 +44,31 @@ const About = () => {
 
       {/* About Section */}
       <div className="about-container">
-        <h1 className="about-title">About Us</h1>
+        <h1 className="about-title" style={{ marginTop: 100, }}>About Us</h1>
         <div className="card-container">
           {cardData.map((card, index) => (
-            <div className="about-card" key={index}>
+            <div
+              className={`about-card ${index === 2 ? "about-card-full" : ""}`} // 👈 Applies teal color to 3rd
+              key={index}
+            >
               <img src={card.image} alt={card.title} className="card-image" />
               <h2 className="card-title">{card.title}</h2>
               <p className="card-description">{card.description}</p>
+               {index === 2 && (
+   <div className="student-badges">
+  <span className="badge">Durvankur Sonar</span>
+  <span className="badge">Liji Varghese</span>
+  <span className="badge">Nikita Kurkure</span>
+  <span className="badge">Pranav Patil</span>
+  <span className="badge">Vivek Chaudhari</span>
+</div>
+
+  )}
             </div>
           ))}
         </div>
+
+
       </div>
     </div>
   );

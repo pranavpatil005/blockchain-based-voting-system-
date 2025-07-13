@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import '../css/AdminLogin.css'; // reusing the same styling
+import '../css/AdminLogin.css'; // reuse same CSS
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
@@ -7,18 +7,19 @@ const AdminSignup = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
+  const [toast, setToast] = useState({ message: '', color: '' }); // toast state
   const navigate = useNavigate();
+
+  const showToast = (message, color) => {
+    setToast({ message, color });
+    setTimeout(() => setToast({ message: '', color: '' }), 5000); // auto hide
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    setError('');
-    setSuccess('');
-
     if (!name || !email || !password) {
-      setError('Please fill in all fields');
+      showToast('Please fill in all fields', 'red');
       return;
     }
 
@@ -30,20 +31,29 @@ const AdminSignup = () => {
       });
 
       if (response.data.success) {
-      setSuccess(response.data.message);
-      alert('Your account has been created successfully');  
-      navigate('/adminlogin');
-    } else {
-      setError('Signup failed');
+        showToast('✅ Account created successfully!', 'green');
+        setTimeout(() => navigate('/adminlogin'), 1000); // redirect after success
+      } else {
+        showToast('❌ Signup failed', 'red');
+      }
+    } catch (err) {
+      console.error('Signup error:', err);
+      showToast(err.response?.data?.message || '❌ Signup failed', 'red');
     }
-  } catch (err) {
-    console.error('Signup error:', err);
-    setError(err.response?.data?.message || 'Signup failed');
-  }
   };
 
   return (
     <div className="login-container">
+      {/* Toast */}
+      {toast.message && (
+        <div
+          className="toast"
+          style={{ backgroundColor: toast.color === 'green' ? '#4caf50' : '#e74c3c' }}
+        >
+          {toast.message}
+        </div>
+      )}
+
       <div className="login-card">
         <div className="icon-container">
           <span className="icon-shield">🛡️</span>
@@ -78,14 +88,11 @@ const AdminSignup = () => {
             onChange={(e) => setPassword(e.target.value)}
           />
 
-          <button type="submit">Sign Up</button>
+          <button type="submit" style={{ backgroundColor: 'rgb(40, 163, 182)' }}>Sign Up</button>
         </form>
 
-        {error && <p className="error">{error}</p>}
-        {success && <p className="success">{success}</p>}
-
         <p className="subtitle">
-          Already have an account <a href="/adminlogin">Login</a> here
+          Already have an account? <a href="/adminlogin">Login</a> here
         </p>
       </div>
     </div>
