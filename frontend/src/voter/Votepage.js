@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import './css/Votepage.css';
+import '../css/Votepage.css';
 import { useNavigate } from 'react-router-dom';
+import { useUserAuth } from '../context/UserAuthContext'; // <-- import auth hook
 
 const candidates = [
   {
@@ -36,11 +37,18 @@ const Votepage = () => {
   const [selected, setSelected] = useState(null);
   const [showConfirm, setShowConfirm] = useState(false);
   const navigate = useNavigate();
+  const { userLogout } = useUserAuth(); // <-- get logout function here
 
   const openConfirm = () => selected !== null && setShowConfirm(true);
+
   const confirmVote = () => {
     alert(`✅ Your vote for ${candidates[selected].name} has been recorded!`);
     setShowConfirm(false);
+  };
+
+  const handleLogout = () => {
+    userLogout(); // ✅ logout function
+    navigate("/"); // redirect to login
   };
 
   return (
@@ -51,16 +59,20 @@ const Votepage = () => {
           <span className="logo">📊 VOTECHAIN</span>
         </div>
         <ul className="navbar-center">
-          <li onClick={() => navigate('/')}>Home</li>
+          <li onClick={() => navigate('/voter')}>Home</li>
           <li onClick={() => navigate('/candidates')}>Candidates</li>
-          <li onClick={() => navigate('/vote')}>Vote</li>
+          <li onClick={() => navigate('/castvote')}>Vote</li>
           <li onClick={() => alert('Showing Results...')}>Results</li>
-          <li onClick={() => navigate('/quicklinks')} style={{ cursor: 'pointer' }}>Quick Links</li>
-          <li onClick={() => navigate('/about')} style={{ cursor: 'pointer' }}>About</li>
         </ul>
         <div className="navbar-right">
           <button className="wallet-button">Connect Wallet</button>
-          <button className="admin-button">Admin</button>
+          <button
+            className="logout-button"
+            style={{ backgroundColor: '#e74c3c', color: '#fff', border: 'none' }}
+            onClick={handleLogout}
+          >
+            Logout
+          </button>
         </div>
       </nav>
 

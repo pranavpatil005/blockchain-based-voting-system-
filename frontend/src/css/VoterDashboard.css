@@ -8,6 +8,7 @@ body, html {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background-color: #fff;
   color: #000;
+    background: linear-gradient(135deg, #f0f4f8, #e0e7ff);
 }
 
 /* Navbar */
@@ -72,7 +73,7 @@ body, html {
 .quick-links {
   text-align: center;
   padding: 120px 20px 100px; /* Adjusted for fixed navbar */
-  background-color: #fafafa;
+   background: linear-gradient(135deg, #f0f4f8, #e0e7ff);
 }
 
 .quick-links h2 {

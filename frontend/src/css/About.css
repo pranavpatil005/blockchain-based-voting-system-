@@ -1,52 +1,94 @@
-/* src/css/About.css */
-
 .about-container {
-  padding: 100px 40px 40px 40px; /* Top padding to offset navbar */
-  background-color: #f0f4f8;
+  padding: 120px 20px 40px; /* 👈 Increased top padding for navbar offset */
+  background: linear-gradient(135deg, #f0f4f8, #e0e7ff);
   text-align: center;
   min-height: 100vh;
 }
 
 .about-title {
-  font-size: 2.5rem;
-  margin-top: 80px; /* 👈 Pushes title down from behind navbar */
+  font-size: 3rem;
   margin-bottom: 50px;
-  color: #333;
+  color: #2c3e50;
+  font-weight: 800;
+  text-shadow: 1px 2px 8px rgba(0, 0, 0, 0.1);
 }
-
 
 .card-container {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   gap: 30px;
+  max-width: 1000px;
+  margin: 0 auto;
 }
 
 .about-card {
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-  padding: 25px;
-  max-width: 280px;
-  transition: transform 0.3s ease;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  padding: 30px 25px;
+  width: 300px;
+  transition: all 0.3s ease;
+  text-align: center;
+  border: 1px solid #f0f0f0;
 }
 
 .about-card:hover {
-  transform: translateY(-10px);
+  transform: translateY(-8px) scale(1.03);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+}
+
+.about-card-full {
+  width: calc(300px * 2 + 30px); /* 2 cards wide + gap */
+background: #ffffff;
+  color: #000;
+  box-shadow: 0 10px 40px rgba(13, 148, 136, 0.4);
+}
+
+.about-card-full:hover {
+  transform: translateY(-10px) scale(1.05);
 }
 
 .card-image {
-  width: 100px;
+  width: 80px;
   margin-bottom: 15px;
 }
 
-.card-title {
-  font-size: 1.4rem;
-  color: #222;
-  margin-bottom: 10px;
+.about-card h2 {
+  font-size: 1.5rem;
+  margin: 10px 0;
+  color: inherit; /* adapts for both light and dark cards */
 }
 
 .card-description {
   font-size: 1rem;
-  color: #555;
+  color: inherit;
+  opacity: 0.85;
+  line-height: 1.6;
 }
+
+.student-badges {
+  display: flex;
+  flex-wrap: wrap; /* Allows wrapping if too many names */
+  gap: 10px; /* Space between badges */
+  margin-top: 15px;
+  justify-content: center; /* Center align badges */
+}
+
+.badge {
+   font-weight: bold;
+  background: #a5c2cf; /* White background for clean look */
+  border: 1px solid #ddd; /* Light border */
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-size: 0.9rem;
+  color: #333;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15); /* Soft shadow */
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.badge:hover {
+  transform: scale(1.05); /* Slight zoom on hover */
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.25);
+}
+
