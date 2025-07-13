@@ -7,20 +7,21 @@ import { useAuth } from '../context/AuthContext';
 const AdminLogin = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
+  const [toast, setToast] = useState({ message: '', color: '' }); // toast state
   const navigate = useNavigate();
-  const { login } = useAuth();  // <-- use useAuth hook here
+  const { login } = useAuth();
+
+  const showToast = (message, color) => {
+    setToast({ message, color });
+    setTimeout(() => setToast({ message: '', color: '' }), 5000); // hide after 5s
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Login submitted with:', email, password);  // check inputs
-
-    setError('');
-    setSuccess('');
+    console.log('Login submitted with:', email, password);
 
     if (!email || !password) {
-      setError('Please fill in all fields');
+      showToast('Please fill in all fields', 'red');
       return;
     }
 
@@ -29,33 +30,37 @@ const AdminLogin = () => {
         email,
         password,
       });
-      console.log('Login response:', response.data);  // log entire response
+      console.log('Login response:', response.data);
 
       if (response.data.success) {
-        setSuccess(response.data.message);
-
         if (response.data.name) {
           localStorage.setItem('name', response.data.name);
-          console.log('Saved name to localStorage:', response.data.name);
-        } else {
-          console.log('No name found in response');
         }
 
         login();
-        navigate('/admin');
+        showToast('✅ Login successful!', 'green'); // green toast
+        setTimeout(() => navigate('/admin'), 1000); // wait before redirect
       } else {
-        setError('Login failed');
+        showToast('❌ Invalid credentials', 'red'); // red toast
       }
     } catch (err) {
       console.error('Login error:', err);
-      setError(err.response?.data?.message || 'Login failed');
+      showToast(err.response?.data?.message || '❌ Login failed', 'red'); // red toast
     }
   };
 
-
-
   return (
     <div className="login-container">
+      {/* Toast */}
+      {toast.message && (
+        <div
+          className="toast"
+          style={{ backgroundColor: toast.color === 'green' ? '#4caf50' : '#e74c3c' }}
+        >
+          {toast.message}
+        </div>
+      )}
+
       <div className="login-card">
         <div className="icon-container">
           <span className="icon-shield">🛡️</span>
@@ -81,13 +86,11 @@ const AdminLogin = () => {
             onChange={(e) => setPassword(e.target.value)}
           />
 
-          <button type="submit">Login</button>
+          <button type="submit" style={{ backgroundColor: 'rgb(40, 163, 182)' }}>Login</button>
         </form>
         <p className="subtitle">
           Don't have an account? <a href="/adminsignup">Sign up</a> here
         </p>
-        {error && <p className="error">{error}</p>}
-        {success && <p className="success">{success}</p>}
       </div>
     </div>
   );

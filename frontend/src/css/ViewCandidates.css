@@ -7,6 +7,7 @@ body, html {
   color: #000;
   overflow-x: hidden;
   width: 100%;
+  
 }
 
 .navbar, .hero, .quick-links, div, section {
@@ -27,6 +28,7 @@ body, html {
   z-index: 1000;
   background-color: #fff;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  
 }
 
 .logo {
@@ -80,6 +82,7 @@ body, html {
 
 /* ===== Hero Section (Optional if used elsewhere) ===== */
 .hero {
+  
   text-align: center;
   padding: 110px 20px 60px; /* Increased top padding to avoid fixed navbar */
 }
@@ -148,15 +151,18 @@ body, html {
 
 /* ===== ViewCandidates Section ===== */
 .candidates-wrapper {
+  
+  margin-top:420px;
   padding: 6rem 2rem 2rem; /* Top padding to account for fixed navbar */
   text-align: center;
-  background-color: #f8f9fc;
+    background: linear-gradient(135deg, #f0f4f8, #e0e7ff);
 }
 
 .election-title {
-  font-size: 2.5rem;
-  font-weight: bold;
-  margin-bottom: 0.5rem;
+  font-size: 3rem;
+  color: #2c3e50;
+  font-weight: 800;
+  text-shadow: 1px 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .subtitle {
