@@ -1,6 +1,7 @@
 import React from 'react';
-import './css/ViewCandidates.css';
+import '../css/ViewCandidates.css';
 import { useNavigate } from 'react-router-dom';
+import { useUserAuth } from '../context/UserAuthContext'; // <-- import auth hook
 
 const candidates = [
   {
@@ -61,6 +62,12 @@ const candidates = [
 
 const ViewCandidates = () => {
   const navigate = useNavigate();
+  const { userLogout } = useUserAuth();  // <-- get userLogout here
+
+  const handleLogout = () => {
+    userLogout();      // call logout function from context
+    navigate('/');     // redirect to login page after logout
+  };
 
   return (
     <div>
@@ -70,22 +77,26 @@ const ViewCandidates = () => {
           <span className="logo">📊 VOTECHAIN</span>
         </div>
         <ul className="navbar-center">
-          <li onClick={() => navigate('/')}>Home</li>
+          <li onClick={() => navigate('/voter')}>Home</li>
           <li onClick={() => navigate('/candidates')}>Candidates</li>
-          <li onClick={() => navigate('/vote')}>Vote</li>
+          <li onClick={() => navigate('/castvote')}>Vote</li>
           <li onClick={() => alert('Showing Results...')}>Results</li>
-          <li onClick={() => navigate('/quicklinks')} style={{ cursor: 'pointer' }}>Quick Links</li>
-          <li onClick={() => navigate('/about')} style={{ cursor: 'pointer' }}>About</li>
         </ul>
         <div className="navbar-right">
           <button className="wallet-button">Connect Wallet</button>
-          <button className="admin-button">Admin</button>
+          <button
+            className="logout-button"
+            style={{ backgroundColor: '#e74c3c', color: '#fff', border: 'none' }}
+            onClick={handleLogout}
+          >
+            Logout
+          </button>
         </div>
       </nav>
 
       {/* Content */}
       <div className="candidates-wrapper">
-        <h1 className="election-title">2024 Local Elections</h1>
+        <h1 className="election-title">Election Name</h1>
         <p className="subtitle">Meet Your Candidates</p>
         <p className="election-day">📅 Election Day: November 5, 2024</p>
 
