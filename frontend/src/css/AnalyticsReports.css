@@ -1,0 +1,57 @@
+.analytics-container {
+  padding: 24px;
+  background-color: #fdfdfd;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  max-width: 1000px;
+  margin: auto;
+}
+
+.analytics-container h2 {
+  font-size: 28px;
+  color: #2c3e50;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.analytics-cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  justify-content: space-between;
+}
+
+.card {
+  flex: 1 1 180px;
+  background-color: #ffffff;
+  border-radius: 10px;
+  padding: 20px;
+  text-align: center;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease;
+}
+
+.card:hover {
+  transform: scale(1.03);
+}
+
+.card h3 {
+  font-size: 16px;
+  color: #34495e;
+  margin-bottom: 8px;
+}
+
+.card p {
+  font-size: 24px;
+  font-weight: bold;
+  color: #3498db;
+}
+
+.report-section {
+  margin-top: 30px;
+  padding: 20px;
+  background-color: #eef3f7;
+  border-radius: 10px;
+  font-size: 16px;
+  color: #2c3e50;
+}
