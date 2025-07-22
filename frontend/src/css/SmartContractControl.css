@@ -1,0 +1,70 @@
+/* SmartContractControl.css */
+
+.contract-control-container {
+  padding: 24px;
+  background-color: #f4f6f8;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.contract-control-container h2 {
+  font-size: 26px;
+  color: #2c3e50;
+  margin-bottom: 20px;
+}
+
+.contract-control-container .status {
+  font-weight: bold;
+  padding: 6px 12px;
+  border-radius: 6px;
+  margin-left: 10px;
+}
+
+.status.not-deployed {
+  background-color: #e74c3c;
+  color: white;
+}
+
+.status.deployed-successfully {
+  background-color: #2ecc71;
+  color: white;
+}
+
+.status.deploying,
+.status.resetting {
+  background-color: #f39c12;
+  color: white;
+}
+
+.button-group {
+  margin-top: 20px;
+  display: flex;
+  gap: 15px;
+}
+
+.button-group button {
+  padding: 10px 18px;
+  font-size: 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.deploy-btn {
+  background-color: #3498db;
+  color: white;
+}
+
+.deploy-btn:hover {
+  background-color: #2980b9;
+}
+
+.reset-btn {
+  background-color: #e67e22;
+  color: white;
+}
+
+.reset-btn:hover {
+  background-color: #d35400;
+}
