@@ -1,26 +1,63 @@
-// src/admin/AdminDashboard.js
 import React, { useState } from 'react';
 import '../css/AdminDashboard.css';
 
-import DashboardTab from './DashboardTab';
-import ElectionsTab from './ElectionsTab';
-import VotersTab from './VotersTab';
-import BlockchainTab from './BlockchainTab';
-import SecurityTab from './SecurityTab';
+import AdminHome from './AdminHome';
+import CreateElection from './CreateElection';
+import CandidateManagement from './CandidateManagement';
+import VoterManagement from './VoterManagement';
+import SmartContractControl from './SmartContractControl';
+import LiveVotingMonitor from './LiveVotingMonitor';
+import ElectionResults from './ElectionResults';
+import BlockchainExplorer from './BlockchainExplorer';
+import SystemSettings from './SystemSettings';
+import AnalyticsReports from './AnalyticsReports';
+import AuditLogs from './AuditLogs';
+import HelpDesk from './HelpDesk';
 
-import { useAuth } from '../context/AuthContext'; // 👈 import auth context
-import { useNavigate } from 'react-router-dom';    // 👈 import navigate
+import { useAuth } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
-const TABS = ['Dashboard', 'Elections', 'Voters', 'Blockchain', 'Security'];
+const TABS = [
+  'Dashboard',
+  'Create Election',
+  'Candidates',
+  'Voters',
+  'Smart Contracts',
+  'Live Monitor',
+  'Results',
+  'Blockchain Explorer',
+  'Settings',
+  'Reports',
+  'Audit Logs',
+  'Help Desk'
+];
 
 const AdminDashboard = () => {
   const [active, setActive] = useState('Dashboard');
-  const { logout } = useAuth();         // 👈 get logout function
-  const navigate = useNavigate();       // 👈 get navigate
+  const { logout } = useAuth();
+  const navigate = useNavigate();
 
   const handleLogout = () => {
-    logout();                           // 👈 clear login state
-    navigate('/adminlogin');            // 👈 redirect to admin login
+    logout();
+    navigate('/adminlogin');
+  };
+
+  const renderTab = () => {
+    switch (active) {
+      case 'Dashboard': return <AdminHome />;
+      case 'Create Election': return <CreateElection />;
+      case 'Candidates': return <CandidateManagement />;
+      case 'Voters': return <VoterManagement />;
+      case 'Smart Contracts': return <SmartContractControl />;
+      case 'Live Monitor': return <LiveVotingMonitor />;
+      case 'Results': return <ElectionResults />;
+      case 'Blockchain Explorer': return <BlockchainExplorer />;
+      case 'Settings': return <SystemSettings />;
+      case 'Reports': return <AnalyticsReports />;
+      case 'Audit Logs': return <AuditLogs />;
+      case 'Help Desk': return <HelpDesk />;
+      default: return <AdminHome />;
+    }
   };
 
   return (
@@ -36,7 +73,7 @@ const AdminDashboard = () => {
           <button
             className="logout-button"
             style={{ backgroundColor: '#e74c3c', color: '#fff', border: 'none', padding: '6px 12px' }}
-            onClick={handleLogout}      // 👈 call logout on click
+            onClick={handleLogout}
           >
             Logout
           </button>
@@ -55,14 +92,9 @@ const AdminDashboard = () => {
         ))}
       </nav>
 
-     <section className="admin-content">
-  {active === 'Dashboard' && <DashboardTab />}
-  {active === 'Elections' && <ElectionsTab />}
-  {active === 'Voters' && <VotersTab />}
-  {active === 'Blockchain' && <BlockchainTab />}
-  {active === 'Security' && <SecurityTab />}
-</section>
-
+      <section className="admin-content">
+        {renderTab()}
+      </section>
     </div>
   );
 };

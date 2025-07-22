@@ -1,0 +1,80 @@
+.monitor-container {
+  padding: 24px;
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.monitor-container h2 {
+  font-size: 28px;
+  color: #2c3e50;
+  margin-bottom: 10px;
+}
+
+.status {
+  font-weight: bold;
+  padding: 6px 12px;
+  border-radius: 6px;
+  margin-left: 10px;
+  background-color: #27ae60;
+  color: #fff;
+  text-transform: capitalize;
+}
+
+.stats {
+  display: flex;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.card {
+  background-color: #ecf0f1;
+  padding: 20px;
+  flex: 1;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.card h3 {
+  font-size: 20px;
+  color: #34495e;
+  margin-bottom: 10px;
+}
+
+.card p {
+  font-size: 24px;
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+.candidate-chart {
+  margin-top: 30px;
+}
+
+.candidate-bar {
+  margin-bottom: 16px;
+}
+
+.candidate-bar span {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 6px;
+  color: #2c3e50;
+}
+
+.bar {
+  background-color: #bdc3c7;
+  height: 26px;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.fill {
+  background-color: #2980b9;
+  color: #fff;
+  height: 100%;
+  line-height: 26px;
+  padding-left: 10px;
+  font-size: 14px;
+  white-space: nowrap;
+}

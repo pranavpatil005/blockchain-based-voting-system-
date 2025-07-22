@@ -12,6 +12,7 @@ import AdminDashboard from './admin/AdminDashboard';
 import About from './About';
 import VoterDashboard from './voter/VoterDashboard';
 
+
 function App() {
   return (
     <Router>
