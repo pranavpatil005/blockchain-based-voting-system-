@@ -1,67 +1,267 @@
-/* ------------------ Navbar Styles ------------------ */
+/* Votepage.css */
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(to bottom right, #e0eaff, #f5f7ff);
+  color: #222;
+}
+
 .navbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 80px;
-  position: fixed;
+  background: white;
+  padding: 10px 30px; /* thinner navbar */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+  position: sticky;
   top: 0;
-  left: 0;
-  width: 100%;
   z-index: 1000;
-  background-color: #fff;
+  max-height: fit-content;
 }
 
-.logo {
+.vote-page {
+  padding: 40px 40px 20px; /* top padding to avoid being hidden */
+  max-width: 1200px;
+  margin: auto;
+  padding-top: 550px;
+}
+
+.navbar-left .logo {
+  font-weight: bold;
   font-size: 20px;
-  font-weight: 600;
-  margin-left: 50px;
 }
 
 .navbar-center {
   list-style: none;
   display: flex;
-  gap: 25px;
-  margin-right: 50px;
-  flex-wrap: nowrap;
+  gap: 30px;
+  font-size: 16px;
 }
 
 .navbar-center li {
   cursor: pointer;
-  font-weight: 500;
-  white-space: nowrap;
+  color: #333;
+  transition: color 0.2s ease;
 }
 
-.navbar-right {
-  display: flex;
-  align-items: center;
-  margin-right: 50px;
+.navbar-center li:hover {
+  color: #007bff;
 }
 
-.navbar-right button {
-  margin-left: 12px;
+.wallet-button,
+.logout-button {
+  margin-left: 10px;
   padding: 8px 14px;
-  border-radius: 5px;
+  border-radius: 6px;
+  font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: background 0.3s ease;
 }
 
 .wallet-button {
-  background-color: #2c5364;
-  border: 1px solid #aaa;
-  color: white;
-}
-
-.wallet-button:hover {
-  background-color: #0f2027;
-}
-
-.admin-button {
-  background-color: #2c5364;
+  background-color: #2c3e50;
+  color: #fff;
   border: none;
-  color: white;
 }
 
-.admin-button:hover {
-  background-color: #0f2027;
+.logout-button:hover,
+.wallet-button:hover {
+  opacity: 0.9;
+}
+
+/* Titles */
+.title {
+  text-align: center;
+  font-size: 45px;
+  margin-top: 50px;
+  color: #111;
+}
+
+.subtitle {
+  text-align: center;
+  color: #666;
+  margin-bottom: 30px;
+}
+
+/* Instructions */
+.instructions {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 16px;
+  color: #444;
+}
+
+/* Candidate Boxes */
+.candidate-box {
+  display: block;
+  border-radius: 12px;
+  background: white;
+  margin: 20px auto;
+  padding: 20px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+  max-width: 750px;
+  transition: transform 0.2s ease;
+  cursor: pointer;
+  position: relative;
+}
+
+.candidate-box:hover {
+  transform: scale(1.02);
+}
+
+input[type="radio"] {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  transform: scale(1.2);
+}
+
+.candidate-content {
+  margin-left: 40px;
+}
+
+.candidate-name {
+  margin-bottom: 6px;
+  font-size: 22px;
+}
+
+.party-tag {
+  display: inline-block;
+  padding: 4px 10px;
+  font-size: 13px;
+  font-weight: 600;
+  color: white;
+  border-radius: 6px;
+  margin: 5px 0 10px;
+}
+
+.party-tag.blue { background-color: #3498db; }
+.party-tag.red { background-color: #e74c3c; }
+.party-tag.purple { background-color: #9b59b6; }
+
+.slogan {
+  font-style: italic;
+  color: #c0392b;
+  margin-bottom: 6px;
+}
+
+.experience {
+  font-weight: bold;
+  margin-bottom: 6px;
+}
+
+.bio {
+  color: #555;
+  margin-bottom: 12px;
+}
+
+.policy-title {
+  font-weight: bold;
+  margin-bottom: 6px;
+}
+
+.policy-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.policy-tag {
+  background: #ecf0f1;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 13px;
+}
+
+/* Cast Button */
+.cast-button {
+  display: block;
+  margin: 30px auto;
+  background: linear-gradient(130deg, #e83e8d, #fd6806);
+  padding: 14px 28px;
+  font-size: 16px;
+  border: none;
+  border-radius: 30px;
+  color: white;
+  cursor: pointer;
+  font-weight: 600;
+  transition: transform 0.2s ease;
+}
+
+.cast-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.cast-button:hover:enabled {
+  transform: scale(1.05);
+}
+
+/* Selection message */
+.selection-msg {
+  text-align: center;
+  color: #444;
+  font-size: 16px;
+}
+
+/* Modal */
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(30, 30, 30, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+}
+
+.modal {
+  background: white;
+  border-radius: 10px;
+  padding: 30px;
+  width: 400px;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+  text-align: center;
+}
+
+.modal-candidate {
+  margin-top: 10px;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.warning {
+  color: #e74c3c;
+  font-size: 14px;
+  margin: 15px 0;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 20px;
+}
+
+.confirm-btn {
+  background: #27ae60;
+  color: white;
+  padding: 10px 16px;
+  border-radius: 8px;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.cancel-btn {
+  background: #bdc3c7;
+  color: #333;
+  padding: 10px 16px;
+  border-radius: 8px;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
 }
