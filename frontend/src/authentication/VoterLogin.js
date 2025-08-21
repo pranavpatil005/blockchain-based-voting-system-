@@ -24,14 +24,14 @@ const VoterLogin = () => {
   };
 
   const handleSendOtp = () => {
-    if (!aadhar) {
-      showToastMessage('Please enter your Aadhar number', 'error');
+    if (aadhar.length !== 12) {
+      showToastMessage('Aadhar number must be 12 digits', 'error');
       return;
     }
     const randomOtp = Math.floor(100000 + Math.random() * 900000);
     setGeneratedOtp(String(randomOtp));
     setOtpSent(true);
-    showToastMessage('OTP sent to your mobile number registered on Aadhar card', 'success');
+    showToastMessage('OTP sent to your registered mobile number', 'success');
   };
 
   const handleSubmit = (e) => {
@@ -44,12 +44,16 @@ const VoterLogin = () => {
       showToastMessage('Invalid OTP. Please try again.', 'error');
       return;
     }
-    // ✅ Set user as logged in
     userLogin();
     showToastMessage('Login Successful!', 'success');
     setTimeout(() => {
-      navigate('/voter'); // Redirect to voter dashboard
+      navigate('/voter');
     }, 1000);
+  };
+
+  const handleAadharChange = (e) => {
+    const value = e.target.value.replace(/\D/g, ''); // remove non-numeric values
+    if (value.length <= 12) setAadhar(value);
   };
 
   return (
@@ -72,9 +76,11 @@ const VoterLogin = () => {
           <input
             type="text"
             id="aadhar"
-            placeholder="Enter your Aadhar number"
+            placeholder="Enter your 12-digit Aadhar number"
             value={aadhar}
-            onChange={(e) => setAadhar(e.target.value)}
+            onChange={handleAadharChange}
+            maxLength="12"
+            inputMode="numeric"
           />
           <button
             type="button"
@@ -107,7 +113,6 @@ const VoterLogin = () => {
           </button>
         </form>
 
-        {/* Toast message */}
         {showToast && (
           <div
             className="toast"

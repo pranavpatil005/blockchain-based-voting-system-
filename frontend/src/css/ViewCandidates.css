@@ -14,6 +14,56 @@ body, html {
   width: 100%;
 }
 
+/* Default desktop navbar styles remain same */
+
+/* Hamburger icon (hidden on desktop) */
+.hamburger {
+  display: none;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .navbar {
+    flex-wrap: wrap;
+    padding: 0 20px;
+    height: auto;
+  }
+
+  .hamburger {
+    display: block;
+    position: absolute;
+    right: 20px;
+    top: 25px;
+  }
+
+  .navbar-center {
+    position: absolute;
+    top: 80px;
+    left: 0;
+    right: 0;
+    background: white;
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px 0;
+    text-align: center;
+    transform: translateY(-200%);
+    transition: transform 0.3s ease;
+  }
+
+  .navbar-center.open {
+    transform: translateY(0);
+  }
+
+  .navbar-right {
+    width: 100%;
+    justify-content: left;
+    margin-top: 10px;
+  }
+}
+
+
 
 /* ===== Navbar ===== */
 .navbar {
@@ -21,14 +71,15 @@ body, html {
   justify-content: space-between;
   align-items: center;
   height: 80px;
+  padding: 0 40px;   /* Add side padding */
   position: fixed;
   top: 0;
   left: 0;
+  right: 0;
   width: 100%;
   z-index: 1000;
   background-color: #fff;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-  
 }
 
 .logo {
@@ -40,9 +91,9 @@ body, html {
 .navbar-center {
   list-style: none;
   display: flex;
-  gap: 25px;
-  margin-right: 50px;
-  flex-wrap: nowrap;
+  gap: 30px;
+  margin: 0;
+  padding: 0;
 }
 
 .navbar-center li {
@@ -51,12 +102,10 @@ body, html {
   white-space: nowrap;
 }
 
-.navbar-right button {
-  margin-left: 12px;
-  padding: 8px 14px;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: all 0.3s ease;
+.navbar-right {
+ display: flex;
+  gap: 12px;
+  align-items: center;
 }
 
 .wallet-button {
@@ -67,6 +116,20 @@ body, html {
 
 .wallet-button:hover {
   background-color: #0f2027;
+}
+
+.logout-button {
+  background-color: #e74c3c;
+  color: #fff;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.logout-button:hover {
+  background-color: #c0392b;
 }
 
 .admin-button {
@@ -181,24 +244,25 @@ body, html {
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
-  gap: 1.5rem;
+  gap: 3rem;/* reduced from 1.5rem */
 }
 
 .candidate-card {
   background-color: white;
   border-radius: 10px;
   box-shadow: 0 3px 8px rgba(0,0,0,0.05);
-  padding: 1.5rem;
-  width: 300px;
+  padding: 1rem; /* reduced from 1.5rem */
+  width: 240px;  /* reduced from 300px */
   text-align: left;
+
 }
 
 .candidate-photo {
   background-color: #eee;
   border-radius: 50%;
-  width: 64px;
-  height: 64px;
-  margin-bottom: 1rem;
+  width: 50px;   /* reduced from 64px */
+  height: 50px;  /* reduced from 64px */
+  margin-bottom: 0.75rem;
 }
 
 .position-tag,
@@ -227,15 +291,10 @@ body, html {
   color: #6b21a8;
 }
 
-.slogan {
-  font-style: italic;
-  color: #1d4ed8;
-  font-weight: 500;
-}
-
 .bio {
   margin: 0.75rem 0;
   color: #444;
+  font-size: 0.85rem;
 }
 
 .policy-title {
@@ -251,7 +310,7 @@ body, html {
 
 .policy-tag {
   background-color: #f1f5f9;
-  padding: 5px 10px;
   border-radius: 999px;
-  font-size: 0.85rem;
+  font-size: 0.75rem;
+  padding: 3px 8px; /* slightly smaller */
 }
