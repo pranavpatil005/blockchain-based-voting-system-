@@ -5,7 +5,7 @@ import { useUserAuth } from '../context/UserAuthContext'; // <-- import auth hoo
 
 const candidates = [
   {
-    name: 'Sarah Johnson',
+    name: 'Durvankur Sonar',
     position: 'Mayor',
     party: 'Democratic Party',
     partyColor: 'blue',
@@ -14,7 +14,7 @@ const candidates = [
     policies: ['Green Infrastructure', 'Affordable Housing', 'Public Transportation'],
   },
   {
-    name: 'Michael Chen',
+    name: 'Liji Varghese',
     position: 'Mayor',
     party: 'Republican Party',
     partyColor: 'red',
@@ -23,7 +23,7 @@ const candidates = [
     policies: ['Public Safety', 'Business Development', 'Infrastructure'],
   },
   {
-    name: 'Elena Rodriguez',
+    name: 'Nikita Kurkure',
     position: 'City Council',
     party: 'Independent',
     partyColor: 'purple',
@@ -32,7 +32,7 @@ const candidates = [
     policies: ['Education Reform', 'Healthcare Access', 'Social Justice'],
   },
   {
-    name: 'David Thompson',
+    name: 'Pranav Patil',
     position: 'City Council',
     party: 'Democratic Party',
     partyColor: 'blue',
@@ -41,7 +41,7 @@ const candidates = [
     policies: ['Climate Action', 'Renewable Energy', 'Urban Planning'],
   },
   {
-    name: 'Amanda Foster',
+    name: 'Vivek Chaudhari',
     position: 'School Board',
     party: 'Republican Party',
     partyColor: 'red',
@@ -49,15 +49,7 @@ const candidates = [
     bio: 'Parent and former teacher advocating for educational excellence and fiscal responsibility.',
     policies: ['Educational Standards', 'Fiscal Responsibility', 'Parent Rights'],
   },
-  {
-    name: 'James Wilson',
-    position: 'School Board',
-    party: 'Independent',
-    partyColor: 'purple',
-    image: 'C:\Users\Asus\Downloads\Proj_vote\Repository\blockchain-based-voting-system-\frontend\Candidate images\C6.jpg',
-    bio: 'Technology professional focused on modernizing education and digital literacy.',
-    policies: ['Digital Learning', 'STEM Education', 'Technology Integration'],
-  },
+  
 ];
 
 const ViewCandidates = () => {
@@ -81,7 +73,7 @@ const ViewCandidates = () => {
           <li onClick={() => navigate('/voter')}>Home</li>
           <li onClick={() => navigate('/candidates')}>Candidates</li>
           <li onClick={() => navigate('/castvote')}>Vote</li>
-          <li onClick={() => alert('Showing Results...')}>Results</li>
+          <li onClick={() => navigate('/results')}>Results</li>
         </ul>
 
        <div className="navbar-right">

@@ -5,6 +5,7 @@ body {
   font-family: 'Segoe UI', sans-serif;
   background: linear-gradient(to bottom right, #e0eaff, #f5f7ff);
   color: #222;
+  
 }
 
 .navbar {
@@ -24,7 +25,8 @@ body {
   padding: 40px 40px 20px; /* top padding to avoid being hidden */
   max-width: 1200px;
   margin: auto;
-  padding-top: 650px;
+  padding-top: 1250px;
+  background: linear-gradient(to bottom, #eef4ff, #ffffff);
 }
 
 .navbar-left .logo {

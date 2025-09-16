@@ -8,6 +8,7 @@ import UserPrivateRoute from './components/UserPrivateRoute';
 import HomePage from './HomePage';
 import Votepage from './voter/Votepage';
 import ViewCandidates from './voter/ViewCandidates';
+import ResultsPg from './ResultsPg';
 import AdminDashboard from './admin/AdminDashboard';
 import About from './About';
 import VoterDashboard from './voter/VoterDashboard';
@@ -34,6 +35,7 @@ function App() {
           <Route path="/voter" element={<VoterDashboard />} />
           <Route path="/castvote" element={<Votepage />} />
           <Route path="/candidates" element={<ViewCandidates />} />
+          <Route path="/results" element={<ResultsPg />} />
 
           {/* Add routes for voter pages here  */}
         </Route>
