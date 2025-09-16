@@ -8,6 +8,7 @@ body, html {
   overflow-x: hidden;
   width: 100%;
   
+  
 }
 
 .navbar, .hero, .quick-links, div, section {
@@ -215,7 +216,7 @@ body, html {
 /* ===== ViewCandidates Section ===== */
 .candidates-wrapper {
   
-  margin-top:420px;
+  /* margin-top:120px; */
   padding: 6rem 2rem 2rem; /* Top padding to account for fixed navbar */
   text-align: center;
     background: linear-gradient(135deg, #f0f4f8, #e0e7ff);

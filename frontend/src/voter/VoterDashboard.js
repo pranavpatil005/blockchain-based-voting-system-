@@ -19,7 +19,7 @@ export default function  VoterDashboard() {
           <nav className="nav-links">
             <Link to="/" className="active">Home</Link>
             <Link to="/candidates">Candidates</Link>
-            <Link to="/vote">Vote</Link>
+            <Link to="/castvote">Vote</Link>
             <Link to="/results">Results</Link>
           </nav>
 
@@ -77,7 +77,9 @@ export default function  VoterDashboard() {
                 Securely vote for your preferred candidate using blockchain technology. Your vote is encrypted and
                 stored securely.
               </p>
-              <button className="btn-black">Vote Now</button>
+              <button className="btn-black">Vote Now
+                
+              </button>
             </div>
 
             <div className="card">
