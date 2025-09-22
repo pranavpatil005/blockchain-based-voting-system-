@@ -10,11 +10,11 @@ import Votepage from './voter/Votepage';
 import ViewCandidates from './voter/ViewCandidates';
 
 import ResultsPg from './ResultsPg';
-import AdminDashboard from './admin/AdminDashboard';
+
 import About from './About';
 
 import VoterDashboard from './voter/VoterDashboard';
-import About from './About';
+
 
 
 // Admin Pages
