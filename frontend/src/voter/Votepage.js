@@ -5,32 +5,51 @@ import { useUserAuth } from '../context/UserAuthContext'; // <-- import auth hoo
 
 const candidates = [
   {
-    name: 'Sarah Johnson',
+    name: 'Durvankur Sonar',
+    position: 'Mayor',
     party: 'Democratic Party',
     partyColor: 'blue',
-    slogan: 'Building Tomorrow Together',
-    experience: '8 years City Council',
+    image: 'C:\Users\Asus\Downloads\Proj_vote\Repository\blockchain-based-voting-system-\frontend\Candidate images\C1.jpeg',// <-- Add photo path
     bio: 'Experienced city council member focused on sustainable development and community engagement.',
     policies: ['Green Infrastructure', 'Affordable Housing', 'Public Transportation'],
   },
   {
-    name: 'Michael Chen',
+    name: 'Liji Varghese',
+    position: 'Mayor',
     party: 'Republican Party',
     partyColor: 'red',
-    slogan: 'Safe Streets, Strong Economy',
-    experience: '12 years Law Enforcement',
+    image: 'C:\Users\Asus\Downloads\Proj_vote\Repository\blockchain-based-voting-system-\frontend\Candidate images\C2.jpg',
     bio: 'Small business owner and former police chief committed to public safety and economic growth.',
     policies: ['Public Safety', 'Business Development', 'Infrastructure'],
   },
   {
-    name: 'Elena Rodriguez',
+    name: 'Nikita Kurkure',
+    position: 'City Council',
     party: 'Independent',
     partyColor: 'purple',
-    slogan: 'Voice of the People',
-    experience: '6 years Community Organizing',
+    image: 'C:\Users\Asus\Downloads\Proj_vote\Repository\blockchain-based-voting-system-\frontend\Candidate images\C3.jpg',
     bio: 'Community organizer and education advocate fighting for equitable representation.',
     policies: ['Education Reform', 'Healthcare Access', 'Social Justice'],
   },
+  {
+    name: 'Pranav Patil',
+    position: 'City Council',
+    party: 'Democratic Party',
+    partyColor: 'blue',
+    image: 'C:\Users\Asus\Downloads\Proj_vote\Repository\blockchain-based-voting-system-\frontend\Candidate images\C4.jpg',
+    bio: 'Environmental lawyer dedicated to climate action and sustainable city planning.',
+    policies: ['Climate Action', 'Renewable Energy', 'Urban Planning'],
+  },
+  {
+    name: 'Vivek Chaudhari',
+    position: 'School Board',
+    party: 'Republican Party',
+    partyColor: 'red',
+    image: 'C:\Users\Asus\Downloads\Proj_vote\Repository\blockchain-based-voting-system-\frontend\Candidate images\C5.jpg',
+    bio: 'Parent and former teacher advocating for educational excellence and fiscal responsibility.',
+    policies: ['Educational Standards', 'Fiscal Responsibility', 'Parent Rights'],
+  },
+ 
 ];
 
 const Votepage = () => {
@@ -62,7 +81,7 @@ const Votepage = () => {
           <li onClick={() => navigate('/voter')}>Home</li>
           <li onClick={() => navigate('/candidates')}>Candidates</li>
           <li onClick={() => navigate('/castvote')}>Vote</li>
-          <li onClick={() => alert('Showing Results...')}>Results</li>
+          <li onClick={() => navigate("/results")}>Results</li>
         </ul>
         <div className="navbar-right">
           <button className="wallet-button">Connect Wallet</button>

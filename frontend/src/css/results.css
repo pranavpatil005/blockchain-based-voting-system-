@@ -1,0 +1,78 @@
+/* .results-container {
+  padding: 40px 20px;
+  background: #f4f7ff;
+  min-height: 100vh;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.results-title {
+  text-align: center;
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #111827I reviewed the code and found no bugs.
+I reviewed the code and found no bugs.
+I reviewed the code and found no bugs.
+;
+}
+
+.results-subtitle {
+  text-align: center;
+  margin-bottom: 40px;
+  color: #6b7280;
+  font-size: 1rem;
+}
+
+.results-list {
+  max-width: 800px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.result-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+  padding: 20px;
+}
+
+.candidate-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.candidate-name {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.candidate-party {
+  padding: 4px 10px;
+  border-radius: 9999px;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.progress-bar {
+  background: #e5e7eb;
+  border-radius: 8px;
+  height: 12px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.progress-fill {
+  height: 100%;
+  transition: width 0.5s ease;
+}
+
+.vote-info {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  color: #374151;
+} */
