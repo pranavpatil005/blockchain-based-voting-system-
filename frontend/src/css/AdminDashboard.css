@@ -1,209 +1,187 @@
-/* .admin-container {
-  padding: 24px;
-  background-color: #f4f6f8;
+/* General Container */
+.dashboard-container {
+  padding: 20px;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  min-height: 100vh;
+  background-color: #f4f6f8;
 }
 
-.admin-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: #ffffff;
-  padding: 16px 24px;
-  border-radius: 10px;
-  margin-bottom: 20px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+/* Welcome Banner */
+.dashboard-welcome {
+  background: linear-gradient(90deg, #2563eb, #0ea5e9);
+  color: #fff;
+  padding: 40px 20px;
+  text-align: center;
+  border-radius: 12px;
+  margin-bottom: 30px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-.admin-header-left h1 {
-  margin: 0;
+.dashboard-welcome h1 {
+  font-size: 36px;
+  margin-bottom: 10px;
+}
+
+.dashboard-welcome p {
+  font-size: 18px;
+  opacity: 0.9;
+}
+
+/* Section Styles */
+.dashboard-section {
+  margin-bottom: 30px;
+}
+
+.dashboard-section h2 {
   font-size: 24px;
+  margin-bottom: 20px;
   color: #2c3e50;
 }
 
-.admin-header-left p {
-  margin: 4px 0 0;
-  font-size: 14px;
-  color: #7f8c8d;
-}
-
-.admin-header-right {
+/* Status Cards */
+.status-cards {
   display: flex;
-  gap: 12px;
-  align-items: center;
-}
-
-.health-btn {
-  background-color: #2ecc71;
-  border: none;
-  color: white;
-  padding: 8px 14px;
-  border-radius: 6px;
-  cursor: default;
-  font-weight: bold;
-}
-
-.new-election-btn {
-  background-color: #3498db;
-  border: none;
-  color: white;
-  padding: 8px 14px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: bold;
-  transition: background-color 0.3s ease;
-}
-
-.new-election-btn:hover {
-  background-color: #2980b9;
-}
-
-.logout-button {
-  background-color: #e74c3c;
-  border: none;
-  color: white;
-  padding: 8px 14px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: bold;
-  transition: background-color 0.3s ease;
-}
-
-.logout-button:hover {
-  background-color: #c0392b;
-}
-
-.admin-tabs {
-  display: flex;
+  gap: 20px;
   flex-wrap: wrap;
-  gap: 10px;
-  margin-bottom: 24px;
 }
 
-.admin-tabs button {
-  background-color: #ecf0f1;
+.status-card {
+  background: #fff;
+  flex: 1;
+  min-width: 250px;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+/* Elections Cards */
+.elections-cards {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.election-card {
+  background: #fff;
+  flex: 1;
+  min-width: 250px;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.election-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.election-buttons button {
+  flex: 1;
+  padding: 8px;
   border: none;
-  padding: 10px 16px;
   border-radius: 8px;
   cursor: pointer;
-  font-weight: 500;
-  transition: background-color 0.3s;
+  background-color: #2563eb;
+  color: #fff;
+  transition: 0.3s;
 }
 
-.admin-tabs button.active {
-  background-color: #2980b9;
+.election-buttons button:hover {
+  background-color: #0ea5e9;
+}
+
+/* Voter Stats */
+.voter-stats {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.voter-card {
+  background: #fff;
+  flex: 1;
+  min-width: 200px;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  text-align: center;
+}
+
+/* Action Buttons */
+.action-buttons {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.action-buttons button {
+  flex: 1;
+  min-width: 140px;
+  padding: 12px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  background-color: #10b981;
   color: #fff;
   font-weight: bold;
+  transition: 0.3s;
 }
 
-.admin-tabs button:hover:not(.active) {
-  background-color: #d0dce5;
+.action-buttons button:hover {
+  background-color: #059669;
 }
 
-.admin-content {
-  background-color: #fff;
-  padding: 24px;
-  border-radius: 12px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03);
-} */
- /* Admin Dashboard Container */
-.admin-container {
-  padding: 20px;
-  background-color: #f4f6f8;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
+/* Notifications */
+.notifications-list {
+  list-style-type: none;
+  padding: 0;
 }
 
-/* Header */
-.admin-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: #ffffff;
-  padding: 16px 24px;
-  border-radius: 10px;
-  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.08);
-  margin-bottom: 20px;
-}
-
-.admin-header-left h1 {
-  font-size: 22px;
-  margin: 0;
-  color: #2c3e50;
-}
-
-.admin-header-left p {
-  margin: 4px 0 0;
-  font-size: 14px;
-  color: #7f8c8d;
-}
-
-.admin-header-right {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.health-btn {
-  background-color: #2ecc71;
-  border: none;
-  color: white;
-  padding: 6px 12px;
-  border-radius: 5px;
-  font-size: 13px;
-  cursor: default;
-}
-
-.logout-button {
-  background-color: #e74c3c !important;
-  color: white !important;
-  padding: 6px 12px;
-  border-radius: 5px;
-  font-size: 13px;
-  cursor: pointer;
-  transition: background 0.2s ease-in-out;
-}
-
-.logout-button:hover {
-  background-color: #c0392b !important;
-}
-
-/* Navigation Tabs */
-.admin-tabs {
-  display: flex;
-  gap: 12px;
-  margin-bottom: 20px;
-}
-
-.admin-tabs button {
-  padding: 8px 16px;
-  border: none;
+.notifications-list li {
+  background: #fff;
+  padding: 12px 16px;
+  margin-bottom: 10px;
   border-radius: 8px;
-  background: #ecf0f1;
-  color: #2c3e50;
-  cursor: pointer;
-  font-size: 14px;
-  transition: background 0.2s ease-in-out, color 0.2s ease-in-out;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.08);
 }
 
-.admin-tabs button.active {
-  background: #3498db;
-  color: #ffffff;
-  font-weight: bold;
+/* Responsive Media Queries */
+@media (max-width: 1024px) {
+  .status-cards, .elections-cards, .voter-stats, .action-buttons {
+    flex-direction: row;
+    justify-content: center;
+  }
 }
 
-.admin-tabs button:hover {
-  background: #dcdfe1;
+@media (max-width: 768px) {
+  .dashboard-welcome h1 {
+    font-size: 28px;
+  }
+
+  .dashboard-welcome p {
+    font-size: 16px;
+  }
+
+  .status-card, .election-card, .voter-card {
+    min-width: 100%;
+  }
+
+  .election-buttons button, .action-buttons button {
+    flex: 1 1 100%;
+  }
 }
 
-/* Main Content */
-.admin-content {
-  background: #ffffff;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.08);
-  flex-grow: 1;
+@media (max-width: 480px) {
+  .dashboard-container {
+    padding: 10px;
+  }
+
+  .dashboard-welcome {
+    padding: 30px 15px;
+  }
+
+  .dashboard-section h2 {
+    font-size: 20px;
+  }
 }

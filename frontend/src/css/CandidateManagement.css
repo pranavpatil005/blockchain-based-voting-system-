@@ -1,28 +1,33 @@
+/* Container */
 .candidate-management-container {
   padding: 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background: #f0f4f8;
-  border-radius: 10px;
+  min-height: 100vh;
 }
 
+/* Heading */
 .candidate-management-container h2 {
-  font-size: 26px;
+  font-size: 28px;
   margin-bottom: 20px;
   color: #2c3e50;
 }
 
+/* Candidate Form */
 .candidate-form {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 15px;
   background: #fff;
   padding: 20px;
-  border-radius: 10px;
-  margin-bottom: 30px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  border-radius: 12px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
 .candidate-form input,
-.candidate-form textarea {
+.candidate-form textarea,
+.candidate-form select {
   padding: 10px;
   font-size: 16px;
   border: 1px solid #ddd;
@@ -33,7 +38,7 @@
 .candidate-form textarea {
   grid-column: span 2;
   resize: vertical;
-  height: 100px;
+  min-height: 80px;
 }
 
 .candidate-form button {
@@ -52,26 +57,172 @@
   background-color: #2980b9;
 }
 
-.candidate-list {
-  background: #fff;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+/* File Upload */
+.file-upload {
+  grid-column: span 2;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
 }
 
+.file-upload label {
+  font-weight: 600;
+  color: #34495e;
+}
+
+.file-upload input {
+  padding: 6px;
+}
+
+/* Search + Sort */
+.search-sort-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.search-sort-container input,
+.search-sort-container select {
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  flex: 1;
+}
+
+.search-sort-container button {
+  padding: 10px 16px;
+  border-radius: 8px;
+  border: none;
+  background-color: #27ae60;
+  color: white;
+  cursor: pointer;
+}
+
+.search-sort-container button:hover {
+  background-color: #1e8449;
+}
+
+/* Candidate List */
 .candidate-list h3 {
   font-size: 22px;
   margin-bottom: 15px;
+  color: #2c3e50;
 }
 
-.candidate-list ul {
-  list-style: none;
-  padding: 0;
+.candidate-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
 }
 
-.candidate-list li {
-  margin-bottom: 15px;
-  padding: 10px;
-  background: #ecf0f1;
-  border-radius: 8px;
+.candidate-card {
+  background: #fff;
+  padding: 15px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  position: relative;
+  text-align: center;
+}
+
+.candidate-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 10px;
+}
+
+.party-logo {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.candidate-card h4 {
+  margin: 5px 0;
+  font-size: 18px;
+  color: #34495e;
+}
+
+.candidate-card p {
+  margin: 4px 0;
+  font-size: 14px;
+  color: #555;
+}
+
+.status {
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-weight: bold;
+  color: white;
+}
+
+.status.pending {
+  background-color: #f39c12;
+}
+
+.status.approved {
+  background-color: #27ae60;
+}
+
+.status.rejected {
+  background-color: #e74c3c;
+}
+
+/* Card actions */
+.card-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+.card-actions button {
+  padding: 6px 10px;
+  font-size: 14px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+}
+
+.card-actions .delete-btn {
+  background-color: #e74c3c;
+  color: white;
+}
+
+.card-actions button:hover {
+  opacity: 0.85;
+}
+
+/* View Manifesto */
+.view-manifesto-btn {
+  margin-top: 10px;
+  padding: 6px 12px;
+  font-size: 14px;
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.view-manifesto-btn:hover {
+  background-color: #2980b9;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .candidate-form {
+    grid-template-columns: 1fr;
+  }
+
+  .search-sort-container {
+    flex-direction: column;
+  }
 }

@@ -1,14 +1,17 @@
 .explorer-container {
   padding: 24px;
-  background-color: #ffffff;
+  background-color: #fff;
   border-radius: 12px;
-  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  max-width: 1000px;
+  margin: auto;
+  font-family: 'Segoe UI', sans-serif;
 }
 
 .explorer-container h2 {
   font-size: 28px;
-  margin-bottom: 8px;
   color: #2c3e50;
+  margin-bottom: 8px;
 }
 
 .note {
@@ -17,13 +20,76 @@
   margin-bottom: 20px;
 }
 
+/* 3D Blockchain Animation */
+.blockchain-3d {
+  perspective: 1000px;
+  margin-bottom: 20px;
+  overflow-x: auto;
+}
+
+.chain {
+  display: flex;
+  gap: 20px;
+  transform-style: preserve-3d;
+  animation: rotateChain 15s linear infinite;
+}
+
+.block {
+  width: 120px;
+  height: 80px;
+  background: linear-gradient(135deg, #3498db, #2ecc71);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-weight: bold;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+  transform: rotateY(0deg);
+  transition: transform 0.5s ease;
+}
+
+.block:hover {
+  transform: rotateY(15deg) translateZ(20px);
+}
+
+/* Rotate animation */
+@keyframes rotateChain {
+  0% { transform: rotateY(0deg); }
+  100% { transform: rotateY(360deg); }
+}
+
+/* Filters */
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.filters input {
+  flex: 1;
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+}
+
+.filters select {
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+}
+
+/* Table Styles */
 .explorer-table {
   width: 100%;
   border-collapse: collapse;
+  animation: fadeIn 0.5s ease-in-out;
 }
 
-.explorer-table th,
-.explorer-table td {
+.explorer-table th, .explorer-table td {
   border: 1px solid #ecf0f1;
   padding: 10px;
   text-align: center;
@@ -42,9 +108,74 @@
 
 .explorer-table tr:hover {
   background-color: #eafaf1;
+  transform: scale(1.01);
+  transition: all 0.3s ease;
 }
+
+.transaction-row {
+  animation: slideIn 0.6s ease-out;
+}
+
+.status-badge {
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: bold;
+  color: #fff;
+  text-transform: uppercase;
+}
+
+.status-badge.confirmed { background-color: #27ae60; }
+.status-badge.pending { background-color: #f39c12; }
+.status-badge.failed { background-color: #e74c3c; }
 
 .loading {
   font-size: 16px;
   color: #34495e;
+  text-align: center;
+  margin-top: 20px;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+@keyframes slideIn {
+  0% { opacity: 0; transform: translateY(-20px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .chain {
+    animation: none;
+    flex-wrap: wrap;
+  }
+
+  .explorer-table, .explorer-table thead, .explorer-table tbody, .explorer-table th, .explorer-table td, .explorer-table tr {
+    display: block;
+  }
+
+  .explorer-table tr {
+    margin-bottom: 15px;
+  }
+
+  .explorer-table td {
+    text-align: right;
+    padding-left: 50%;
+    position: relative;
+  }
+
+  .explorer-table td::before {
+    content: attr(data-label);
+    position: absolute;
+    left: 15px;
+    width: 45%;
+    text-align: left;
+    font-weight: bold;
+  }
+
+  .filters { flex-direction: column; }
 }
