@@ -51,11 +51,12 @@
 // export default AdminLayout;
 
 import React, { useState } from "react";
-import { NavLink, Outlet } from "react-router-dom";
+import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import "../css/AdminLayout.css";
 
 const AdminLayout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const navigate = useNavigate();
 
   const handleLinkClick = () => {
     setSidebarOpen(false);
@@ -75,15 +76,21 @@ const AdminLayout = () => {
             className="menu-btn"
             onClick={() => setSidebarOpen(!sidebarOpen)}
           >
-            &#9776; {/* Hamburger menu */}
+            &#9776; {/* Hamburger menu (black) */}
           </button>
           <div className="admin-header-text">
-            <h1>Blockchain Voting Admin</h1>
-            <p>Secure, transparent, and decentralized voting management</p>
+            <h1>Admin Panel</h1>
+          
           </div>
         </div>
 
         <div className="admin-header-right">
+          <button
+            className="new-election-btn"
+            onClick={() => navigate("/admin/createelection")}
+          >
+            ➕ New Election
+          </button>
           <button className="health-btn">🟢 Network Healthy</button>
           <button
             className="logout-button"
