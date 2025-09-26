@@ -88,9 +88,7 @@ const AdminLogin = () => {
 
           <button type="submit" style={{ backgroundColor: 'rgb(40, 163, 182)' }}>Login</button>
         </form>
-        <p className="subtitle">
-          Don't have an account? <a href="/adminsignup">Sign up</a> here
-        </p>
+       
       </div>
     </div>
   );
