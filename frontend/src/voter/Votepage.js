@@ -71,24 +71,71 @@ const Votepage = () => {
   };
 
   return (
-    <div className="vote-page">
-      {/* Navbar */}
-      <nav className="navbar">
-        <div className="navbar-left">
-          <span className="logo">📊 VOTECHAIN</span>
-        </div>
-        <ul className="navbar-center">
-          <li onClick={() => navigate('/voter')}>Home</li>
-          <li onClick={() => navigate('/candidates')}>Candidates</li>
-          <li onClick={() => navigate('/castvote')}>Vote</li>
+    <div className="vote-page"  style={{
+    paddingTop: "1450px", 
+  }}>
+      <nav
+    style={{
+      position: "fixed",
+      top: 0,
+      left: 0,
+      width: "100%",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "space-between",
+      backgroundColor: "#2c3e50",
+      padding: "12px 24px",
+      color: "white",
+      fontFamily: "Arial, sans-serif",
+      zIndex: 1000, // keep navbar on top
+      boxShadow: "0 2px 6px rgba(0,0,0,0.3)",
+    }}
+  >
+        {/* Left Logo */}
+        <div style={{ fontSize: "20px", fontWeight: "bold" }}>📊 VOTECHAIN</div>
+
+        {/* Center Menu */}
+        <ul
+          style={{
+            display: "flex",
+            listStyle: "none",
+            gap: "24px",
+            margin: 0,
+            padding: 0,
+            fontSize: "16px",
+            cursor: "pointer",
+          }}
+        >
+          <li onClick={() => navigate("/voter")}>Home</li>
+          <li onClick={() => navigate("/candidates")}>Candidates</li>
+          <li onClick={() => navigate("/castvote")}>Vote</li>
           <li onClick={() => navigate("/results")}>Results</li>
         </ul>
-        <div className="navbar-right">
-          <button className="wallet-button">Connect Wallet</button>
+
+        {/* Right Buttons */}
+        <div style={{ display: "flex", gap: "12px" }}>
           <button
-            className="logout-button"
-            style={{ backgroundColor: '#e74c3c', color: '#fff', border: 'none' }}
+            style={{
+              backgroundColor: "#27ae60",
+              color: "white",
+              border: "none",
+              padding: "8px 14px",
+              borderRadius: "5px",
+              cursor: "pointer",
+            }}
+          >
+            Connect Wallet
+          </button>
+          <button
             onClick={handleLogout}
+            style={{
+              backgroundColor: "#e74c3c",
+              color: "white",
+              border: "none",
+              padding: "8px 14px",
+              borderRadius: "5px",
+              cursor: "pointer",
+            }}
           >
             Logout
           </button>

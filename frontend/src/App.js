@@ -2,17 +2,13 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import VoterLogin from './authentication/VoterLogin';
 import AdminLogin from './authentication/AdminLogin';
-import AdminSignup from './authentication/AdminSignup';
 import PrivateRoute from './components/PrivateRoute';
 import UserPrivateRoute from './components/UserPrivateRoute';
 import HomePage from './HomePage';
 import Votepage from './voter/Votepage';
 import ViewCandidates from './voter/ViewCandidates';
-
-import ResultsPg from './ResultsPg';
-
+import ResultsPg from './voter/ResultsPg';
 import About from './About';
-
 import VoterDashboard from './voter/VoterDashboard';
 
 
@@ -32,6 +28,8 @@ import LiveVotingMonitor from './admin/LiveVotingMonitor';
 import SmartContractControl from './admin/SmartContractControl';
 import SystemSettings from './admin/SystemSettings';
 import VoterManagement from './admin/VoterManagement';
+
+
 function App() {
   return (
     <Router>
@@ -40,7 +38,6 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/voterlogin" element={<VoterLogin />} />
         <Route path="/adminlogin" element={<AdminLogin />} />
-        <Route path="/adminsignup" element={<AdminSignup />} />
         <Route path="/about" element={<About />} />
 
         {/* Admin Routes */}

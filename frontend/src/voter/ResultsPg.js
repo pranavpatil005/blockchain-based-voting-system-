@@ -1,86 +1,13 @@
-
-// import React from "react";
-// import { useNavigate } from "react-router-dom";
-// import "./css/resultsPg.css";
-
-// // Sample static data (replace with blockchain data later)
-// const sampleCandidates = [
-//   { id: 1, name: "Sarah Johnson", party: "Democratic Party", votes: 120 },
-//   { id: 2, name: "Michael Chen", party: "Republican Party", votes: 95 },
-//   { id: 3, name: "Aisha Khan", party: "Independent", votes: 75 },
-//   { id: 4, name: "Raj Patel", party: "Green Party", votes: 50 },
-//   { id: 5, name: "Emily Davis", party: "Libertarian", votes: 40 },
-// ];
-
-// export default function ResultsPg() {
-//   const navigate = useNavigate();
-
-//   const handleLogout = () => {
-//     alert("Logged out!");
-//     navigate("/voterlogin");
-//   };
-
-//   // Calculate total votes
-//   const totalVotes = sampleCandidates.reduce((sum, c) => sum + c.votes, 0);
-
-//   return (
-//     <div className="results-page">
-//       <nav className="navbar">
-//         <div className="navbar-left">
-//           <span className="logo">📊 VOTECHAIN</span>
-//         </div>
-
-//         <ul className="navbar-center">
-//           <li onClick={() => navigate("/voter")}>Home</li>
-//           <li onClick={() => navigate("/candidates")}>Candidates</li>
-//           <li onClick={() => navigate("/castvote")}>Vote</li>
-//           <li onClick={() => navigate("/results")}>Results</li>
-//         </ul>
-
-//         <div className="navbar-right">
-//           <button className="wallet-button">Connect Wallet</button>
-//           <button className="logout-button" onClick={handleLogout}>
-//             Logout
-//           </button>
-//         </div>
-//       </nav>
-
-//       <div className="results-container">
-//         <h1>Election Results</h1>
-//         <p>Total Votes: {totalVotes}</p>
-
-//         <div className="results-list">
-//           {sampleCandidates.map((candidate) => {
-//             const percentage = ((candidate.votes / totalVotes) * 100).toFixed(1);
-//             return (
-//               <div key={candidate.id} className="result-card">
-//                 <h2>{candidate.name}</h2>
-//                 <p className="party">{candidate.party}</p>
-//                 <p className="votes">{candidate.votes} votes ({percentage}%)</p>
-//                 <div className="progress-bar">
-//                   <div
-//                     className="progress"
-//                     style={{ width: `${percentage}%` }}
-//                   ></div>
-//                 </div>
-//               </div>
-//             );
-//           })}
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import "./css/resultsPg.css";
+import "../css/resultsPg.css";
 
 const sampleCandidates = [
-  { id: 1, name: "Durvankur Sonar", party: "Democratic Party", votes: 1542 },
-  { id: 2, name: "Lji Varghese", party: "Republican Party", votes: 1285 },
-  { id: 3, name: "Nikita Kurkure", party: "Independent", votes: 1323 },
-  { id: 4, name: "Pranav Patil", party: "Democratic Party", votes: 1451 },
-  { id: 5, name: "Vivek Chaudhari", party: "Republican Party", votes: 1345 },
+  { id: 1, name: "Durvankur Sonar", party: "BJP", votes: 1542 },
+  { id: 2, name: "Lji Varghese", party: "AAP", votes: 1285 },
+  { id: 3, name: "Nikita Kurkure", party: "Shivsena", votes: 1323 },
+  { id: 4, name: "Pranav Patil", party: "Rashtravadi Congress", votes: 1451 },
+  { id: 5, name: "Vivek Chaudhari", party: "Congress", votes: 1345 },
 ];
 
 export default function ResultsPg() {
@@ -96,23 +23,72 @@ export default function ResultsPg() {
   const turnout = ((totalVotes / eligibleVoters) * 100).toFixed(1);
 
   return (
-    <div className="results-page">
-      {/* keep navbar same */}
-      <nav className="navbar">
-        <div className="navbar-left">
-          <span className="logo">VOTECHAIN</span>
-        </div>
+    <div className="results-page"  style={{
+    paddingTop: "350px", 
+  }}>
+      <nav
+    style={{
+      position: "fixed",
+      top: 0,
+      left: 0,
+      width: "100%",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "space-between",
+      backgroundColor: "#2c3e50",
+      padding: "12px 24px",
+      color: "white",
+      fontFamily: "Arial, sans-serif",
+      zIndex: 1000, // keep navbar on top
+      boxShadow: "0 2px 6px rgba(0,0,0,0.3)",
+    }}
+  >
+        {/* Left Logo */}
+        <div style={{ fontSize: "20px", fontWeight: "bold" }}>📊 VOTECHAIN</div>
 
-        <ul className="navbar-center">
+        {/* Center Menu */}
+        <ul
+          style={{
+            display: "flex",
+            listStyle: "none",
+            gap: "24px",
+            margin: 0,
+            padding: 0,
+            fontSize: "16px",
+            cursor: "pointer",
+          }}
+        >
           <li onClick={() => navigate("/voter")}>Home</li>
           <li onClick={() => navigate("/candidates")}>Candidates</li>
           <li onClick={() => navigate("/castvote")}>Vote</li>
           <li onClick={() => navigate("/results")}>Results</li>
         </ul>
 
-        <div className="navbar-right">
-          <button className="wallet-button">Connect Wallet</button>
-          <button className="logout-button" onClick={handleLogout}>
+        {/* Right Buttons */}
+        <div style={{ display: "flex", gap: "12px" }}>
+          <button
+            style={{
+              backgroundColor: "#27ae60",
+              color: "white",
+              border: "none",
+              padding: "8px 14px",
+              borderRadius: "5px",
+              cursor: "pointer",
+            }}
+          >
+            Connect Wallet
+          </button>
+          <button
+            onClick={handleLogout}
+            style={{
+              backgroundColor: "#e74c3c",
+              color: "white",
+              border: "none",
+              padding: "8px 14px",
+              borderRadius: "5px",
+              cursor: "pointer",
+            }}
+          >
             Logout
           </button>
         </div>
@@ -184,7 +160,6 @@ export default function ResultsPg() {
 
         {/* Actions */}
         <div className="actions-row">
-          <button className="btn">Export Results</button>
           <button className="btn ghost" onClick={() => navigate("/voter")}>
             Return to Home
           </button>

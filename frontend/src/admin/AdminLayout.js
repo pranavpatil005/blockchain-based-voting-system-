@@ -106,14 +106,14 @@ const AdminLayout = () => {
         <NavLink to="/admin/dashboard" className="sidebar-link" onClick={handleLinkClick}>Dashboard</NavLink>
         <NavLink to="/admin/createelection" className="sidebar-link" onClick={handleLinkClick}>Create Election</NavLink>
         <NavLink to="/admin/candidates" className="sidebar-link" onClick={handleLinkClick}>Candidates</NavLink>
-        <NavLink to="/admin/management" className="sidebar-link" onClick={handleLinkClick}>Voters</NavLink>
-        <NavLink to="/admin/smartcontract" className="sidebar-link" onClick={handleLinkClick}>Smart Contracts</NavLink>
+        {/* <NavLink to="/admin/management" className="sidebar-link" onClick={handleLinkClick}>Voters</NavLink> */}
+        {/* <NavLink to="/admin/smartcontract" className="sidebar-link" onClick={handleLinkClick}>Smart Contracts</NavLink> */}
         <NavLink to="/admin/monitor" className="sidebar-link" onClick={handleLinkClick}>Live Monitor</NavLink>
         <NavLink to="/admin/results" className="sidebar-link" onClick={handleLinkClick}>Election Results</NavLink>
         <NavLink to="/admin/blockchain" className="sidebar-link" onClick={handleLinkClick}>Blockchain Explorer</NavLink>
-        <NavLink to="/admin/settings" className="sidebar-link" onClick={handleLinkClick}>System Settings</NavLink>
+        {/* <NavLink to="/admin/settings" className="sidebar-link" onClick={handleLinkClick}>System Settings</NavLink>
         <NavLink to="/admin/analytics" className="sidebar-link" onClick={handleLinkClick}>Analytics Reports</NavLink>
-        <NavLink to="/admin/auditlogs" className="sidebar-link" onClick={handleLinkClick}>Audit Logs</NavLink>
+        <NavLink to="/admin/auditlogs" className="sidebar-link" onClick={handleLinkClick}>Audit Logs</NavLink> */}
         <NavLink to="/admin/helpdesk" className="sidebar-link" onClick={handleLinkClick}>Help Desk</NavLink>
       </aside>
 

@@ -114,7 +114,7 @@ const BlockchainExplorer = () => {
       <p className="note">Track transactions recorded on the blockchain in real-time</p>
 
       {/* 3D Blockchain Visual */}
-      <div className="blockchain-3d">
+      {/* <div className="blockchain-3d">
         <div className="chain">
           {[...Array(6)].map((_, i) => (
             <div key={i} className="block">
@@ -122,7 +122,7 @@ const BlockchainExplorer = () => {
             </div>
           ))}
         </div>
-      </div>
+      </div> */}
 
       {/* Filters */}
       <div className="filters">
