@@ -35,7 +35,7 @@ const AdminDashboard = () => {
 
      
 
-      {/* Elections Overview */}
+      {/* Elections Overview
       <section className="dashboard-section elections-section">
         <h2>Elections Overview</h2>
         <div className="elections-cards">
@@ -49,7 +49,7 @@ const AdminDashboard = () => {
             </div>
           ))}
         </div>
-      </section>
+      </section> */}
 
       {/* Voter Overview */}
       <section className="dashboard-section voter-section">

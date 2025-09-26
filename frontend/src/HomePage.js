@@ -1,62 +1,69 @@
 // src/App.js
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const App = () => {
   const navigate = useNavigate();
-  const handleLogin = () => {
-    navigate("/voterlogin");
-  };
-  const calculateTimeLeft = () => {
-    const now = new Date();
-    const endOfDay = new Date();
-    endOfDay.setHours(23, 59, 59, 999); // End of day
+  const [activeElection, setActiveElection] = useState(null);
+  const [timeLeft, setTimeLeft] = useState(null);
 
-    const difference = endOfDay.getTime() - now.getTime();
+  const handleLogin = () => navigate("/voterlogin");
 
-    if (difference > 0) {
-      return {
-        days: Math.floor(difference / (1000 * 60 * 60 * 24)),
-        hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
-        minutes: Math.floor((difference / 1000 / 60) % 60),
-        seconds: Math.floor((difference / 1000) % 60),
-      };
-    }
-    return { days: 0, hours: 0, minutes: 0, seconds: 0 };
-  };
+  const calculateTimeLeft = (endDate) => {
+  const now = new Date();
+  const end = new Date(endDate + 'T23:59:59'); // consider endDate till 23:59:59
+  const difference = end.getTime() - now.getTime();
 
-  const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
+  if (difference > 0) {
+    return {
+      days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+      hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
+      minutes: Math.floor((difference / 1000 / 60) % 60),
+      seconds: Math.floor((difference / 1000) % 60),
+    };
+  }
+  return null;
+};
+
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setTimeLeft(calculateTimeLeft());
+  axios.get("http://localhost:5000/api/active-election-candidates")
+    .then(res => {
+      if (res.data.success) {
+        setActiveElection({
+          name: res.data.electionName,
+          from_date: res.data.from_date,
+          to_date: res.data.to_date,
+          candidates: res.data.candidates
+        });
+        setTimeLeft(calculateTimeLeft(res.data.to_date));
+      } else {
+        setActiveElection(null);
+        setTimeLeft(null);
+      }
+    })
+    .catch(() => {
+      setActiveElection(null);
+      setTimeLeft(null);
+    });
+}, []);
+
+  // Timer update
+  useEffect(() => {
+    if (!activeElection) return;
+
+    const timer = setInterval(() => {
+      const updatedTime = calculateTimeLeft(activeElection.to_date);
+      setTimeLeft(updatedTime);
+
+      if (!updatedTime) clearInterval(timer);
     }, 1000);
 
-    return () => clearTimeout(timer);
-  });
+    return () => clearInterval(timer);
+  }, [activeElection]);
 
-  const timerComponents = [];
-  const timeUnits = [
-    { label: 'DAYS', value: timeLeft.days, color: '#DC3545' },
-    { label: 'HOURS', value: timeLeft.hours, color: '#007BFF' },
-    { label: 'MINS', value: timeLeft.minutes, color: '#DC3545' },
-    { label: 'SEC', value: timeLeft.seconds, color: '#007BFF' },
-  ];
-
-  timeUnits.forEach((unit) => {
-    timerComponents.push(
-      <div key={unit.label} style={styles.timeUnitContainer}>
-        <div style={styles.numberBox}>
-          <span style={{ ...styles.number, color: unit.color }}>
-            {String(unit.value).padStart(2, '0')}
-          </span>
-          <div style={{ ...styles.underline, backgroundColor: unit.color }}></div>
-        </div>
-        <div style={styles.label}>{unit.label}</div>
-      </div>
-    );
-  });
-
+  
   return (
     <div>
       {/* Header Start */}
@@ -89,13 +96,10 @@ const App = () => {
               <a href="donation.html" className="btn-default" >
                 Connect Wallet
               </a>
-<a
-  onClick={handleLogin}
-  className="btn-default btn-highlighted"
-  style={{ marginLeft: '8px', cursor: 'pointer' }}
->
-  Register to Vote
-</a>
+              <a onClick={handleLogin} className="btn-default" style={{ marginLeft: '8px', cursor: 'pointer' }} >
+                Register to Vote
+              </a>
+
 
             </div>
           </nav>
@@ -147,30 +151,70 @@ const App = () => {
                   </p>
                 </div>
                 <div className="header-btn">
-                  <a href="contact.html" class="btn-default btn-highlighted">Register to Vote</a>
+                  <a onClick={handleLogin} class="btn-default btn-highlighted">Register to Vote</a>
                 </div>
-                <div className="wow fadeInUp" data-wow-delay="0.4s">
-                  {timeLeft.days === 0 &&
-                    timeLeft.hours === 0 &&
-                    timeLeft.minutes === 0 &&
-                    timeLeft.seconds === 0 ? (
-                    <p style={{ color: 'red', fontWeight: 'bold' }}>ELECTION ENDED</p>
-                  ) : (
+                <div>
+                  {/* Election Status */}
+                  <div style={{ textAlign: 'center', marginTop: '20px' }}>
+                    {activeElection && timeLeft ? (
+                      <>
+                        <p style={{
+                          color: '#27ae60',
+                          fontWeight: 'bold',
+                          fontSize: '22px',
+                          letterSpacing: '1px',
+                          textShadow: '1px 1px 2px rgba(0,0,0,0.2)'
+                        }}>
+                          🚨 ELECTION ONGOING 🚨
+                        </p>
 
-                    <p style={{ color: 'green', fontWeight: 'bold' }}>ELECTION ONGOING  </p>
+                        {/* Countdown Timer */}
+                        <div style={{ display: 'flex', justifyContent: 'center', gap: '15px', marginTop: '10px' }}>
+                          {Object.entries(timeLeft).map(([unit, value]) => (
+                            <div key={unit} style={{ textAlign: 'center' }}>
+                              <div style={{ fontSize: '20px', fontWeight: 'bold' }}>{String(value).padStart(2, '0')}</div>
+                              <div>{unit.toUpperCase()}</div>
+                            </div>
+                          ))}
+                        </div>
 
-                  )}
-                </div>
-
-
-
-
-                <div className="col-lg-12" style={{ display: 'flex', justifyContent: 'center' }}>
-                  {/* Countdown Timer */}
-                  <div className="wow fadeInUp" data-wow-delay="0.6s" style={styles.countdownContainer}>
-                    {timerComponents.length ? timerComponents : <span>Time's up!</span>}
+                        {/* Vote Button */}
+                        <div style={{ marginTop: '15px' }}>
+                          <button className="btn-primary" onClick={() => navigate("/castvote")}>Vote Now</button>
+                        </div>
+                      </>
+                    ) : (
+                      <p style={{
+                        color: 'red',
+                        fontWeight: 'bold',
+                        fontSize: '22px',
+                        letterSpacing: '1px',
+                        textShadow: '1px 1px 2px rgba(0,0,0,0.2)'
+                      }}>
+                        ELECTION ENDED
+                      </p>
+                    )}
                   </div>
                 </div>
+
+
+
+
+
+                <span
+                  style={{ color: "white", cursor: "pointer" }}
+                  onClick={() => {
+                    const element = document.getElementById("resultsSection");
+                    if (element) {
+                      element.scrollIntoView({ behavior: "smooth" });
+                    }
+                  }}
+                >
+                  See Results!
+                </span>
+
+
+
 
               </div>
             </div>
@@ -251,7 +295,7 @@ const App = () => {
 
 
       {/* Our Supporters Section Start */}
-      <div className="our-supporters parallaxie">
+      <div className="our-supporters parallaxie" id="resultsSection">
         <div className="container">
           <div className="row section-row">
             <div className="col-lg-12">

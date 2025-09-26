@@ -18,7 +18,7 @@ const db = mysql.createConnection({
   user: 'root',
   password: '',  // your MySQL password
   database: 'evoting',
-  port: 3306    
+  port: 3307  
 });
 
 db.connect((err) => {
@@ -82,7 +82,7 @@ app.get('/api/elections', (req, res) => {
 
 
 
-// Get all candidates with election name
+// Get ands store all candidates with election name
 app.post('/api/candidates', (req, res) => {
   console.log("Received candidate data:", req.body); // <-- add this
 
@@ -114,6 +114,118 @@ app.get('/api/candidates', (req, res) => {
   db.query(sql, (err, result) => {
     if (err) return res.status(500).json({ success: false, message: err.message });
     res.json(result);
+  });
+});
+
+
+
+// Increment vote count for a candidate
+app.post('/api/cast-vote', (req, res) => {
+  const { candidate_id } = req.body;
+
+  if (!candidate_id) {
+    return res.status(400).json({ success: false, message: "Candidate ID is required" });
+  }
+
+  const sql = `UPDATE candidates SET votes = votes + 1 WHERE id = ?`;
+
+  db.query(sql, [candidate_id], (err, result) => {
+    if (err) return res.status(500).json({ success: false, message: err.message });
+    res.json({ success: true, message: "Vote recorded successfully" });
+  });
+});
+
+
+app.get('/api/active-election-candidates', (req, res) => {
+  const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+
+  const electionSql = `SELECT * FROM election WHERE from_date <= ? AND to_date >= ? LIMIT 1`;
+  db.query(electionSql, [today, today], (err, electionResult) => {
+    if (err) return res.status(500).json({ success: false, message: err.message });
+
+    if (electionResult.length === 0) {
+      return res.json({ success: false, message: "No active election today" });
+    }
+
+    const election = electionResult[0];
+
+    const candidatesSql = `SELECT id, name, votes FROM candidates WHERE election_id = ? ORDER BY votes DESC`;
+    db.query(candidatesSql, [election.id], (err, candidatesResult) => {
+      if (err) return res.status(500).json({ success: false, message: err.message });
+
+      const candidates = candidatesResult.map(c => ({
+        id: c.id,
+        name: c.name,
+        votes: Number(c.votes) || 0
+      }));
+
+      // Send from_date and to_date for frontend timer
+      res.json({
+        success: true,
+        electionName: election.name,
+        from_date: election.from_date,
+        to_date: election.to_date,
+        candidates
+      });
+    });
+  });
+});
+
+
+
+
+// Get latest ended election with candidates and votes
+app.get('/api/latest-ended-election', (req, res) => {
+  const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+
+  // Get latest election whose to_date is before today
+  const electionSql = `
+    SELECT * 
+    FROM election 
+    WHERE to_date < ? 
+    ORDER BY to_date DESC 
+    LIMIT 1
+  `;
+
+  db.query(electionSql, [today], (err, electionResult) => {
+    if (err) return res.status(500).json({ success: false, message: err.message });
+
+    if (electionResult.length === 0) {
+      return res.json({ success: false, message: "No past elections found" });
+    }
+
+    const election = electionResult[0];
+
+    // Get candidates for this election
+    const candidatesSql = `
+      SELECT id, name, votes, party
+      FROM candidates 
+      WHERE election_id = ?
+      ORDER BY votes DESC
+    `;
+
+    db.query(candidatesSql, [election.id], (err, candidatesResult) => {
+      if (err) return res.status(500).json({ success: false, message: err.message });
+
+      const candidates = candidatesResult.map(c => ({
+        id: c.id,
+        name: c.name,
+        party: c.party,
+        votes: Number(c.votes) || 0
+      }));
+
+      res.json({
+        success: true,
+        election: {
+          id: election.id,
+          name: election.name,
+          from_date: election.from_date,
+          to_date: election.to_date,
+          description: election.description,
+          candidates
+        }
+      });
+    });
   });
 });
 
