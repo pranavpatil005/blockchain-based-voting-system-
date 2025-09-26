@@ -1,106 +1,101 @@
-import React, { useState } from 'react';
-import '../css/Votepage.css';
-import { useNavigate } from 'react-router-dom';
-import { useUserAuth } from '../context/UserAuthContext'; // <-- import auth hook
-
-const candidates = [
-  {
-    name: 'Durvankur Sonar',
-    position: 'Mayor',
-    party: 'Democratic Party',
-    partyColor: 'blue',
-    image: 'C:\Users\Asus\Downloads\Proj_vote\Repository\blockchain-based-voting-system-\frontend\Candidate images\C1.jpeg',// <-- Add photo path
-    bio: 'Experienced city council member focused on sustainable development and community engagement.',
-    policies: ['Green Infrastructure', 'Affordable Housing', 'Public Transportation'],
-  },
-  {
-    name: 'Liji Varghese',
-    position: 'Mayor',
-    party: 'Republican Party',
-    partyColor: 'red',
-    image: 'C:\Users\Asus\Downloads\Proj_vote\Repository\blockchain-based-voting-system-\frontend\Candidate images\C2.jpg',
-    bio: 'Small business owner and former police chief committed to public safety and economic growth.',
-    policies: ['Public Safety', 'Business Development', 'Infrastructure'],
-  },
-  {
-    name: 'Nikita Kurkure',
-    position: 'City Council',
-    party: 'Independent',
-    partyColor: 'purple',
-    image: 'C:\Users\Asus\Downloads\Proj_vote\Repository\blockchain-based-voting-system-\frontend\Candidate images\C3.jpg',
-    bio: 'Community organizer and education advocate fighting for equitable representation.',
-    policies: ['Education Reform', 'Healthcare Access', 'Social Justice'],
-  },
-  {
-    name: 'Pranav Patil',
-    position: 'City Council',
-    party: 'Democratic Party',
-    partyColor: 'blue',
-    image: 'C:\Users\Asus\Downloads\Proj_vote\Repository\blockchain-based-voting-system-\frontend\Candidate images\C4.jpg',
-    bio: 'Environmental lawyer dedicated to climate action and sustainable city planning.',
-    policies: ['Climate Action', 'Renewable Energy', 'Urban Planning'],
-  },
-  {
-    name: 'Vivek Chaudhari',
-    position: 'School Board',
-    party: 'Republican Party',
-    partyColor: 'red',
-    image: 'C:\Users\Asus\Downloads\Proj_vote\Repository\blockchain-based-voting-system-\frontend\Candidate images\C5.jpg',
-    bio: 'Parent and former teacher advocating for educational excellence and fiscal responsibility.',
-    policies: ['Educational Standards', 'Fiscal Responsibility', 'Parent Rights'],
-  },
- 
-];
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { useUserAuth } from "../context/UserAuthContext";
 
 const Votepage = () => {
+  const [candidates, setCandidates] = useState([]);
+  const [electionName, setElectionName] = useState("");
   const [selected, setSelected] = useState(null);
-  const [showConfirm, setShowConfirm] = useState(false);
+  const [hasVoted, setHasVoted] = useState(false);
   const navigate = useNavigate();
-  const { userLogout } = useUserAuth(); // <-- get logout function here
-
-  const openConfirm = () => selected !== null && setShowConfirm(true);
-
-  const confirmVote = () => {
-    alert(`✅ Your vote for ${candidates[selected].name} has been recorded!`);
-    setShowConfirm(false);
-  };
+  const { userLogout } = useUserAuth();
 
   const handleLogout = () => {
-    userLogout(); // ✅ logout function
-    navigate("/"); // redirect to login
+    userLogout();
+    navigate("/");
+  };
+
+  useEffect(() => {
+    // 1️⃣ Get all elections
+    axios
+      .get("http://localhost:5000/api/elections")
+      .then((res) => {
+        const today = new Date();
+        const activeElection = res.data.elections.find((e) => {
+          const from = new Date(e.from_date);
+          const to = new Date(e.to_date);
+          return today >= from && today <= to;
+        });
+
+        if (!activeElection) {
+          setElectionName("No Active Election Today");
+          setCandidates([]);
+          return;
+        }
+
+        setElectionName(activeElection.name);
+
+        // 2️⃣ Fetch all candidates and filter only for active election
+        axios
+          .get("http://localhost:5000/api/candidates")
+          .then((res) => {
+            const filteredCandidates = res.data.filter(
+              (c) => c.election_id === activeElection.id
+            );
+            setCandidates(filteredCandidates);
+          })
+          .catch((err) => console.error(err));
+      })
+      .catch((err) => console.error(err));
+  }, []);
+
+  const confirmVote = () => {
+    if (selected !== null) {
+      const candidateId = candidates[selected].id;
+
+      axios
+        .post("http://localhost:5000/api/cast-vote", { candidate_id: candidateId })
+        .then((res) => {
+          if (res.data.success) {
+            alert(`✅ Your vote for ${candidates[selected].name} has been recorded on blockchain!`);
+            setHasVoted(true);
+          } else {
+            alert("❌ Failed to cast vote");
+          }
+        })
+        .catch((err) => {
+          console.error(err);
+          alert("❌ Error occurred while casting vote");
+        });
+    }
   };
 
   return (
-    <div className="vote-page"  style={{
-    paddingTop: "1450px", 
-  }}>
+    <div style={{ paddingTop: "100px", fontFamily: "Arial, sans-serif" }}>
       <nav
-    style={{
-      position: "fixed",
-      top: 0,
-      left: 0,
-      width: "100%",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "space-between",
-      backgroundColor: "#2c3e50",
-      padding: "12px 24px",
-      color: "white",
-      fontFamily: "Arial, sans-serif",
-      zIndex: 1000, // keep navbar on top
-      boxShadow: "0 2px 6px rgba(0,0,0,0.3)",
-    }}
-  >
-        {/* Left Logo */}
+        style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          width: "100%",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          backgroundColor: "#2c3e50",
+          padding: "12px 24px",
+          color: "white",
+          boxShadow: "0 2px 6px rgba(0,0,0,0.3)",
+          zIndex: 1000,
+        }}
+      >
         <div style={{ fontSize: "20px", fontWeight: "bold" }}>📊 VOTECHAIN</div>
-
-        {/* Center Menu */}
         <ul
           style={{
             display: "flex",
             listStyle: "none",
             gap: "24px",
-            margin: 0,
+            marginRight: "100px",
             padding: 0,
             fontSize: "16px",
             cursor: "pointer",
@@ -109,10 +104,7 @@ const Votepage = () => {
           <li onClick={() => navigate("/voter")}>Home</li>
           <li onClick={() => navigate("/candidates")}>Candidates</li>
           <li onClick={() => navigate("/castvote")}>Vote</li>
-          <li onClick={() => navigate("/results")}>Results</li>
         </ul>
-
-        {/* Right Buttons */}
         <div style={{ display: "flex", gap: "12px" }}>
           <button
             style={{
@@ -142,89 +134,121 @@ const Votepage = () => {
         </div>
       </nav>
 
-      <h1 className="title">Cast Your Vote</h1>
-      <p className="subtitle">Mayor Election 2024</p>
+      {!hasVoted ? (
+        <>
+          <h1 style={{ textAlign: "center", fontWeight: "bold", marginTop: "20px" }}>{electionName}</h1>
+          {candidates.length === 0 ? (
+            <p style={{ textAlign: "center" }}>No candidates for this election</p>
+          ) : (
+            <>
+              <h2 style={{ textAlign: "center", marginTop: "10px" }}>Cast Your Vote</h2>
+              <table
+                style={{
+                  width: "80%",
+                  margin: "20px auto",
+                  borderCollapse: "collapse",
+                  fontFamily: "Arial, sans-serif",
+                  boxShadow: "0 4px 10px rgba(0,0,0,0.1)",
+                }}
+              >
+                <thead>
+                  <tr style={{ backgroundColor: "#34495e", color: "white" }}>
+                    <th style={{ padding: "12px" }}>Select</th>
+                    <th style={{ padding: "12px" }}>Candidate Name</th>
+                    <th style={{ padding: "12px" }}>Party</th>
+                    <th style={{ padding: "12px" }}>Party Logo</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {candidates.map((c, idx) => (
+                    <tr
+                      key={idx}
+                      style={{
+                        backgroundColor: selected === idx ? "#d1f2eb" : "white",
+                        border: selected === idx ? "2px solid #2980b9" : "1px solid #ddd",
+                        transition: "0.2s",
+                      }}
+                    >
+                      <td style={{ textAlign: "center", padding: "10px" }}>
+                        <label
+                          style={{
+                            display: "inline-block",
+                            width: "20px",
+                            height: "20px",
+                            borderRadius: "50%",
+                            border: "2px solid #2980b9",
+                            backgroundColor: selected === idx ? "#2980b9" : "white",
+                            cursor: "pointer",
+                            position: "relative",
+                          }}
+                        >
+                          <input
+                            type="radio"
+                            name="candidate"
+                            checked={selected === idx}
+                            onChange={() => setSelected(idx)}
+                            style={{
+                              opacity: 0,
+                              width: "100%",
+                              height: "100%",
+                              margin: 0,
+                              cursor: "pointer",
+                              position: "absolute",
+                              top: 0,
+                              left: 0,
+                            }}
+                          />
+                        </label>
+                      </td>
 
-      <div className="instructions">
-        Select one candidate below and click <strong>“Cast Vote”</strong> to submit
-        your ballot. You can only vote once.
-      </div>
+                      <td style={{ padding: "10px", fontWeight: "bold" }}>{c.name}</td>
+                      <td style={{ padding: "10px" }}>{c.party}</td>
+                      <td style={{ padding: "10px", textAlign: "center" }}>
+                        <img
+                          src={c.party_logo}
+                          alt={c.party}
+                          style={{ width: "50px", height: "50px", objectFit: "contain" }}
+                        />
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
 
-      {/* Candidate list */}
-      {candidates.map((c, idx) => (
-        <label
-          key={idx}
-          className={`candidate-box ${selected === idx ? 'selected' : ''}`}
-        >
-          <input
-            type="radio"
-            name="candidate"
-            checked={selected === idx}
-            onChange={() => setSelected(idx)}
-          />
-
-          <div className="candidate-content">
-            <div className="avatar" />
-            <div className="candidate-info">
-              <h2 className="candidate-name">{c.name}</h2>
-              <span className={`party-tag ${c.partyColor}`}>{c.party}</span>
-
-              <p className="slogan">“{c.slogan}”</p>
-              <p className="experience">{c.experience}</p>
-              <p className="bio">{c.bio}</p>
-
-              <p className="policy-title">Key Policy Positions:</p>
-              <div className="policy-tags">
-                {c.policies.map((p, i) => (
-                  <span className="policy-tag" key={i}>{p}</span>
-                ))}
+              <div style={{ textAlign: "center", margin: "20px" }}>
+                <button
+                  onClick={confirmVote}
+                  disabled={selected === null}
+                  style={{
+                    backgroundColor: selected !== null ? "#2980b9" : "gray",
+                    color: "white",
+                    border: "none",
+                    padding: "12px 20px",
+                    borderRadius: "6px",
+                    cursor: selected !== null ? "pointer" : "not-allowed",
+                    fontSize: "16px",
+                  }}
+                >
+                  🗳️ Cast Your Vote
+                </button>
               </div>
-            </div>
-          </div>
-        </label>
-      ))}
-
-      <button
-        className="cast-button"
-        disabled={selected === null}
-        onClick={openConfirm}
-      >
-        🗳️ Cast Your Vote
-      </button>
-
-      {selected !== null && (
-        <p className="selection-msg">
-          You have selected: <strong>{candidates[selected].name}</strong>
-        </p>
-      )}
-
-      {showConfirm && (
-        <div className="modal-backdrop">
-          <div className="modal">
-            <h3>Confirm Your Vote</h3>
-            <p>Are you sure you want to vote for:</p>
-
-            <div className="modal-candidate">
-              <span>{candidates[selected].name}</span>
-              <span className={`party-tag ${candidates[selected].partyColor}`}>
-                {candidates[selected].party}
-              </span>
-            </div>
-
-            <p className="warning">
-              ⚠️ This action cannot be undone. You can only vote once.
-            </p>
-
-            <div className="modal-actions">
-              <button className="confirm-btn" onClick={confirmVote}>
-                Yes, Cast My Vote
-              </button>
-              <button className="cancel-btn" onClick={() => setShowConfirm(false)}>
-                Cancel
-              </button>
-            </div>
-          </div>
-        </div>
+            </>
+          )}
+        </>
+      ) : (
+        <h1
+          style={{
+            textAlign: "center",
+            fontSize: "36px",
+            marginTop: "100px",
+            color: "#27ae60",
+            lineHeight: "1.5",
+          }}
+        >
+          🎉 Thank You for Voting! 🎉<br />
+          Your vote has been recorded on blockchain for <br />
+          <strong>{electionName}</strong>.
+        </h1>
       )}
     </div>
   );

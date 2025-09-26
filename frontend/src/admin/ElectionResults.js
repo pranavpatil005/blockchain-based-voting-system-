@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import confetti from "canvas-confetti";
+import axios from "axios";
 import "../css/ElectionResults.css";
 
 const ElectionResults = () => {
@@ -7,32 +8,65 @@ const ElectionResults = () => {
   const [totalVotes, setTotalVotes] = useState(0);
   const [winnerDeclared, setWinnerDeclared] = useState(false);
   const [animatedVotes, setAnimatedVotes] = useState({});
+  const [electionName, setElectionName] = useState("");
 
   useEffect(() => {
-    // Simulated fetch
-    setTimeout(() => {
-      const data = [
-        { name: "NIKITA", votes: 320, photo: "https://www.allthatgrows.in/cdn/shop/files/YellowLotusBulbs.jpg?v=1750249392&width=1080" },
-        { name: "LIJI", votes: 250, photo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSblKka3JFLeZdXwLE3MXGMAjfLBC1UyWx6lQ&s" },
-        { name: "VIVEK", votes: 180, photo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQEEdZAnwKLE0ajJCzZpiM1fw4tSAC4ErQ24Q&s" },
-        { name: "PRANV", votes: 90, photo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSq8yHE6hhbU1_OnzPbnIf87X9_fvSz5oiFVA&s" },
-        { name: "DURVANKUR", votes: 90, photo: "https://i.pravatar.cc/100?img=4" }
+  const today = new Date();
 
-      ];
-      const votesSum = data.reduce((sum, c) => sum + c.votes, 0);
-      setResults(data);
-      setTotalVotes(votesSum);
+  // 1️⃣ Get elections
+  axios
+    .get("http://localhost:5000/api/elections")
+    .then((res) => {
+      if (!res.data.success || res.data.elections.length === 0) return;
 
-      // Animate vote counts
-      data.forEach((c) => animateVote(c.name, c.votes));
+      // Filter past elections whose to_date is before today
+      const pastElections = res.data.elections.filter(
+        (e) => new Date(e.to_date) < today
+      );
 
-      // Trigger confetti for winner
-      const topCandidate = data.reduce((prev, curr) => (curr.votes > prev.votes ? curr : prev), data[0]);
-      setTimeout(() => launchConfetti(topCandidate), 1000);
-    }, 1000);
-  }, []);
+      if (pastElections.length === 0) return; // No past elections, don't show results
 
-  // Animate vote numbers
+      // Sort by to_date descending and take the latest past election
+      const latestElection = pastElections.sort(
+        (a, b) => new Date(b.to_date) - new Date(a.to_date)
+      )[0];
+
+      setElectionName(latestElection.name);
+
+      // 2️⃣ Get candidates for this latest past election
+      axios
+        .get("http://localhost:5000/api/candidates")
+        .then((res) => {
+          const filteredCandidates = res.data.filter(
+            (c) => c.election_id === latestElection.id
+          );
+          setResults(filteredCandidates);
+
+          const votesSum = filteredCandidates.reduce(
+            (sum, c) => sum + Number(c.votes || 0),
+            0
+          );
+          setTotalVotes(votesSum);
+
+          // Animate votes
+          filteredCandidates.forEach((c) =>
+            animateVote(c.name, Number(c.votes || 0))
+          );
+
+          // Trigger confetti for winner
+          if (filteredCandidates.length > 0) {
+            const topCandidate = filteredCandidates.reduce((prev, curr) =>
+              Number(curr.votes) > Number(prev.votes) ? curr : prev
+            );
+            setTimeout(() => launchConfetti(topCandidate), 1000);
+          }
+        })
+        .catch((err) => console.error(err));
+    })
+    .catch((err) => console.error(err));
+}, []);
+
+
   const animateVote = (name, votes) => {
     let start = 0;
     const duration = 1500;
@@ -66,36 +100,54 @@ const ElectionResults = () => {
 
   return (
     <div className="results-container">
-      <h2>Election Results</h2>
+      <h2>{electionName ? `Results: ${electionName}` : "Election Results"}</h2>
       <p className="note">Live vote count with real-time visualization</p>
 
       {results.length > 0 ? (
-        <div className="results-grid">
-          {results
-            .sort((a, b) => b.votes - a.votes)
-            .map((candidate, index) => (
-              <div
-                key={index}
-                className={`candidate-card rank-${index + 1} ${winnerDeclared && index === 0 ? "winner-card" : ""}`}
-              >
-                <div className="candidate-header">
-                  <img src={candidate.photo} alt={candidate.name} className="candidate-photo" />
-                  <h3>{candidate.name}</h3>
-                </div>
-                <p className="votes-count">{animatedVotes[candidate.name] || 0} votes</p>
-                <div className="vote-bar">
-                  <div
-                    className="fill"
-                    style={{ width: `${calculatePercent(candidate.votes)}%` }}
-                  >
-                    {calculatePercent(candidate.votes)}%
-                  </div>
-                </div>
-              </div>
-            ))}
+       <div
+  className="results-grid"
+  style={{
+    display: "flex",
+    flexWrap: "wrap",
+    justifyContent: "center", // centers horizontally
+    alignItems: "center",     // centers vertically if container has height
+    gap: "20px",
+    minHeight: "70vh"         // ensures some vertical space to center within
+  }}
+>
+  {results
+    .sort((a, b) => Number(b.votes) - Number(a.votes))
+    .map((candidate, index) => (
+      <div
+        key={index}
+        className={`candidate-card rank-${index + 1} ${
+          winnerDeclared && index === 0 ? "winner-card" : ""
+        }`}
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        <div className="candidate-header">
+          <img src={candidate.photo} alt={candidate.name} className="candidate-photo" />
+          <h3>{candidate.name}</h3>
         </div>
+        <p className="votes-count">{animatedVotes[candidate.name] || 0} votes</p>
+        <div className="vote-bar" style={{ width: "100%" }}>
+          <div
+            className="fill"
+            style={{ width: `${calculatePercent(Number(candidate.votes || 0))}%` }}
+          >
+            {calculatePercent(Number(candidate.votes || 0))}%
+          </div>
+        </div>
+      </div>
+    ))}
+</div>
+
       ) : (
-        <p className="loading">Loading results...</p>
+        <p className="loading">Loading Results...</p>
       )}
     </div>
   );

@@ -48,7 +48,7 @@ export default function VoterDashboard() {
             display: "flex",
             listStyle: "none",
             gap: "24px",
-            margin: 0,
+            marginRight: "100px",
             padding: 0,
             fontSize: "16px",
             cursor: "pointer",
@@ -57,7 +57,7 @@ export default function VoterDashboard() {
           <li onClick={() => navigate("/voter")}>Home</li>
           <li onClick={() => navigate("/candidates")}>Candidates</li>
           <li onClick={() => navigate("/castvote")}>Vote</li>
-          <li onClick={() => navigate("/results")}>Results</li>
+          {/* <li onClick={() => navigate("/results")}>Results</li> */}
         </ul>
 
         {/* Right Buttons */}
@@ -99,6 +99,12 @@ export default function VoterDashboard() {
             Experience the future of voting with our secure, transparent, and tamper-proof blockchain-based election
             platform.
           </p>
+          <button
+            className="btn-primary"
+            onClick={() => navigate("/castvote")}
+          >
+            Vote Now
+          </button>
 
 
         </div>
@@ -183,7 +189,7 @@ export default function VoterDashboard() {
 
             </div>
 
-            <div className="card">
+            {/* <div className="card">
               <div className="card-icon blue">
                 <BarChart3 size={28} color="#fff" />
               </div>
@@ -198,7 +204,7 @@ export default function VoterDashboard() {
               >
                 View Results
               </button>
-            </div>
+            </div> */}
           </div>
         </div>
       </section>

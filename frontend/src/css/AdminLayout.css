@@ -11,7 +11,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #2563eb; /* Blue header */
+  background-color: #111827; /* Blue header */
   color: #fff;
   padding: 12px 24px;
   position: fixed;
@@ -19,7 +19,7 @@
   left: 0;
   width: 100%;
   z-index: 1000;
-  border-bottom: 1px solid #1e40af;
+  border-bottom: 1px solid #111827;
 }
 
 .admin-header-left {
@@ -31,7 +31,7 @@
   font-size: 28px; /* Bigger icon */
   background: none;
   border: none;
-  color: #000; /* Black color */
+  color: #fff; /* Black color */
   cursor: pointer;
   margin-right: 12px;
 }

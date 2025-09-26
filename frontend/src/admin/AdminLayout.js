@@ -89,9 +89,14 @@ const AdminLayout = () => {
             className="new-election-btn"
             onClick={() => navigate("/admin/createelection")}
           >
-            ➕ New Election
+            ➕ Election
           </button>
-          <button className="health-btn">🟢 Network Healthy</button>
+          <button
+            className="new-election-btn"
+            onClick={() => navigate("/admin/createelection")}
+          >
+            ➕ Candidates
+          </button>
           <button
             className="logout-button"
             onClick={handleLogout}
@@ -106,7 +111,7 @@ const AdminLayout = () => {
         <NavLink to="/admin/dashboard" className="sidebar-link" onClick={handleLinkClick}>Dashboard</NavLink>
         <NavLink to="/admin/createelection" className="sidebar-link" onClick={handleLinkClick}>Create Election</NavLink>
         <NavLink to="/admin/candidates" className="sidebar-link" onClick={handleLinkClick}>Candidates</NavLink>
-        {/* <NavLink to="/admin/management" className="sidebar-link" onClick={handleLinkClick}>Voters</NavLink> */}
+        <NavLink to="/admin/management" className="sidebar-link" onClick={handleLinkClick}>Voters</NavLink>
         {/* <NavLink to="/admin/smartcontract" className="sidebar-link" onClick={handleLinkClick}>Smart Contracts</NavLink> */}
         <NavLink to="/admin/monitor" className="sidebar-link" onClick={handleLinkClick}>Live Monitor</NavLink>
         <NavLink to="/admin/results" className="sidebar-link" onClick={handleLinkClick}>Election Results</NavLink>
