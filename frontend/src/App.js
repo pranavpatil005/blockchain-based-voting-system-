@@ -36,8 +36,8 @@ function App() {
       <Routes>
         {/* Public Routes */}
         <Route path="/" element={<HomePage />} />
-        <Route path="/voterlogin" element={<VoterLogin />} />
-        <Route path="/adminlogin" element={<AdminLogin />} />
+        <Route path="/voter/login" element={<VoterLogin />} />
+        <Route path="/admin/login" element={<AdminLogin />} />
         <Route path="/about" element={<About />} />
 
         {/* Admin Routes */}

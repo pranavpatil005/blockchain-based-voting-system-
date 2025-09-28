@@ -5,65 +5,80 @@ import axios from 'axios';
 
 const App = () => {
   const navigate = useNavigate();
+  const handleLogin = () => navigate("/voter/login");
+
   const [activeElection, setActiveElection] = useState(null);
+  const [lastElection, setLastElection] = useState(null);
+  const [election, setElection] = useState(null);
+  const [status, setStatus] = useState('Loading...');
   const [timeLeft, setTimeLeft] = useState(null);
 
-  const handleLogin = () => navigate("/voterlogin");
-
   const calculateTimeLeft = (endDate) => {
-  const now = new Date();
-  const end = new Date(endDate + 'T23:59:59'); // consider endDate till 23:59:59
-  const difference = end.getTime() - now.getTime();
+    const now = new Date();
+    const end = new Date(endDate); // directly use the DB date
+    end.setHours(23, 59, 59, 999); // end of that day
 
-  if (difference > 0) {
-    return {
-      days: Math.floor(difference / (1000 * 60 * 60 * 24)),
-      hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
-      minutes: Math.floor((difference / 1000 / 60) % 60),
-      seconds: Math.floor((difference / 1000) % 60),
-    };
-  }
-  return null;
-};
+    const diff = end.getTime() - now.getTime();
+
+    if (diff > 0) {
+      return {
+        days: Math.floor(diff / (1000 * 60 * 60 * 24)),
+        hours: Math.floor((diff / (1000 * 60 * 60)) % 24),
+        minutes: Math.floor((diff / 1000 / 60) % 60),
+        seconds: Math.floor((diff / 1000) % 60),
+      };
+    }
+    return null;
+  };
+
 
 
   useEffect(() => {
-  axios.get("http://localhost:5000/api/active-election-candidates")
-    .then(res => {
-      if (res.data.success) {
-        setActiveElection({
-          name: res.data.electionName,
-          from_date: res.data.from_date,
-          to_date: res.data.to_date,
-          candidates: res.data.candidates
-        });
-        setTimeLeft(calculateTimeLeft(res.data.to_date));
-      } else {
-        setActiveElection(null);
-        setTimeLeft(null);
-      }
-    })
-    .catch(() => {
-      setActiveElection(null);
-      setTimeLeft(null);
-    });
-}, []);
+    axios.get('http://localhost:5000/api/active-election')
+      .then(res => {
+        if (res.data.election) {
+          setElection(res.data.election);
+          setStatus('Election Ongoing');
+          setTimeLeft(calculateTimeLeft(res.data.election.to_date));
+        } else {
+          setElection(null);
+          setStatus('Election Ended');
+        }
+      })
+      .catch(() => setStatus('Error fetching election'));
 
-  // Timer update
+  }, []);
+
+  // Countdown timer
   useEffect(() => {
-    if (!activeElection) return;
-
+    if (!election) return;
     const timer = setInterval(() => {
-      const updatedTime = calculateTimeLeft(activeElection.to_date);
-      setTimeLeft(updatedTime);
-
-      if (!updatedTime) clearInterval(timer);
+      const updated = calculateTimeLeft(election.to_date);
+      setTimeLeft(updated);
+      if (!updated) setStatus('Election Ended');
+      else setStatus('Election Ongoing');
     }, 1000);
-
     return () => clearInterval(timer);
-  }, [activeElection]);
+  }, [election]);
 
-  
+
+  const castVote = (id) => {
+    axios.post('http://localhost:5000/api/cast-vote', { candidate_id: id })
+      .then(() => alert('Vote recorded successfully'))
+      .catch(() => alert('Error casting vote'));
+  };
+
+  useEffect(() => {
+    axios.get('http://localhost:5000/api/latest-ended-election')
+      .then(res => {
+        if (res.data.success) {
+          setLastElection(res.data.election);
+        }
+      })
+      .catch(err => console.log(err));
+  }, []);
+
+
   return (
     <div>
       {/* Header Start */}
@@ -106,18 +121,7 @@ const App = () => {
           <div className="responsive-menu"></div>
         </div>
       </header>
-      {/* Header End */}
-      <div className="footer-copyright">
-        <div className="container">
-          <div className="row">
-            <div className="col-md-12">
-              <div className="copyright-text">
-                BLOCKCHAIN BASED E-VOTING SYSTEM
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+
 
       {/* Hero Section Start */}
       <div className="hero parallaxie">
@@ -133,7 +137,8 @@ const App = () => {
                     style={{
                       fontSize: '80px',
                       textShadow: '2px 2px 5px rgba(240, 223, 223, 0.5)',
-                      marginBottom: '50px'
+                      marginBottom: '50px',
+                      marginTop: '80px',
                     }}
                   >
                     Blockchain based E-Voting System
@@ -150,68 +155,117 @@ const App = () => {
                     change, shaping policies, and creating a brighter future for everyone.
                   </p>
                 </div>
-                <div className="header-btn">
-                  <a onClick={handleLogin} class="btn-default btn-highlighted">Register to Vote</a>
-                </div>
+                {status === "Election Ongoing" ? (
+                  <div className="header-btn">
+                    <a onClick={handleLogin} class="btn-default btn-highlighted">Register to Vote</a>
+                  </div>
+                ) : (<span></span>
+                )}
                 <div>
                   {/* Election Status */}
-                  <div style={{ textAlign: 'center', marginTop: '20px' }}>
-                    {activeElection && timeLeft ? (
+                  <div style={{ textAlign: 'center', padding: '50px' }}>
+                    {/* <h1>Blockchain Based E-Voting System</h1> */}
+                    <h2
+                      style={{
+                        color: status === "Election Ongoing" ? "green" : "red",
+                        fontWeight: "bold",
+                        fontSize: "28px",
+                        textShadow: "1px 1px 2px rgba(0,0,0,0.2)"
+                      }}
+                    >
+                      {status}
+                    </h2>
+
+
+                    {election && timeLeft && status === 'Election Ongoing' && (
                       <>
-                        <p style={{
-                          color: '#27ae60',
-                          fontWeight: 'bold',
-                          fontSize: '22px',
-                          letterSpacing: '1px',
-                          textShadow: '1px 1px 2px rgba(0,0,0,0.2)'
-                        }}>
-                          🚨 ELECTION ONGOING 🚨
-                        </p>
+                        <h3 class="text-info">Election: {election.name}</h3>
+                        <div
+                          style={{
+                            display: "flex",
+                            justifyContent: "center",
+                            gap: "15px",
+                            margin: "20px 0"
+                          }}
+                        >
+                          {Object.entries(timeLeft).map(([unit, value], index) => {
+                            // Alternate colors (red for DAYS/MINS, blue for HOURS/SEC)
+                            const isRed = unit === "days" || unit === "minutes";
+                            const color = isRed ? "#e74c3c" : "#2937b9ff";
 
-                        {/* Countdown Timer */}
-                        <div style={{ display: 'flex', justifyContent: 'center', gap: '15px', marginTop: '10px' }}>
-                          {Object.entries(timeLeft).map(([unit, value]) => (
-                            <div key={unit} style={{ textAlign: 'center' }}>
-                              <div style={{ fontSize: '20px', fontWeight: 'bold' }}>{String(value).padStart(2, '0')}</div>
-                              <div>{unit.toUpperCase()}</div>
-                            </div>
-                          ))}
+                            return (
+                              <div
+                                key={unit}
+                                style={{
+                                  background: "#fff",
+                                  padding: "15px",
+                                  borderRadius: "4px",
+                                  textAlign: "center",
+                                  minWidth: "70px",
+                                  boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
+                                  borderBottom: `4px solid ${color}`
+                                }}
+                              >
+                                <div
+                                  style={{
+                                    fontSize: "28px",
+                                    fontWeight: "bold",
+                                    color: color,
+                                    marginBottom: "5px"
+                                  }}
+                                >
+                                  {String(value).padStart(2, "0")}
+                                </div>
+                                <div
+                                  style={{
+                                    fontSize: "12px",
+                                    fontWeight: "600",
+                                    color: "#333",
+                                    letterSpacing: "1px"
+                                  }}
+                                >
+                                  {unit.toUpperCase()}
+                                </div>
+                              </div>
+                            );
+                          })}
                         </div>
 
-                        {/* Vote Button */}
-                        <div style={{ marginTop: '15px' }}>
-                          <button className="btn-primary" onClick={() => navigate("/castvote")}>Vote Now</button>
-                        </div>
                       </>
-                    ) : (
-                      <p style={{
-                        color: 'red',
-                        fontWeight: 'bold',
-                        fontSize: '22px',
-                        letterSpacing: '1px',
-                        textShadow: '1px 1px 2px rgba(0,0,0,0.2)'
-                      }}>
-                        ELECTION ENDED
-                      </p>
                     )}
                   </div>
+
                 </div>
 
 
 
-
-
-                <span
-                  style={{ color: "white", cursor: "pointer" }}
-                  onClick={() => {
-                    const element = document.getElementById("resultsSection");
-                    if (element) {
-                      element.scrollIntoView({ behavior: "smooth" });
-                    }
-                  }}
-                >
-                  See Results!
-                </span>
+                {status === "Election Ongoing" ? (
+                  <span></span>
+                ) : (
+                  <span
+                    style={{
+                      display: "inline-block",
+                      padding: "10px 25px",
+                      color: "#fff",
+                      backgroundColor: "#1fbb27",
+                      borderRadius: "25px",
+                      cursor: "pointer",
+                      fontWeight: "600",
+                      transition: "all 0.3s ease",
+                      boxShadow: "0 4px 6px rgba(0,0,0,0.1)"
+                    }}
+                    onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#16a520")}
+                    onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#1fbb27")}
+                    onClick={() => {
+                      const element = document.getElementById("resultsSection");
+                      if (element) {
+                        element.scrollIntoView({ behavior: "smooth" });
+                      }
+                    }}
+                  >
+                    See Results!
+                  </span>
+                )}
 
 
 
@@ -301,52 +355,62 @@ const App = () => {
             <div className="col-lg-12">
               {/* Supporters Content Start */}
               <div className="supporters-content">
-                {/* Section Title Start */}
                 <div className="section-title dark-section">
-                  {/* <h2 className="text-anime-style-2" data-cursor="-opaque">
-                    Results are <span>Not Declared  </span>yet
-                  </h2> */}
-                  <h2 className="text-anime-style-2" data-cursor="-opaque">
-                    Winner is <br></br><span>Durvankur Sonar  </span>
-                  </h2>
-                </div>
+                  {status === "Election Ended" ? (
+                    lastElection?.candidates?.length > 0 ? (
+                      <div>
+                        <h5 style={{color:"white", marginBottom:"30px"}}>Results of Last Ended Election</h5>
+                        <h2>
+                          Winner is<br></br> <span>
+                            {lastElection.candidates.reduce((prev, current) =>
+                              prev.votes > current.votes ? prev : current
+                            ).name}
+                          </span>
+                        </h2>
+                      </div>
+                    ) : (
+                      <h2>No candidates found for last election</h2>
+                    )
+                  ) : (
+                    <h2>Results are Not Declared yet</h2>
+                  )}
 
+
+                </div>
               </div>
               {/* Supporters Content End */}
             </div>
           </div>
 
-          <div className="row">
-            <div className="col-lg-12">
-              {/* Supporters Counter List Start */}
-              <div className="supporters-counter-list">
-                <div className="supporters-counter-item">
-                  <img src="images/icon-supporter-1.svg" alt="" />
-                  <h2><span className="counter">501</span></h2>
-                  <p>Durvankur Sonar</p>
-                </div>
-                <div className="supporters-counter-item">
-                  <img src="images/icon-supporter-2.svg" alt="" />
-                  <h2><span className="counter">131</span></h2>
-                  <p>Pranav Patil</p>
-                </div>
-                <div className="supporters-counter-item">
-                  <img src="images/icon-supporter-3.svg" alt="" />
-                  <h2><span className="counter">612</span></h2>
-                  <p>Liji Varghese</p>
-                </div>
-                <div className="supporters-counter-item">
-                  <img src="images/icon-supporter-4.svg" alt="" />
-                  <h2><span className="counter">400</span></h2>
-                  <p>Nikita Kurkure</p>
-                </div>
 
+
+          <div className="container">
+
+
+            {lastElection ? (
+              <div className="row justify-content-center">
+                <div className="col-lg-12 d-flex justify-content-center">
+                  <div className="supporters-counter-list d-flex justify-content-center flex-wrap">
+                    {lastElection.candidates.map((c, i) => (
+                      <div key={i} className="supporters-counter-item text-center mx-2">
+                        <img src={`images/icon-supporter-${i + 1}.svg`} alt="" />
+                        <h2>
+                          <span className="counter">{c.votes}</span>
+                        </h2>
+                        <p>{c.name}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </div>
-              {/* Supporters Counter List End */}
-            </div>
+            ) : (
+              <p className="text-center">No past election data available</p>
+            )}
           </div>
+
         </div>
       </div>
+
       {/* Our Supporters Section End */}
 
 
@@ -560,8 +624,15 @@ const App = () => {
               </div>
               {/* Footer Header End */}
             </div>
+            <div className="col-lg-4 col-md-4">
+              <img
+                src={`${process.env.PUBLIC_URL}/assets/images/logo.png`}
+                alt="Logo"
+              />
+            </div>
+            <div className="col-lg-1 col-md-1"></div>
 
-            <div className="col-lg-3 col-md-4">
+            <div className="col-lg-3 col-md-3">
               {/* About Footer Start */}
               <div className="about-footer">
                 <div className="footer-logo">
@@ -575,19 +646,12 @@ const App = () => {
                 </div>
               </div>
             </div>
-            <div className="col-lg-2 col-md-2">
+            <div className="col-lg-1 col-md-1"></div>
 
-            </div>
 
-            <div className="col-lg-2 col-md-2">
+            <div className="col-lg-3 col-md-3">
               <div className="footer-links">
                 <h3>Developed By :</h3>
-              </div>
-            </div>
-
-            <div className="col-lg-3 col-md-4">
-              <div className="footer-links">
-
 
                 <ul>
                   <li><a href="#">Durvankur Gajanan Sonar</a></li>

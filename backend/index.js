@@ -176,9 +176,9 @@ app.get('/api/active-election-candidates', (req, res) => {
 
 // Get latest ended election with candidates and votes
 app.get('/api/latest-ended-election', (req, res) => {
-  const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+  const now = new Date(); // current datetime
 
-  // Get latest election whose to_date is before today
+  // Get latest election whose to_date is before now
   const electionSql = `
     SELECT * 
     FROM election 
@@ -187,11 +187,11 @@ app.get('/api/latest-ended-election', (req, res) => {
     LIMIT 1
   `;
 
-  db.query(electionSql, [today], (err, electionResult) => {
+  db.query(electionSql, [now], (err, electionResult) => {
     if (err) return res.status(500).json({ success: false, message: err.message });
 
     if (electionResult.length === 0) {
-      return res.json({ success: false, message: "No past elections found" });
+      return res.json({ success: true, election: null }); // no ended elections
     }
 
     const election = electionResult[0];
@@ -214,6 +214,7 @@ app.get('/api/latest-ended-election', (req, res) => {
         votes: Number(c.votes) || 0
       }));
 
+      // Return election with candidates array
       res.json({
         success: true,
         election: {
@@ -230,6 +231,50 @@ app.get('/api/latest-ended-election', (req, res) => {
 });
 
 
+
+
+
+
+// Get current election and candidates with status
+app.get('/api/active-election', (req, res) => {
+  const today = new Date().toISOString().split('T')[0];
+
+  const sql = `SELECT * FROM election WHERE from_date <= ? AND to_date >= ? LIMIT 1`;
+  db.query(sql, [today, today], (err, result) => {
+    if (err) return res.status(500).json({ success: false, message: err.message });
+
+    if (result.length === 0) {
+      return res.json({ success: true, status: 'Election Ended', election: null });
+    }
+
+    const election = result[0];
+
+    const candidatesSql = `SELECT id, name, party, votes FROM candidates WHERE election_id = ? ORDER BY votes DESC`;
+    db.query(candidatesSql, [election.id], (err, candidatesResult) => {
+      if (err) return res.status(500).json({ success: false, message: err.message });
+
+      const candidates = candidatesResult.map(c => ({
+        id: c.id,
+        name: c.name,
+        party: c.party,
+        votes: Number(c.votes) || 0
+      }));
+
+      res.json({
+        success: true,
+        status: 'Election Ongoing',
+        election: {
+          id: election.id,
+          name: election.name,
+          from_date: election.from_date,
+          to_date: election.to_date,
+          description: election.description,
+          candidates
+        }
+      });
+    });
+  });
+});
 
 
 

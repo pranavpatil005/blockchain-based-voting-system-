@@ -33,7 +33,7 @@ const ViewCandidates = () => {
         });
 
         if (!activeElection) {
-          setElectionName('No active election today');
+          setElectionName('No Active Election Today');
           setCandidates([]);
           return;
         }
@@ -56,7 +56,7 @@ const ViewCandidates = () => {
   }, []);
 
   return (
-    <div style={{ paddingTop: '100px', fontFamily: 'Arial, sans-serif' }}>
+    <div style={{ paddingTop: '10px', fontFamily: 'Arial, sans-serif' }}>
       {/* Navbar */}
       <nav style={{
         position: 'fixed',
@@ -88,14 +88,17 @@ const ViewCandidates = () => {
       </nav>
 
       {/* Content */}
-      <div style={{ width: '90%', margin: '0 auto', paddingTop: '20px' }}>
+      <div style={{ width: '90%', margin: '0 auto', paddingTop: '100px' }}>
         <h1 style={{ textAlign: 'center', marginBottom: '10px' }}>{electionName}</h1>
         {candidates.length === 0 ? (
           <p style={{ textAlign: 'center' }}>No candidates for this election</p>
         ) : (
+          
           <div className="candidate-grid" style={{ display: 'flex', flexWrap: 'wrap', gap: '20px', justifyContent: 'center' }}>
+          
             {candidates.map((candidate) => (
               <div key={candidate.id} className="candidate-card" style={{
+                marginTop:"20px",
                 width: '250px',
                 border: '1px solid #ddd',
                 borderRadius: '8px',
