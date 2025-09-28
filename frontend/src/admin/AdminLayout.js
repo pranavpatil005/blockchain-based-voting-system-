@@ -64,7 +64,7 @@ const AdminLayout = () => {
 
   const handleLogout = () => {
     localStorage.removeItem("token"); // Replace with your auth logic
-    window.location.href = "/adminlogin";
+    window.location.href = "/";
   };
 
   return (

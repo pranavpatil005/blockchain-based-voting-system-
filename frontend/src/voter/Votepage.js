@@ -72,7 +72,7 @@ const Votepage = () => {
   };
 
   return (
-    <div style={{ paddingTop: "100px", fontFamily: "Arial, sans-serif" }}>
+    <div style={{  fontFamily: "Arial, sans-serif" }}>
       <nav
         style={{
           position: "fixed",
@@ -152,7 +152,7 @@ const Votepage = () => {
                 }}
               >
                 <thead>
-                  <tr style={{ backgroundColor: "#34495e", color: "white" }}>
+                  <tr style={{ backgroundColor: "#34495e", color: "white" ,textAlign: "center"}}>
                     <th style={{ padding: "12px" }}>Select</th>
                     <th style={{ padding: "12px" }}>Candidate Name</th>
                     <th style={{ padding: "12px" }}>Party</th>
@@ -164,6 +164,7 @@ const Votepage = () => {
                     <tr
                       key={idx}
                       style={{
+                        textAlign: "center",
                         backgroundColor: selected === idx ? "#d1f2eb" : "white",
                         border: selected === idx ? "2px solid #2980b9" : "1px solid #ddd",
                         transition: "0.2s",

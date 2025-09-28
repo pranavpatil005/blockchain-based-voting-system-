@@ -111,7 +111,7 @@ export default function VoterDashboard() {
       </section>
 
       {/* Features Section */}
-      <section className="features">
+      <section className="features" style={{backgroundColor:"#d4e0e9ff"}}>
         <div className="container text-center">
           <h2 className="section-title">Why Choose VoteChain?</h2>
           <p className="section-subtitle">
