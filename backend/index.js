@@ -18,7 +18,7 @@ const db = mysql.createConnection({
   user: 'root',
   password: '',  // your MySQL password
   database: 'evoting',
-  port: 3306  
+  port: 3306
 });
 
 db.connect((err) => {
