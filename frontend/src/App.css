@@ -6,6 +6,69 @@
   height: 40vmin;
   pointer-events: none;
 }
+/* Base button */
+.btn-default {
+  padding: 10px 22px;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+ 
+  font-size: 15px;
+  border: 2px solid transparent;
+  transition: all 0.2s ease-in-out;
+  margin: 5px;
+}
+
+/* Register button - minimal */
+.btn-register {
+  background-color: #ffffff;
+  color: #1abc9c;
+  border: 2px solid #1abc9c;
+}
+
+.btn-register:hover {
+  background-color: #1abc9c;
+  color: #ffffff;
+  transform: translateY(-2px);
+}
+
+/* Wallet button - minimal */
+.btn-wallet {
+  background-color: #ffffff;
+  color: #f39c12;
+  border: 2px solid #f39c12;
+}
+
+.btn-wallet:hover {
+  background-color: #f39c12;
+  color: #ffffff;
+  transform: translateY(-2px);
+}
+
+/* Wallet icon */
+.wallet-icon {
+  font-size: 30px;
+  transition: transform 0.2s ease-in-out;
+}
+
+.btn-wallet:hover .wallet-icon {
+  transform: translateX(3px);
+}
+
+
+/* Connected wallet state */
+.btn-wallet.connected {
+  background-color: #2ecc71;
+  color: #ffffff;
+  border-color: #27ae60;
+}
+
+
 
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
