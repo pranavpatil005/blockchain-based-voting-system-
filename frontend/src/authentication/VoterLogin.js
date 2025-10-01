@@ -7,8 +7,6 @@ const VoterLogin = () => {
   const [aadhaar, setAadhaar] = useState('');
   const [otpSent, setOtpSent] = useState(false);
   const [otp, setOtp] = useState('');
-  const [generatedOtp, setGeneratedOtp] = useState('');
-
   const [toastMsg, setToastMsg] = useState('');
   const [toastType, setToastType] = useState('success');
   const [showToast, setShowToast] = useState(false);
@@ -16,7 +14,6 @@ const VoterLogin = () => {
   const navigate = useNavigate();
   const { userLogin } = useUserAuth();
 
-  // Function to show toast
   const showToastMessage = (msg, type = 'success') => {
     setToastMsg(msg);
     setToastType(type);
@@ -24,16 +21,13 @@ const VoterLogin = () => {
     setTimeout(() => setShowToast(false), 5000);
   };
 
-  // Handle Aadhaar input change
   const handleAadhaarChange = (e) => {
     const value = e.target.value.replace(/\D/g, '');
     if (value.length <= 12) setAadhaar(value);
-    setOtpSent(false);       // reset OTP sent state
-    setGeneratedOtp('');     // clear previous OTP
-    setOtp('');              // clear OTP input
+    setOtpSent(false);
+    setOtp('');
   };
 
-  // Handle sending OTP
   const handleSendOtp = async () => {
     if (aadhaar.length !== 12) {
       showToastMessage('Aadhaar number must be 12 digits', 'error');
@@ -41,42 +35,40 @@ const VoterLogin = () => {
     }
 
     try {
-      const res = await axios.post('http://localhost:5000/api/check-voter', { aadhaar });
-      console.log('Backend response:', res.data);
-
+      const res = await axios.post('http://localhost:5000/api/send-otp', { aadhaar });
       if (!res.data.success) {
         showToastMessage(res.data.message, 'error');
         return;
       }
-
-      // Generate OTP
-      const randomOtp = Math.floor(100000 + Math.random() * 900000);
-      setGeneratedOtp(String(randomOtp));
       setOtpSent(true);
       showToastMessage('OTP sent to your registered mobile number', 'success');
-    } catch (error) {
-      console.error(error);
+    } catch (err) {
+      console.error(err);
       showToastMessage('Server error. Try again later.', 'error');
     }
   };
 
-  // Handle login form submit
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (!aadhaar || !otp) {
       showToastMessage('Please fill in all fields', 'error');
       return;
     }
 
-    if (otp !== generatedOtp) {
-      showToastMessage('Invalid OTP. Please try again.', 'error');
-      return;
-    }
+    try {
+      const res = await axios.post('http://localhost:5000/api/verify-otp', { aadhaar, otp });
+      if (!res.data.success) {
+        showToastMessage(res.data.message, 'error');
+        return;
+      }
 
-    userLogin();
-    showToastMessage('Login Successful!', 'success');
-    setTimeout(() => navigate('/voter'), 1000);
+      userLogin();
+      showToastMessage('Login Successful!', 'success');
+      setTimeout(() => navigate('/voter'), 1000);
+    } catch (err) {
+      console.error(err);
+      showToastMessage('Server error. Try again later.', 'error');
+    }
   };
 
   return (
@@ -97,12 +89,6 @@ const VoterLogin = () => {
         <p style={{ fontWeight: 'bold', color: '#666', marginBottom: '1.5rem' }}>
           Enter your Aadhaar number and OTP to login
         </p>
-
-        {generatedOtp && (
-          <p style={{ color: '#333', fontWeight: 'bold' }}>
-            Your OTP (for testing): {generatedOtp}
-          </p>
-        )}
 
         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', textAlign: 'left' }}>
           <label htmlFor="aadhaar">Aadhaar Number</label>
@@ -149,7 +135,6 @@ const VoterLogin = () => {
           </button>
         </form>
 
-        {/* Toast */}
         {showToast && (
           <div style={{
             position: 'fixed',
