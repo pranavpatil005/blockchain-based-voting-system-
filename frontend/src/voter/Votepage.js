@@ -8,6 +8,7 @@ const Votepage = () => {
   const [electionName, setElectionName] = useState("");
   const [selected, setSelected] = useState(null);
   const [hasVoted, setHasVoted] = useState(false);
+  const [timer, setTimer] = useState(10); // ⏳ countdown timer
   const navigate = useNavigate();
   const { userLogout } = useUserAuth();
 
@@ -17,9 +18,7 @@ const Votepage = () => {
   };
 
   useEffect(() => {
-    // 1️⃣ Get all elections
-    axios
-      .get("http://localhost:5000/api/elections")
+    axios.get("http://localhost:5000/api/elections")
       .then((res) => {
         const today = new Date();
         const activeElection = res.data.elections.find((e) => {
@@ -36,27 +35,39 @@ const Votepage = () => {
 
         setElectionName(activeElection.name);
 
-        // 2️⃣ Fetch all candidates and filter only for active election
-        axios
-          .get("http://localhost:5000/api/candidates")
+        axios.get("http://localhost:5000/api/candidates")
           .then((res) => {
-            const filteredCandidates = res.data.filter(
-              (c) => c.election_id === activeElection.id
-            );
+            const filteredCandidates = res.data.filter(c => c.election_id === activeElection.id);
             setCandidates(filteredCandidates);
           })
-          .catch((err) => console.error(err));
+          .catch(err => console.error(err));
       })
-      .catch((err) => console.error(err));
+      .catch(err => console.error(err));
   }, []);
+
+  // 🔥 Timer effect after voting
+  useEffect(() => {
+    if (hasVoted) {
+      const countdown = setInterval(() => {
+        setTimer((prev) => {
+          if (prev === 1) {
+            clearInterval(countdown);
+            handleLogout(); // auto logout at 0
+          }
+          return prev - 1;
+        });
+      }, 1000);
+
+      return () => clearInterval(countdown);
+    }
+  }, [hasVoted]);
 
   const confirmVote = () => {
     if (selected !== null) {
       const candidateId = candidates[selected].id;
 
-      axios
-        .post("http://localhost:5000/api/cast-vote", { candidate_id: candidateId })
-        .then((res) => {
+      axios.post("http://localhost:5000/api/cast-vote", { candidate_id: candidateId })
+        .then(res => {
           if (res.data.success) {
             alert(`✅ Your vote for ${candidates[selected].name} has been recorded on blockchain!`);
             setHasVoted(true);
@@ -64,7 +75,7 @@ const Votepage = () => {
             alert("❌ Failed to cast vote");
           }
         })
-        .catch((err) => {
+        .catch(err => {
           console.error(err);
           alert("❌ Error occurred while casting vote");
         });
@@ -72,149 +83,104 @@ const Votepage = () => {
   };
 
   return (
-    <div style={{  fontFamily: "Arial, sans-serif" }}>
-      <nav
-        style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          width: "100%",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          backgroundColor: "#2c3e50",
-          padding: "12px 24px",
-          color: "white",
-          boxShadow: "0 2px 6px rgba(0,0,0,0.3)",
-          zIndex: 1000,
-        }}
-      >
+    <div style={{ fontFamily: "Arial, sans-serif" }}>
+      {/* Navbar */}
+      <nav style={{
+        position: "fixed", top: 0, left: 0, width: "100%",
+        display: "flex", alignItems: "center", justifyContent: "space-between",
+        backgroundColor: "#2c3e50", padding: "12px 24px", color: "white",
+        boxShadow: "0 2px 6px rgba(0,0,0,0.3)", zIndex: 1000
+      }}>
         <div style={{ fontSize: "20px", fontWeight: "bold" }}>📊 VOTECHAIN</div>
-        <ul
-          style={{
-            display: "flex",
-            listStyle: "none",
-            gap: "24px",
-            marginRight: "100px",
-            padding: 0,
-            fontSize: "16px",
-            cursor: "pointer",
-          }}
-        >
+        <ul style={{
+          display: "flex", listStyle: "none", gap: "24px",
+          marginRight: "100px", padding: 0, fontSize: "16px", cursor: "pointer"
+        }}>
           <li onClick={() => navigate("/voter")}>Home</li>
           <li onClick={() => navigate("/candidates")}>Candidates</li>
           <li onClick={() => navigate("/castvote")}>Vote</li>
         </ul>
         <div style={{ display: "flex", gap: "12px" }}>
-          <button
-            style={{
-              backgroundColor: "#27ae60",
-              color: "white",
-              border: "none",
-              padding: "8px 14px",
-              borderRadius: "5px",
-              cursor: "pointer",
-            }}
-          >
-            Connect Wallet
-          </button>
-          <button
-            onClick={handleLogout}
-            style={{
-              backgroundColor: "#e74c3c",
-              color: "white",
-              border: "none",
-              padding: "8px 14px",
-              borderRadius: "5px",
-              cursor: "pointer",
-            }}
-          >
-            Logout
-          </button>
+          <button style={{
+            backgroundColor: "#27ae60", color: "white", border: "none",
+            padding: "8px 14px", borderRadius: "5px", cursor: "pointer"
+          }}>Connect Wallet</button>
+          <button onClick={handleLogout} style={{
+            backgroundColor: "#e74c3c", color: "white", border: "none",
+            padding: "8px 14px", borderRadius: "5px", cursor: "pointer"
+          }}>Logout</button>
         </div>
       </nav>
 
       {!hasVoted ? (
         <>
-          <h1 style={{ textAlign: "center", fontWeight: "bold", marginTop: "20px" }}>{electionName}</h1>
+          <h1 style={{ textAlign: "center", fontWeight: "bold", marginTop: "100px" }}>{electionName}</h1>
           {candidates.length === 0 ? (
             <p style={{ textAlign: "center" }}>No candidates for this election</p>
           ) : (
             <>
               <h2 style={{ textAlign: "center", marginTop: "10px" }}>Cast Your Vote</h2>
-              <table
-                style={{
-                  width: "80%",
-                  margin: "20px auto",
-                  borderCollapse: "collapse",
-                  fontFamily: "Arial, sans-serif",
-                  boxShadow: "0 4px 10px rgba(0,0,0,0.1)",
-                }}
-              >
-                <thead>
-                  <tr style={{ backgroundColor: "#34495e", color: "white" ,textAlign: "center"}}>
-                    <th style={{ padding: "12px" }}>Select</th>
-                    <th style={{ padding: "12px" }}>Candidate Name</th>
-                    <th style={{ padding: "12px" }}>Party</th>
-                    <th style={{ padding: "12px" }}>Party Logo</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {candidates.map((c, idx) => (
-                    <tr
-                      key={idx}
-                      style={{
-                        textAlign: "center",
-                        backgroundColor: selected === idx ? "#d1f2eb" : "white",
-                        border: selected === idx ? "2px solid #2980b9" : "1px solid #ddd",
-                        transition: "0.2s",
-                      }}
-                    >
-                      <td style={{ textAlign: "center", padding: "10px" }}>
-                        <label
-                          style={{
-                            display: "inline-block",
-                            width: "20px",
-                            height: "20px",
-                            borderRadius: "50%",
-                            border: "2px solid #2980b9",
-                            backgroundColor: selected === idx ? "#2980b9" : "white",
-                            cursor: "pointer",
-                            position: "relative",
-                          }}
-                        >
-                          <input
-                            type="radio"
-                            name="candidate"
-                            checked={selected === idx}
-                            onChange={() => setSelected(idx)}
-                            style={{
-                              opacity: 0,
-                              width: "100%",
-                              height: "100%",
-                              margin: 0,
-                              cursor: "pointer",
-                              position: "absolute",
-                              top: 0,
-                              left: 0,
-                            }}
-                          />
-                        </label>
-                      </td>
+              <div style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
+                gap: "20px",
+                width: "60%",
+                margin: "20px auto"
+              }}>
+                {candidates.map((c, idx) => (
+                  <div
+                    key={idx}
+                    onClick={() => setSelected(idx)}
+                    style={{
+                      border: selected === idx ? "3px solid #2980b9" : "1px solid #ccc",
+                      borderRadius: "10px",
+                      padding: "15px",
+                      textAlign: "center",
+                      boxShadow: selected === idx ? "0 4px 15px rgba(41, 128, 185, 0.4)" : "0 2px 8px rgba(0,0,0,0.1)",
+                      cursor: "pointer",
+                      transition: "0.3s",
+                      backgroundColor: selected === idx ? "#d1f2eb" : "white"
+                    }}
+                  >
+                    <div style={{
+  border: selected === idx ? "3px solid #2980b9" : "1px solid #ccc",
+  borderRadius: "10px",
+  padding: "15px",
+  textAlign: "center",
+  boxShadow: selected === idx ? "0 4px 15px rgba(41, 128, 185, 0.4)" : "0 2px 8px rgba(0,0,0,0.1)",
+  cursor: "pointer",
+  transition: "0.3s",
+  backgroundColor: selected === idx ? "#91dfceff" : "white",
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center"
+}}>
+  {/* Party Logo + Party Name */}
+  <div style={{ display: "flex", flexDirection: "column", alignItems: "center", marginBottom: "15px" }}>
+    <img src={c.party_logo} alt={c.party} style={{ width: "50px", height: "50px", objectFit: "contain", marginBottom: "5px" }} />
+    <span style={{
+      display: "inline-block",
+      padding: "4px 12px",
+      backgroundColor: "#407fddff",
+      color: "black",
+      borderRadius: "12px",
+      fontSize: "12px",
+      fontWeight: "bold"
+    }}>
+      {c.party}
+    </span>
+  </div>
 
-                      <td style={{ padding: "10px", fontWeight: "bold" }}>{c.name}</td>
-                      <td style={{ padding: "10px" }}>{c.party}</td>
-                      <td style={{ padding: "10px", textAlign: "center" }}>
-                        <img
-                          src={c.party_logo}
-                          alt={c.party}
-                          style={{ width: "50px", height: "50px", objectFit: "contain" }}
-                        />
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+  {/* Candidate Image */}
+  <img src={c.photo} alt={c.name} style={{ width: "100px", height: "100px", borderRadius: "50%", objectFit: "cover", marginBottom: "10px" }} />
+
+  {/* Candidate Name */}
+  <h3 style={{ margin: "5px 0", fontWeight: "bold" }}>{c.name}</h3>
+</div>
+
+                  </div>
+                ))}
+              </div>
 
               <div style={{ textAlign: "center", margin: "20px" }}>
                 <button
@@ -236,20 +202,34 @@ const Votepage = () => {
             </>
           )}
         </>
-      ) : (
-        <h1
-          style={{
-            textAlign: "center",
-            fontSize: "36px",
-            marginTop: "100px",
-            color: "#27ae60",
-            lineHeight: "1.5",
-          }}
-        >
-          🎉 Thank You for Voting! 🎉<br />
-          Your vote has been recorded on blockchain for <br />
-          <strong>{electionName}</strong>.
-        </h1>
+      )  : (
+        <div style={{ textAlign: "center", marginTop: "120px" }}>
+          <h1 style={{
+            fontSize: "36px", color: "#27ae60", lineHeight: "1.5"
+          }}>
+            🎉 Thank You for Voting! 🎉<br />
+            Your vote has been recorded on blockchain for <br />
+            <strong>{electionName}</strong>.
+          </h1>
+          <p style={{ fontSize: "20px", marginTop: "20px" }}>
+            ⏳ You will be logged out automatically in <strong>{timer}</strong> seconds...
+          </p>
+          <button
+            onClick={handleLogout}
+            style={{
+              marginTop: "20px",
+              backgroundColor: "#e74c3c",
+              color: "white",
+              border: "none",
+              padding: "10px 18px",
+              borderRadius: "6px",
+              cursor: "pointer",
+              fontSize: "16px"
+            }}
+          >
+            🚪 Logout Now
+          </button>
+        </div>
       )}
     </div>
   );

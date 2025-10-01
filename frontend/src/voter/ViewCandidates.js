@@ -112,7 +112,10 @@ const ViewCandidates = () => {
                   style={{ width: '100%', height: '200px', objectFit: 'cover', borderRadius: '6px' }}
                 />
                 <h2 style={{ margin: '10px 0' }}>{candidate.name}</h2>
-                <p><strong>DOB:</strong> {candidate.dob || '-'}</p>
+               <p>
+  <strong>DOB:</strong> {candidate.dob ? new Date(candidate.dob).toLocaleDateString() : '-'}
+</p>
+
                 <p><strong>Qualification:</strong> {candidate.qualification || '-'}</p>
                 <span style={{
                   display: 'inline-block',
