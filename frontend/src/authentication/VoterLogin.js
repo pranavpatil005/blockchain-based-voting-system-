@@ -111,9 +111,14 @@ const VoterLogin = () => {
         boxShadow: '0 8px 16px rgba(0,0,0,0.25)',
         textAlign: 'center'
       }}>
-        <div style={{ marginBottom: '1rem' }}>
-          <span style={{ fontSize: '2rem', color: '#2c5364' }}>🛡️</span>
-        </div>
+       <div style={{ marginBottom: '1rem' }}>
+  <img 
+    src="/assets/images/logo2.png" 
+    alt="Website Logo" 
+    style={{ width: '60px', height: '60px', objectFit: 'contain' }}
+  />
+</div>
+
 
         <h2>Secure Voter Login</h2>
         <p style={{ fontWeight: 'bold', color: '#666', marginBottom: '1.5rem' }}>
