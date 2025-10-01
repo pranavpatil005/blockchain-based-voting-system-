@@ -114,17 +114,18 @@ button[type="button"] {
 .toast {
   position: fixed;
   top: 20px;
-  right: 20px;
-  left:20px;
+  right: 20px;          /* keep only right */
   background-color: #4caf50;
   color: white;
   padding: 12px 20px;
   border-radius: 5px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   z-index: 9999;
-  animation: slideIn 0.5s, fadeOut 0.5s 4.5s forwards;
   font-weight: bold;
+  animation: slideIn 0.5s, fadeOut 0.5s 4.5s forwards;
+  max-width: 300px;      /* optional, limits width */
 }
+
 
 @keyframes slideIn {
   from {

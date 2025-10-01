@@ -81,6 +81,27 @@ app.get('/api/elections', (req, res) => {
 });
 
 
+// Check if Aadhaar exists in users table
+app.post('/api/check-voter', (req, res) => {
+  const { aadhaar } = req.body;
+
+  if (!aadhaar || aadhaar.length !== 12) {
+    return res.status(400).json({ success: false, message: 'Invalid Aadhaar' });
+  }
+
+  const sql = 'SELECT * FROM users WHERE aadhaar = ? LIMIT 1';
+  db.query(sql, [aadhaar], (err, result) => {
+    if (err) return res.status(500).json({ success: false, message: 'Database error' });
+
+    if (result.length > 0) {
+      res.json({ success: true, message: 'Voter found' });
+    } else {
+      res.json({ success: false, message: 'You are not registered' });
+    }
+  });
+});
+
+
 
 // Get ands store all candidates with election name
 app.post('/api/candidates', (req, res) => {
