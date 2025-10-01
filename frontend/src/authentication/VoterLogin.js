@@ -28,6 +28,9 @@ const VoterLogin = () => {
     setOtp('');
   };
 
+  // ---------------------------
+  // Send OTP
+  // ---------------------------
   const handleSendOtp = async () => {
     if (aadhaar.length !== 12) {
       showToastMessage('Aadhaar number must be 12 digits', 'error');
@@ -44,10 +47,21 @@ const VoterLogin = () => {
       showToastMessage('OTP sent to your registered mobile number', 'success');
     } catch (err) {
       console.error(err);
-      showToastMessage('Server error. Try again later.', 'error');
+      if (err.response) {
+        if (err.response.status === 404) {
+          showToastMessage('You are not registered', 'error');
+        } else {
+          showToastMessage(err.response.data.message || 'Server error. Try again later.', 'error');
+        }
+      } else {
+        showToastMessage('Server error. Try again later.', 'error');
+      }
     }
   };
 
+  // ---------------------------
+  // Verify OTP
+  // ---------------------------
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!aadhaar || !otp) {
@@ -67,10 +81,26 @@ const VoterLogin = () => {
       setTimeout(() => navigate('/voter'), 1000);
     } catch (err) {
       console.error(err);
-      showToastMessage('Server error. Try again later.', 'error');
+      if (err.response) {
+        switch (err.response.status) {
+          case 401:
+            showToastMessage(err.response.data.message || 'Invalid OTP', 'error');
+            break;
+          case 404:
+            showToastMessage('You are not registered', 'error');
+            break;
+          default:
+            showToastMessage(err.response.data.message || 'Server error. Try again later.', 'error');
+        }
+      } else {
+        showToastMessage('Server error. Try again later.', 'error');
+      }
     }
   };
 
+  // ---------------------------
+  // JSX
+  // ---------------------------
   return (
     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
       <div style={{

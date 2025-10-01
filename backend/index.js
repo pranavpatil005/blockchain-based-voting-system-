@@ -8,7 +8,7 @@ const twilio = require('twilio');
 const app = express();
 const PORT = 5000;
 
-// Twilio config
+// Twilio configuration
 const accountSid = process.env.TWILIO_ACCOUNT_SID;
 const authToken = process.env.TWILIO_AUTH_TOKEN;
 const twilioNumber = process.env.TWILIO_PHONE_NUMBER;
@@ -39,8 +39,9 @@ db.connect((err) => {
 app.post('/api/admin-login', (req, res) => {
   const { email, password } = req.body;
   const sql = 'SELECT * FROM users WHERE email = ? AND password = ? AND role = "admin" LIMIT 1';
+  
   db.query(sql, [email, password], (err, result) => {
-    if (err) return res.status(500).json({ message: 'Database error' });
+    if (err) return res.status(500).json({ success: false, message: 'Database error' });
     if (result.length > 0) {
       const admin = result[0];
       res.json({
@@ -57,11 +58,11 @@ app.post('/api/admin-login', (req, res) => {
 });
 
 // ---------------------------
-// Voter OTP Login Routes
+// Voter OTP Routes
 // ---------------------------
 
-// Send OTP to voter
-app.post('/api/send-otp', async (req, res) => {
+// Send OTP
+app.post('/api/send-otp', (req, res) => {
   const { aadhaar } = req.body;
 
   if (!aadhaar || aadhaar.length !== 12) {
@@ -71,7 +72,10 @@ app.post('/api/send-otp', async (req, res) => {
   const sqlCheck = 'SELECT * FROM users WHERE aadhaar = ? LIMIT 1';
   db.query(sqlCheck, [aadhaar], async (err, result) => {
     if (err) return res.status(500).json({ success: false, message: 'Database error' });
-    if (result.length === 0) return res.status(404).json({ success: false, message: 'Voter not registered' });
+
+    if (result.length === 0) {
+      return res.status(404).json({ success: false, message: 'Voter not registered' });
+    }
 
     const voter = result[0];
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
@@ -113,7 +117,10 @@ app.post('/api/verify-otp', (req, res) => {
   const sql = 'SELECT * FROM voter_otps WHERE aadhaar = ? AND otp = ? LIMIT 1';
   db.query(sql, [aadhaar, otp], (err, result) => {
     if (err) return res.status(500).json({ success: false, message: 'Database error' });
-    if (result.length === 0) return res.status(401).json({ success: false, message: 'Invalid OTP' });
+
+    if (result.length === 0) {
+      return res.status(401).json({ success: false, message: 'Invalid OTP' });
+    }
 
     const otpData = result[0];
     if (new Date() > otpData.expires_at) {
@@ -125,8 +132,7 @@ app.post('/api/verify-otp', (req, res) => {
 });
 
 // ---------------------------
-// Other routes (elections, candidates, voting) remain the same
-// Copy your existing code for those here
+// TODO: Add other routes for elections, candidates, voting
 // ---------------------------
 
 app.listen(PORT, () => {
