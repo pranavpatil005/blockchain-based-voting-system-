@@ -2,6 +2,10 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import './App.css';
+
+
+import { FaWallet } from "react-icons/fa";
 
 const App = () => {
   const navigate = useNavigate();
@@ -78,11 +82,25 @@ const App = () => {
       .catch(err => console.log(err));
   }, []);
 
+const [account, setAccount] = useState(null);
+
+const connectWallet = async () => {
+  if (window.ethereum) {
+    try {
+      const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
+      setAccount(accounts[0]);
+    } catch (err) {
+      console.error("Wallet connection failed", err);
+    }
+  } else {
+    alert("MetaMask not installed. Please install it to connect.");
+  }
+};
 
   return (
     <div>
       {/* Header Start */}
-      <header className="main-header" style={{ marginTop: '3300px' }}>
+      <header className="main-header" style={{ marginTop: '3100px' }}>
         <div className="header-sticky">
           <nav className="navbar navbar-expand-lg">
             <div
@@ -92,31 +110,35 @@ const App = () => {
               {/* Logo Left */}
               <a className="navbar-brand" href="#">
                 <img
-                  src={`${process.env.PUBLIC_URL}/assets/images/logo.png`}
+                  src={`${process.env.PUBLIC_URL}/assets/images/logo2.png`}
                   alt="Logo"
-                  style={{ width: '150px', height: '50px' }} // adjust as needed
+                  style={{ width: '120px', height: '80px' }} 
                 />
 
               </a>
 
-              {/* Spacer */}
               <div style={{ flex: 1 }}></div>
 
-              {/* Connect Wallet Button Right */}
-
-
-              <div className="navbar-toggle"></div>
-            </div>
-            <div className="header-btn">
-              <a href="donation.html" className="btn-default" >
-                Connect Wallet
-              </a>
-              <a onClick={handleLogin} className="btn-default" style={{ marginLeft: '8px', cursor: 'pointer' }} >
-                Register to Vote
-              </a>
+           
 
 
             </div>
+       <div className="header-btn" style={{ display: 'flex', justifyContent: 'space-between', width: '280px' }}>
+  <a onClick={handleLogin} className="btn-default btn-register">
+    Register to Vote
+  </a>
+<a 
+  onClick={connectWallet} 
+  className={`btn-default btn-wallet ${account ? 'connected' : ''}`} 
+  style={{ cursor: "pointer" }}
+>
+  <FaWallet className="wallet-icon" />
+  {account ? `${account.slice(0, 6)}...${account.slice(-4)}` : "Connect Wallet"}
+</a>
+
+</div>
+
+
           </nav>
           <div className="responsive-menu"></div>
         </div>
