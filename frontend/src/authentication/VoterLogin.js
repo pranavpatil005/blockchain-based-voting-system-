@@ -16,7 +16,7 @@ const VoterLogin = () => {
   const navigate = useNavigate();
   const { userLogin } = useUserAuth();
 
-  // Function to show toast
+  // ✅ Toast handler
   const showToastMessage = (msg, type = 'success') => {
     setToastMsg(msg);
     setToastType(type);
@@ -24,16 +24,16 @@ const VoterLogin = () => {
     setTimeout(() => setShowToast(false), 5000);
   };
 
-  // Handle Aadhaar input change
+  // ✅ Aadhaar input change
   const handleAadhaarChange = (e) => {
     const value = e.target.value.replace(/\D/g, '');
     if (value.length <= 12) setAadhaar(value);
-    setOtpSent(false);       // reset OTP sent state
-    setGeneratedOtp('');     // clear previous OTP
-    setOtp('');              // clear OTP input
+    setOtpSent(false);
+    setGeneratedOtp('');
+    setOtp('');
   };
 
-  // Handle sending OTP
+  // ✅ Send OTP request
   const handleSendOtp = async () => {
     if (aadhaar.length !== 12) {
       showToastMessage('Aadhaar number must be 12 digits', 'error');
@@ -42,25 +42,22 @@ const VoterLogin = () => {
 
     try {
       const res = await axios.post('http://localhost:5000/api/check-voter', { aadhaar });
-      console.log('Backend response:', res.data);
 
       if (!res.data.success) {
         showToastMessage(res.data.message, 'error');
         return;
       }
 
-      // Generate OTP
-      const randomOtp = Math.floor(100000 + Math.random() * 900000);
-      setGeneratedOtp(String(randomOtp));
+      setGeneratedOtp(res.data.otp); // ✅ OTP from backend
       setOtpSent(true);
-      showToastMessage('OTP sent to your registered mobile number', 'success');
+      showToastMessage('OTP sent (shown here for testing)', 'success');
     } catch (error) {
       console.error(error);
       showToastMessage('Server error. Try again later.', 'error');
     }
   };
 
-  // Handle login form submit
+  // ✅ Submit login
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -98,6 +95,7 @@ const VoterLogin = () => {
           Enter your Aadhaar number and OTP to login
         </p>
 
+        {/* ✅ Show OTP on screen (testing only) */}
         {generatedOtp && (
           <p style={{ color: '#333', fontWeight: 'bold' }}>
             Your OTP (for testing): {generatedOtp}
@@ -149,7 +147,7 @@ const VoterLogin = () => {
           </button>
         </form>
 
-        {/* Toast */}
+        {/* ✅ Toast */}
         {showToast && (
           <div style={{
             position: 'fixed',
