@@ -108,14 +108,18 @@ const connectWallet = async () => {
               style={{ display: 'flex', alignItems: 'center', height: '250px' }}
             >
               {/* Logo Left */}
-              <a className="navbar-brand" href="#">
-                <img
-                  src={`${process.env.PUBLIC_URL}/assets/images/logo2.png`}
-                  alt="Logo"
-                  style={{ width: '120px', height: '80px' }} 
-                />
+               <div style={{ fontSize: "20px", fontWeight: "bold" }}> 
+          
+          
+          
+  <img 
+    src="/assets/images/logo2.png" 
+    alt="Website Logo" 
+    style={{ width: '60px', height: '60px', objectFit: 'contain' }}
+  />
 
-              </a>
+
+VOTECHAIN</div>
 
               <div style={{ flex: 1 }}></div>
 

@@ -9,76 +9,61 @@ class Cursor {
         this.body = $(this.options.container);
         this.el = $('<div class="cb-cursor"></div>');
         this.text = $('<div class="cb-cursor-text"></div>');
+
+        // Make the base dot very tiny by default
+        this.el.css('--dot-scale', 0.05); // optional CSS variable for tiny scale
+
         this.init();
     }
 
+    
     init() {
         this.el.append(this.text);
         this.body.append(this.el);
         this.bind();
+        // start off-screen
         this.move(-window.innerWidth, -window.innerHeight, 0);
+
+        // Optional: hide main dot initially
+        this.el.addClass('-hidden-dot');
     }
 
     bind() {
         const self = this;
 
-        this.body.on('mouseleave', () => {
-            self.hide();
-        }).on('mouseenter', () => {
-            self.show();
-        }).on('mousemove', (e) => {
-            this.pos = {
-                x: this.stick ? this.stick.x - ((this.stick.x - e.clientX) * 0.15) : e.clientX,
-                y: this.stick ? this.stick.y - ((this.stick.y - e.clientY) * 0.15) : e.clientY
-            };
-            this.update();
-        }).on('mousedown', () => {
-            self.setState('-active');
-        }).on('mouseup', () => {
-            self.removeState('-active');
-        }).on('mouseenter', 'a,input,textarea,button', () => {
-            self.setState('-pointer');
-        }).on('mouseleave', 'a,input,textarea,button', () => {
-            self.removeState('-pointer');
-        }).on('mouseenter', 'iframe', () => {
-            self.hide();
-        }).on('mouseleave', 'iframe', () => {
-            self.show();
-        }).on('mouseenter', '[data-cursor]', function () {
-            self.setState(this.dataset.cursor);
-        }).on('mouseleave', '[data-cursor]', function () {
-            self.removeState(this.dataset.cursor);
-        }).on('mouseenter', '[data-cursor-text]', function () {
-            self.setText(this.dataset.cursorText);
-        }).on('mouseleave', '[data-cursor-text]', function () {
-            self.removeText();
-        }).on('mouseenter', '[data-cursor-stick]', function () {
-            self.setStick(this.dataset.cursorStick);
-        }).on('mouseleave', '[data-cursor-stick]', function () {
-            self.removeStick();
-        });
+        this.body.on('mouseleave', () => self.hide())
+            .on('mouseenter', () => self.show())
+            .on('mousemove', (e) => {
+                this.pos = {
+                    x: this.stick ? this.stick.x - ((this.stick.x - e.clientX) * 0.15) : e.clientX,
+                    y: this.stick ? this.stick.y - ((this.stick.y - e.clientY) * 0.15) : e.clientY
+                };
+                this.update();
+            })
+            .on('mousedown', () => self.setState('-active'))
+            .on('mouseup', () => self.removeState('-active'))
+            .on('mouseenter', 'a,input,textarea,button', () => self.setState('-pointer'))
+            .on('mouseleave', 'a,input,textarea,button', () => self.removeState('-pointer'))
+            .on('mouseenter', 'iframe', () => self.hide())
+            .on('mouseleave', 'iframe', () => self.show())
+            .on('mouseenter', '[data-cursor]', function () { self.setState(this.dataset.cursor); })
+            .on('mouseleave', '[data-cursor]', function () { self.removeState(this.dataset.cursor); })
+            .on('mouseenter', '[data-cursor-text]', function () { self.setText(this.dataset.cursorText); })
+            .on('mouseleave', '[data-cursor-text]', function () { self.removeText(); })
+            .on('mouseenter', '[data-cursor-stick]', function () { self.setStick(this.dataset.cursorStick); })
+            .on('mouseleave', '[data-cursor-stick]', function () { self.removeStick(); });
     }
 
-    setState(state) {
-        this.el.addClass(state);
-    }
-
-    removeState(state) {
-        this.el.removeClass(state);
-    }
-
-    toggleState(state) {
-        this.el.toggleClass(state);
-    }
+    setState(state) { this.el.addClass(state); }
+    removeState(state) { this.el.removeClass(state); }
+    toggleState(state) { this.el.toggleClass(state); }
 
     setText(text) {
         this.text.html(text);
         this.el.addClass('-text');
     }
 
-    removeText() {
-        this.el.removeClass('-text');
-    }
+    removeText() { this.el.removeClass('-text'); }
 
     setStick(el) {
         const target = $(el);
@@ -90,9 +75,7 @@ class Cursor {
         this.move(this.stick.x, this.stick.y, 5);
     }
 
-    removeStick() {
-        this.stick = false;
-    }
+    removeStick() { this.stick = false; }
 
     update() {
         this.move();
@@ -112,16 +95,21 @@ class Cursor {
 
     show() {
         if (this.visible) return;
-        clearInterval(this.visibleInt);
+        clearTimeout(this.visibleInt);
+
+        // Ensure dot is tiny by default
+        this.el.css('transform', 'scale(0.05)');
         this.el.addClass('-visible');
+
         this.visibleInt = setTimeout(() => this.visible = true);
     }
 
     hide() {
-        clearInterval(this.visibleInt);
+        clearTimeout(this.visibleInt);
         this.el.removeClass('-visible');
         this.visibleInt = setTimeout(() => this.visible = false, this.options.visibleTimeout);
     }
 }
+
 // Init cursor
 const cursor = new Cursor();
