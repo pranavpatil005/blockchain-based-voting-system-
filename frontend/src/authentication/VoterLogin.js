@@ -1,17 +1,19 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useUserAuth } from '../context/UserAuthContext';
 import axios from 'axios';
+import useSessionState from '../hooks/useSessionState';
 
 const VoterLogin = () => {
-  const [aadhaar, setAadhaar] = useState('');
-  const [otpSent, setOtpSent] = useState(false);
-  const [otp, setOtp] = useState('');
-  const [generatedOtp, setGeneratedOtp] = useState('');
+  // ✅ Use session state instead of normal useState
+  const [aadhaar, setAadhaar, clearAadhaar] = useSessionState('voter_aadhaar', '');
+  const [otpSent, setOtpSent, clearOtpSent] = useSessionState('voter_otp_sent', false);
+  const [otp, setOtp, clearOtp] = useSessionState('voter_otp', '');
+  const [generatedOtp, setGeneratedOtp, clearGeneratedOtp] = useSessionState('voter_generated_otp', '');
 
-  const [toastMsg, setToastMsg] = useState('');
-  const [toastType, setToastType] = useState('success');
-  const [showToast, setShowToast] = useState(false);
+  const [toastMsg, setToastMsg] = useSessionState('voter_toast_msg', '');
+  const [toastType, setToastType] = useSessionState('voter_toast_type', 'success');
+  const [showToast, setShowToast] = useSessionState('voter_show_toast', false);
 
   const navigate = useNavigate();
   const { userLogin } = useUserAuth();
@@ -48,7 +50,7 @@ const VoterLogin = () => {
         return;
       }
 
-      setGeneratedOtp(res.data.otp); // ✅ OTP from backend
+      setGeneratedOtp(res.data.otp); // OTP from backend
       setOtpSent(true);
       showToastMessage('OTP sent (shown here for testing)', 'success');
     } catch (error) {
@@ -73,6 +75,13 @@ const VoterLogin = () => {
 
     userLogin();
     showToastMessage('Login Successful!', 'success');
+
+    // ✅ Clear session storage after login
+    clearAadhaar();
+    clearOtpSent();
+    clearOtp();
+    clearGeneratedOtp();
+
     setTimeout(() => navigate('/voter'), 1000);
   };
 
@@ -87,7 +96,11 @@ const VoterLogin = () => {
         textAlign: 'center'
       }}>
         <div style={{ marginBottom: '1rem' }}>
-          <span style={{ fontSize: '2rem', color: '#2c5364' }}>🛡️</span>
+          <img 
+            src="/assets/images/logo2.png" 
+            alt="Website Logo" 
+            style={{ width: '60px', height: '60px', objectFit: 'contain' }}
+          />
         </div>
 
         <h2>Secure Voter Login</h2>

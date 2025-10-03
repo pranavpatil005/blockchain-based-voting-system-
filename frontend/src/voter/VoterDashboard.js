@@ -19,7 +19,7 @@ export default function VoterDashboard() {
     <div
       className="homepage"
       style={{
-        paddingTop: "900px",
+        paddingTop: "900px",  
       }}
     >
       <nav
@@ -40,7 +40,18 @@ export default function VoterDashboard() {
         }}
       >
         {/* Left Logo */}
-        <div style={{ fontSize: "20px", fontWeight: "bold" }}>📊 VOTECHAIN</div>
+        <div data-cursor="-opaque"style={{ fontSize: "20px", fontWeight: "bold" }}> 
+          
+          
+          
+  <img 
+    src="/assets/images/logo2.png" 
+    alt="Website Logo" 
+    style={{ width: '60px', height: '60px', objectFit: 'contain' }}
+  />
+
+
+VOTECHAIN</div>
 
         {/* Center Menu */}
         <ul
@@ -94,7 +105,7 @@ export default function VoterDashboard() {
       <section className="hero-section">
         <div className="container text-center">
 
-          <h1 className="hero-title">Blockchain based E-Voting System</h1>
+          <h1 data-cursor="-opaque" className="hero-title">Blockchain based E-Voting System</h1>
           <p className="hero-subtitle">
             Experience the future of voting with our secure, transparent, and tamper-proof blockchain-based election
             platform.
