@@ -62,8 +62,12 @@ const AdminLogin = () => {
       )}
 
       <div className="login-card">
-        <div className="icon-container">
-          <span className="icon-shield">🛡️</span>
+         <div style={{ marginBottom: '1rem' }}>
+          <img 
+            src="/assets/images/logo2.png" 
+            alt="Website Logo" 
+            style={{ width: '60px', height: '60px', objectFit: 'contain' }}
+          />
         </div>
         <h2>Admin Login</h2>
         <p className="subtitle">Enter your email and password to login</p>
