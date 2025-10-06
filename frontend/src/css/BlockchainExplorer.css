@@ -9,9 +9,10 @@
 }
 
 .explorer-container h2 {
+ text-align: center;
   font-size: 28px;
-  color: #2c3e50;
-  margin-bottom: 8px;
+  color: #2563eb;
+  margin-bottom: 25px;
 }
 
 .note {
