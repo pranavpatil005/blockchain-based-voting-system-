@@ -114,6 +114,7 @@ const CandidateManagement = () => {
 
   return (
     <div className="candidate-management-container">
+       <h2>Add New Candidate</h2>
       {/* Candidate Form */}
       <form className="candidate-form" onSubmit={addCandidate}>
         {/* Election Select Menu */}
