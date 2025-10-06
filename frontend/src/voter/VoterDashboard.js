@@ -40,7 +40,7 @@ export default function VoterDashboard() {
         }}
       >
         {/* Left Logo */}
-        <div data-cursor="-opaque"style={{ fontSize: "20px", fontWeight: "bold" }}> 
+        <div style={{ fontSize: "20px", fontWeight: "bold" }}> 
           
           
           
@@ -105,7 +105,7 @@ VOTECHAIN</div>
       <section className="hero-section">
         <div className="container text-center">
 
-          <h1 data-cursor="-opaque" className="hero-title">Blockchain based E-Voting System</h1>
+          <h1  className="hero-title">Blockchain based E-Voting System</h1>
           <p className="hero-subtitle">
             Experience the future of voting with our secure, transparent, and tamper-proof blockchain-based election
             platform.

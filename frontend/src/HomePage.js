@@ -151,157 +151,221 @@ VOTECHAIN</div>
 
       {/* Hero Section Start */}
       <div className="hero parallaxie">
-        <div className="container">
-          <div className="row align-items-center">
-            <div className="col-lg-12">
+  <div className="container">
+    <div className="row align-items-center">
+      <div className="col-lg-12">
 
-              <div className="hero-content">
-                <div className="section-title dark-section">
-                  <h1
-                    className="text-anime-style-2"
-                    data-cursor="-opaque"
-                    style={{
-                      fontSize: '80px',
-                      textShadow: '2px 2px 5px rgba(240, 223, 223, 0.5)',
-                      marginBottom: '50px',
-                      marginTop: '80px',
-                    }}
-                  >
-                    Blockchain based E-Voting System
-                  </h1>
-                  <hr style={{ color: 'white', marginBottom: '50px' }}></hr>
+        <div className="hero-content">
+          <div className="section-title dark-section">
+            {/* Main Heading */}
+            <h1
+              className="text-anime-style-2"
+              onMouseEnter={(e) => {
+                e.currentTarget.style.color = "#00e5ff";
+                
+                e.currentTarget.style.textShadow = "1px 1px 10px rgba(0,229,255,0.5)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.color = "white";
+                e.currentTarget.style.transform = "scale(1)";
+                e.currentTarget.style.textShadow = "2px 2px 5px rgba(240, 223, 223, 0.5)";
+              }}
+              style={{
+                fontSize: "80px",
+                textShadow: "2px 2px 5px rgba(240, 223, 223, 0.5)",
+                marginBottom: "50px",
+                marginTop: "80px",
+                transition: "all 0.4s cubic-bezier(0.25, 1, 0.5, 1)",
+              }}
+            >
+              Blockchain based E-Voting System
+            </h1>
 
-                  <h1 className="text-anime-style-2" data-cursor="-opaque">
+            <hr style={{ color: 'white', marginBottom: '50px', opacity: 0.6 }} />
 
-                    Be the change<span> you want to see</span>
-                  </h1>
-                  <p className="wow fadeInUp" data-wow-delay="0.2s">
-                    At the heart of democracy lies the power of the people. By contributing
-                    to our mission, you become an essential part of driving positive
-                    change, shaping policies, and creating a brighter future for everyone.
-                  </p>
-                </div>
-                {status === "Election Ongoing" ? (
-                  <div className="header-btn">
-                    <a onClick={handleLogin} class="btn-default btn-highlighted">Register to Vote</a>
-                  </div>
-                ) : (<span></span>
-                )}
-                <div>
-                  {/* Election Status */}
-                  <div style={{ textAlign: 'center', padding: '50px' }}>
-                    {/* <h1>Blockchain Based E-Voting System</h1> */}
-                    <h2
-                      style={{
-                        color: status === "Election Ongoing" ? "green" : "red",
-                        fontWeight: "bold",
-                        fontSize: "28px",
-                        textShadow: "1px 1px 2px rgba(0,0,0,0.2)"
-                      }}
-                    >
-                      {status}
-                    </h2>
+            {/* Subheading with animated span */}
+            <h1
+              className="text-anime-style-2"
+             
+            >
+              Be the change
+              <span
+                style={{
+                  display: "inline-block",
+                  transition: "all 0.4s ease",
+                }}
+             
+              >
+                {" "}you want to see
+              </span>
+            </h1>
 
+            {/* Paragraph */}
+            <p
+              className="wow fadeInUp"
+              data-wow-delay="0.2s"
+              onMouseEnter={(e) => e.currentTarget.style.color = "#ffd166"}
+              onMouseLeave={(e) => e.currentTarget.style.color = "white"}
+              style={{
+                transition: "color 0.4s ease",
+                lineHeight: "1.8",
+              }}
+            >
+              At the heart of democracy lies the power of the people. By contributing
+              to our mission, you become an essential part of driving positive
+              change, shaping policies, and creating a brighter future for everyone.
+            </p>
+          </div>
 
-                    {election && timeLeft && status === 'Election Ongoing' && (
-                      <>
-                        <h3 class="text-info">Election: {election.name}</h3>
+          {/* Register Button */}
+          {status === "Election Ongoing" && (
+            <div className="header-btn">
+              <a
+                onClick={handleLogin}
+                className="btn-default btn-highlighted"
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = "linear-gradient(135deg, #00e5ff, #0077ff)";
+                  e.currentTarget.style.color = "#fff";
+                  e.currentTarget.style.transform = "scale(1.05) translateY(-2px)";
+                  e.currentTarget.style.boxShadow = "0px 10px 25px rgba(0, 229, 255, 0.4)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = "#fff";
+                  e.currentTarget.style.color = "#000";
+                  e.currentTarget.style.transform = "scale(1) translateY(0)";
+                  e.currentTarget.style.boxShadow = "none";
+                }}
+                style={{
+                  transition: "all 0.4s cubic-bezier(0.25, 1, 0.5, 1)",
+                  cursor: "pointer",
+                  padding: "12px 30px",
+                  borderRadius: "30px",
+                  fontWeight: 600,
+                }}
+              >
+                Register to Vote
+              </a>
+            </div>
+          )}
+
+          {/* Election Status */}
+          <div style={{ textAlign: 'center', padding: '50px' }}>
+            <h2
+              style={{
+                color: status === "Election Ongoing" ? "green" : "red",
+                fontWeight: "bold",
+                fontSize: "28px",
+                textShadow: "1px 1px 2px rgba(0,0,0,0.2)",
+              }}
+            >
+              {status}
+            </h2>
+
+            {election && timeLeft && status === 'Election Ongoing' && (
+              <>
+                <h3 className="text-info">Election: {election.name}</h3>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    gap: "15px",
+                    margin: "20px 0"
+                  }}
+                >
+                  {Object.entries(timeLeft).map(([unit, value]) => {
+                    const isRed = unit === "days" || unit === "minutes";
+                    const color = isRed ? "#e74c3c" : "#2937b9ff";
+                    return (
+                      <div
+                        key={unit}
+                        style={{
+                          background: "#fff",
+                          padding: "15px",
+                          borderRadius: "6px",
+                          textAlign: "center",
+                          minWidth: "70px",
+                          boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+                          borderBottom: `4px solid ${color}`,
+                          transition: "transform 0.3s ease, box-shadow 0.3s ease",
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.transform = "translateY(-5px)";
+                          e.currentTarget.style.boxShadow = "0 8px 20px rgba(0,0,0,0.15)";
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.transform = "translateY(0)";
+                          e.currentTarget.style.boxShadow = "0 4px 12px rgba(0,0,0,0.1)";
+                        }}
+                      >
                         <div
                           style={{
-                            display: "flex",
-                            justifyContent: "center",
-                            gap: "15px",
-                            margin: "20px 0"
+                            fontSize: "28px",
+                            fontWeight: "bold",
+                            color: color,
+                            marginBottom: "5px"
                           }}
                         >
-                          {Object.entries(timeLeft).map(([unit, value], index) => {
-                            // Alternate colors (red for DAYS/MINS, blue for HOURS/SEC)
-                            const isRed = unit === "days" || unit === "minutes";
-                            const color = isRed ? "#e74c3c" : "#2937b9ff";
-
-                            return (
-                              <div
-                                key={unit}
-                                style={{
-                                  background: "#fff",
-                                  padding: "15px",
-                                  borderRadius: "4px",
-                                  textAlign: "center",
-                                  minWidth: "70px",
-                                  boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
-                                  borderBottom: `4px solid ${color}`
-                                }}
-                              >
-                                <div
-                                  style={{
-                                    fontSize: "28px",
-                                    fontWeight: "bold",
-                                    color: color,
-                                    marginBottom: "5px"
-                                  }}
-                                >
-                                  {String(value).padStart(2, "0")}
-                                </div>
-                                <div
-                                  style={{
-                                    fontSize: "12px",
-                                    fontWeight: "600",
-                                    color: "#333",
-                                    letterSpacing: "1px"
-                                  }}
-                                >
-                                  {unit.toUpperCase()}
-                                </div>
-                              </div>
-                            );
-                          })}
+                          {String(value).padStart(2, "0")}
                         </div>
-
-                      </>
-                    )}
-                  </div>
-
+                        <div
+                          style={{
+                            fontSize: "12px",
+                            fontWeight: "600",
+                            color: "#333",
+                            letterSpacing: "1px"
+                          }}
+                        >
+                          {unit.toUpperCase()}
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
-
-
-
-                {status === "Election Ongoing" ? (
-                  <span></span>
-                ) : (
-                  <span
-                    style={{
-                      display: "inline-block",
-                      padding: "10px 25px",
-                      color: "#fff",
-                      backgroundColor: "#1fbb27",
-                      borderRadius: "25px",
-                      cursor: "pointer",
-                      fontWeight: "600",
-                      transition: "all 0.3s ease",
-                      boxShadow: "0 4px 6px rgba(0,0,0,0.1)"
-                    }}
-                    onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#16a520")}
-                    onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#1fbb27")}
-                    onClick={() => {
-                      const element = document.getElementById("resultsSection");
-                      if (element) {
-                        element.scrollIntoView({ behavior: "smooth" });
-                      }
-                    }}
-                  >
-                    See Results!
-                  </span>
-                )}
-
-
-
-
-              </div>
-            </div>
-
+              </>
+            )}
           </div>
+
+          {/* See Results Button */}
+          {status !== "Election Ongoing" && (
+            <span
+              style={{
+                display: "inline-block",
+                padding: "12px 30px",
+                color: "#fff",
+                backgroundColor: "#1fbb27",
+                borderRadius: "30px",
+                cursor: "pointer",
+                fontWeight: "600",
+                transition: "all 0.3s ease",
+                boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = "#16a520";
+                e.currentTarget.style.transform = "scale(1.05)";
+                e.currentTarget.style.boxShadow = "0 8px 20px rgba(0,0,0,0.2)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = "#1fbb27";
+                e.currentTarget.style.transform = "scale(1)";
+                e.currentTarget.style.boxShadow = "0 4px 12px rgba(0,0,0,0.15)";
+              }}
+              onClick={() => {
+                const element = document.getElementById("resultsSection");
+                if (element) {
+                  element.scrollIntoView({ behavior: "smooth" });
+                }
+              }}
+            >
+              See Results!
+            </span>
+          )}
+
         </div>
       </div>
+    </div>
+  </div>
+</div>
+
       {/* Hero Section End */}
 
       {/* About Us Section Start */}
@@ -337,7 +401,7 @@ VOTECHAIN</div>
                 {/* Section Title Start */}
                 <div className="section-title">
                   <h3 className="">About Us</h3>
-                  <h2 className="text-anime-style-2" data-cursor="-opaque">
+                  <h2 className="text-anime-style-2" >
                     <span>BLOCKCHAIN</span> based E-Voting System
                   </h2>
                   <p style={{ fontSize: '17px' }}>
@@ -395,7 +459,7 @@ VOTECHAIN</div>
                         </h2>
                       </div>
                     ) : (
-                      <h2>No candidates found for last election</h2>
+                      <h2 >No candidates found for last election</h2>
                     )
                   ) : (
                     <h2>Results are Not Declared yet</h2>
@@ -448,7 +512,8 @@ VOTECHAIN</div>
               {/* Section Title Start */}
               <div className="section-title section-title-left">
                 <h3 className="wow fadeInUp">Our campaign</h3>
-                <h2 className="text-anime-style-2" data-cursor="-opaque">
+                <h2 className="text-anime-style-2" 
+                >
                   Our mission and vision: building a <span>better tomorrow</span>
                 </h2>
               </div>
@@ -640,7 +705,7 @@ VOTECHAIN</div>
               {/* Footer Header Start */}
               <div className="footer-header">
                 <div className="section-title dark-section">
-                  <h2 className="text-anime-style-2" data-cursor="-opaque">
+                  <h2 className="text-anime-style-2" >
                     <span> BLOCKCHAIN</span> based E-Voting System
                   </h2>
 
@@ -648,6 +713,7 @@ VOTECHAIN</div>
 
 
               </div>
+              
               {/* Footer Header End */}
             </div>
             <div className="col-lg-4 col-md-4">
