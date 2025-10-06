@@ -188,8 +188,10 @@ const AdminLayout = () => {
             ➕ Election
           </button>
           <button
+
+          
             className="new-election-btn"
-            onClick={() => navigate("/admin/createelection")}
+            onClick={() => navigate("/admin/candidates")}
           >
             ➕ Candidates
           </button>
