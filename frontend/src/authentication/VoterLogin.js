@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useUserAuth } from '../context/UserAuthContext';
 import axios from 'axios';
@@ -17,6 +17,13 @@ const VoterLogin = () => {
 
   const navigate = useNavigate();
   const { userLogin } = useUserAuth();
+
+  // ✅ Clear any leftover toast when component mounts
+  useEffect(() => {
+    setShowToast(false);
+    setToastMsg('');
+    setToastType('success');
+  }, []);
 
   // ✅ Toast handler
   const showToastMessage = (msg, type = 'success') => {

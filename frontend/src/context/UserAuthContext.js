@@ -1,24 +1,19 @@
-// src/context/UserAuthContext.js
-import { createContext, useContext, useState, useEffect } from 'react';
+// frontend/src/context/UserAuthContext.js
+import React, { createContext, useContext } from "react";
+import useSessionState from "../hooks/useSessionState";
 
 const UserAuthContext = createContext();
 
 export const UserAuthProvider = ({ children }) => {
-  const [userLoggedIn, setUserLoggedIn] = useState(false);
-
-  useEffect(() => {
-    const loggedIn = localStorage.getItem('userLoggedIn') === 'true';
-    setUserLoggedIn(loggedIn);
-  }, []);
+  // Persist login using session storage
+  const [userLoggedIn, setUserLoggedIn, clearUserLoggedIn] = useSessionState("userLoggedIn", false);
 
   const userLogin = () => {
-    localStorage.setItem('userLoggedIn', 'true');
     setUserLoggedIn(true);
   };
 
   const userLogout = () => {
-    localStorage.removeItem('userLoggedIn');
-    setUserLoggedIn(false);
+    clearUserLoggedIn(); // also clears from sessionStorage
   };
 
   return (
