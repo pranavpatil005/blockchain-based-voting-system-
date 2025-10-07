@@ -1,22 +1,27 @@
-import React, { useState } from 'react';
+import React from 'react';
 import '../css/AdminLogin.css';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import useSessionState from '../hooks/useSessionState';
 
 const AdminLogin = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [toast, setToast] = useState({ message: '', color: '' });
-  const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
-  const { login } = useAuth();
+  // ✅ Replace all normal useState with useSessionState
+  const [email, setEmail, clearEmail] = useSessionState('admin_email', '');
+  const [password, setPassword, clearPassword] = useSessionState('admin_password', '');
+  const [toast, setToast] = useSessionState('admin_toast', { message: '', color: '' });
+  const [loading, setLoading, clearLoading] = useSessionState('admin_loading', false);
 
+  const navigate = useNavigate();
+  const { login } = useAuth(); // from AuthContext (for admin)
+
+  // ✅ Toast handler
   const showToast = (message, color) => {
     setToast({ message, color });
     setTimeout(() => setToast({ message: '', color: '' }), 5000);
   };
 
+  // ✅ Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -34,11 +39,17 @@ const AdminLogin = () => {
 
       if (response.data.success) {
         if (response.data.name) {
-          localStorage.setItem('name', response.data.name);
+          sessionStorage.setItem('admin_name', response.data.name); // ✅ store name temporarily
         }
 
-        login();
+        login(); // ✅ mark admin as logged in (now session-persistent)
         showToast('✅ Login successful!', 'green');
+
+        // ✅ Clear stored fields
+        clearEmail();
+        clearPassword();
+        clearLoading();
+
         setTimeout(() => navigate('/admin'), 1000);
       } else {
         showToast('❌ Invalid credentials', 'red');
@@ -53,7 +64,7 @@ const AdminLogin = () => {
 
   return (
     <div className="login-container">
-      {/* Toast Notification */}
+      {/* ✅ Toast Notification */}
       {toast.message && (
         <div
           className="toast"
@@ -65,7 +76,7 @@ const AdminLogin = () => {
         </div>
       )}
 
-      {/* Login Card */}
+      {/* ✅ Login Card */}
       <div className="login-card">
         {/* Website Logo */}
         <div className="logo-container" style={{ marginBottom: '1rem' }}>
