@@ -18,6 +18,8 @@ const db = mysql.createConnection({
   password: '', // your MySQL password
   database: 'evoting',
   port: 3306
+
+
 });
 
 db.connect((err) => {
@@ -289,6 +291,125 @@ app.get('/api/active-election', (req, res) => {
     });
   });
 });
+
+
+
+
+// ---------------------------
+// Finish / Close Election
+// ---------------------------
+app.put('/api/finish-election/:id', (req, res) => {
+  const { id } = req.params;
+  const { to_date } = req.body;
+
+  if (!to_date) {
+    return res.status(400).json({ success: false, message: 'to_date is required' });
+  }
+
+  const sql = `UPDATE election SET to_date = ? WHERE id = ?`;
+  db.query(sql, [to_date, id], (err, result) => {
+    if (err) return res.status(500).json({ success: false, message: err.message });
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ success: false, message: 'Election not found' });
+    }
+
+    res.json({ success: true, message: 'Election finished successfully' });
+  });
+});
+
+
+
+
+// ---------------------------
+// Start Election
+// ---------------------------
+app.put('/api/start-election/:id', (req, res) => {
+  const { id } = req.params;
+  const { from_date } = req.body;
+
+  if (!from_date) {
+    return res.status(400).json({ success: false, message: 'from_date is required' });
+  }
+
+  const sql = `UPDATE election SET from_date = ? WHERE id = ?`;
+  db.query(sql, [from_date, id], (err, result) => {
+    if (err) return res.status(500).json({ success: false, message: err.message });
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ success: false, message: 'Election not found' });
+    }
+
+    res.json({ success: true, message: 'Election started successfully' });
+  });
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// ---------------------------
+// Add a new voter
+// ---------------------------
+// Add Voter
+app.post('/api/add-voter', (req, res) => {
+  const { name, voterId, aadhaar, phone, age, photo } = req.body;
+
+  if (!name || !voterId || !aadhaar || !phone) {
+    return res.status(400).json({ success: false, message: 'Required fields missing' });
+  }
+
+  const sql = `
+    INSERT INTO users (name, voterId, aadhaar, mobile_number, age, role, photo)
+    VALUES (?, ?, ?, ?, ?, 'user', ?)
+  `;
+
+  const ageValue = age ? Number(age) : null;
+
+  db.query(sql, [name, voterId, aadhaar, phone, ageValue, photo || null], (err, result) => {
+    if (err) {
+      console.error('DB Error:', err);
+      return res.status(500).json({ success: false, message: err.message });
+    }
+    res.json({ success: true, message: 'Voter added successfully', voterId: result.insertId });
+  });
+});
+
+// Get All Voters
+app.get('/api/voters', (req, res) => {
+  const sql = `
+    SELECT id, name, voterId, aadhaar, mobile_number AS phone, age, photo
+    FROM users
+    WHERE role='user'
+    ORDER BY name ASC
+  `;
+  db.query(sql, (err, result) => {
+    if (err) return res.status(500).json({ success: false, message: err.message });
+    res.json({ success: true, voters: result });
+  });
+});
+
+
+
+
+
 
 // ---------------------------
 // Start Server

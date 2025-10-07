@@ -1,0 +1,108 @@
+/* ManageElections.css */
+
+.manage-elections-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: 'Arial', sans-serif;
+}
+
+.manage-elections-container h2 {
+  text-align: center;
+  margin-bottom: 30px;
+  color: #2c3e50;
+}
+
+.message {
+  text-align: center;
+  color: #27ae60;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+.election-card {
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.election-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+}
+
+.election-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.election-header h3 {
+  font-size: 22px;
+  color: #34495e;
+}
+
+.status {
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #fff;
+  text-transform: uppercase;
+}
+
+.status.Upcoming {
+  background-color: #3498db;
+}
+
+.status.Ongoing {
+  background-color: #27ae60;
+}
+
+.status.Ended {
+  background-color: #e74c3c;
+}
+
+.election-card p {
+  color: #555;
+  margin: 4px 0;
+}
+
+.candidates-section {
+  margin-top: 15px;
+}
+
+.candidates-section h4 {
+  margin-bottom: 8px;
+  color: #2c3e50;
+}
+
+.candidates-section ul {
+  list-style-type: disc;
+  padding-left: 20px;
+}
+
+.candidates-section li {
+  margin-bottom: 4px;
+  color: #555;
+}
+
+.election-card button {
+  margin-top: 15px;
+  background-color: #e67e22;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  color: #fff;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.2s;
+}
+
+.election-card button:hover {
+  background-color: #d35400;
+}
