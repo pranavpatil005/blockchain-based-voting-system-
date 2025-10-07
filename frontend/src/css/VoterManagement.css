@@ -6,8 +6,10 @@
 }
 
 h2 {
-  color: #2c3e50;
-  margin-bottom: 20px;
+  text-align: center;
+  font-size: 28px;
+  color: #2563eb;
+  margin-bottom: 25px;
 }
 
 .voter-form {
