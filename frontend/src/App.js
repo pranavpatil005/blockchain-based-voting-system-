@@ -11,8 +11,6 @@ import ResultsPg from './voter/ResultsPg';
 import About from './About';
 import VoterDashboard from './voter/VoterDashboard';
 
-
-
 // Admin Pages
 import AdminLayout from './admin/AdminLayout';
 import AdminDashboard from './admin/AdminDashboard';
@@ -29,6 +27,7 @@ import SmartContractControl from './admin/SmartContractControl';
 import SystemSettings from './admin/SystemSettings';
 import VoterManagement from './admin/VoterManagement';
 
+import ManageElections from './admin/ManageElections'; 
 
 function App() {
   return (
@@ -57,6 +56,8 @@ function App() {
             <Route path="smartcontract" element={<SmartContractControl />} />
             <Route path="settings" element={<SystemSettings />} />
             <Route path="management" element={<VoterManagement />} />
+
+            <Route path="manage-elections" element={<ManageElections />} />
           </Route>
         </Route>
 
@@ -65,11 +66,7 @@ function App() {
           <Route path="/voter" element={<VoterDashboard />} />
           <Route path="/castvote" element={<Votepage />} />
           <Route path="/candidates" element={<ViewCandidates />} />
-
           <Route path="/results" element={<ResultsPg />} />
-
-          {/* Add routes for voter pages here  */}
-
         </Route>
       </Routes>
     </Router>

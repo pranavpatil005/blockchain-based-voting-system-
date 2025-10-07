@@ -1,24 +1,14 @@
-import { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext } from 'react';
+import useSessionState from '../hooks/useSessionState';
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [adminLoggedIn, setAdminLoggedIn] = useState(false);
+  // ✅ Use session storage to persist admin login
+  const [adminLoggedIn, setAdminLoggedIn, clearAdminLoggedIn] = useSessionState('adminLoggedIn', false);
 
-  useEffect(() => {
-    const loggedIn = localStorage.getItem('adminLoggedIn') === 'true';
-    setAdminLoggedIn(loggedIn);
-  }, []);
-
-  const login = () => {
-    localStorage.setItem('adminLoggedIn', 'true');
-    setAdminLoggedIn(true);
-  };
-
-  const logout = () => {
-    localStorage.removeItem('adminLoggedIn');
-    setAdminLoggedIn(false);
-  };
+  const login = () => setAdminLoggedIn(true);
+  const logout = () => clearAdminLoggedIn();
 
   return (
     <AuthContext.Provider value={{ adminLoggedIn, login, logout }}>
