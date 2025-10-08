@@ -1,0 +1,3 @@
+npx hardhat ignition deploy ./ignition/modules/votingSystem.js --network localhost
+
+npx hardhat node
