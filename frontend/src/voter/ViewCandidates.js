@@ -3,7 +3,7 @@ import axios from 'axios';
 import '../css/ViewCandidates.css';
 import { useNavigate } from 'react-router-dom';
 import { useUserAuth } from '../context/UserAuthContext';
-
+import Navbar from "./Navbar";
 const ViewCandidates = () => {
   const [candidates, setCandidates] = useState([]);
   const [electionName, setElectionName] = useState('');
@@ -58,34 +58,7 @@ const ViewCandidates = () => {
   return (
     <div style={{ paddingTop: '10px', fontFamily: 'Arial, sans-serif' }}>
       {/* Navbar */}
-      <nav style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        width: '100%',
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        backgroundColor: '#2c3e50',
-        padding: '12px 24px',
-        color: 'white',
-        zIndex: 1000,
-      }}>
-        <div style={{ fontSize: '20px', fontWeight: 'bold' }}>📊 VOTECHAIN</div>
-        <ul style={{ display: 'flex', listStyle: 'none', gap: '24px', marginRight: 100, padding: 0 }}>
-          <li onClick={() => navigate('/voter')} style={{ cursor: 'pointer' }}>Home</li>
-          <li onClick={() => navigate('/candidates')} style={{ cursor: 'pointer' }}>Candidates</li>
-          <li onClick={() => navigate('/castvote')} style={{ cursor: 'pointer' }}>Vote</li>
-        </ul>
-        <div style={{ display: 'flex', gap: '12px' }}>
-          <button style={{ backgroundColor: '#27ae60', color: 'white', border: 'none', padding: '8px 14px', borderRadius: '5px' }}>
-            Connect Wallet
-          </button>
-          <button onClick={handleLogout} style={{ backgroundColor: '#e74c3c', color: 'white', border: 'none', padding: '8px 14px', borderRadius: '5px' }}>
-            Logout
-          </button>
-        </div>
-      </nav>
+      <Navbar />
 
       {/* Content */}
       <div style={{ width: '90%', margin: '0 auto', paddingTop: '100px' }}>

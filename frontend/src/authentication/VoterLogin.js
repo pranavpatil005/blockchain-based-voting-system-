@@ -83,6 +83,16 @@ const VoterLogin = () => {
     userLogin();
     showToastMessage('Login Successful!', 'success');
 
+
+
+
+
+    localStorage.setItem("aadhaar", aadhaar);
+
+
+
+
+    
     // ✅ Clear session storage after login
     clearAadhaar();
     clearOtpSent();
