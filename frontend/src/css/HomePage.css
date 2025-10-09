@@ -112,3 +112,18 @@
   gap: 10px;
   justify-content: flex-end; /* push buttons to the right */
 }
+
+.about-image img {
+  width: 100%;
+  height: auto;
+  border-radius: 50px; /* half-circular curved corners */
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35); /* soft shadow around image */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  display: block;
+}
+
+/* Optional hover effect for a clean lift */
+.about-image img:hover {
+  transform: scale(1.03);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.45);
+}
