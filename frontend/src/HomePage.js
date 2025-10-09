@@ -766,7 +766,7 @@ useEffect(() => {
       {
         name: "Liji Mohan Varghese",
         img: "/assets/images/members/liji.jpg",
-        linkedin: "https://www.linkedin.com/in/liji-varghese",
+        linkedin: "http://www.linkedin.com/in/liji-varghese-398b15257",
         github: "https://github.com/Lizz6780",
       },
       {
