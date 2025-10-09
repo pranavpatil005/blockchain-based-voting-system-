@@ -569,6 +569,152 @@ body.dark-mode .results-wrapper {
 }
 
 
+/* ===== Modern Professional Footer ===== */
+.main-footer {
+  position: relative;
+  color: #e2e8f0;
+  padding: 60px 0 20px;
+  font-family: "Poppins", sans-serif;
+  overflow: hidden;
+}
+
+/* ✨ Add a translucent overlay to dull the background */
+.main-footer::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+  to top,
+  rgba(13, 94, 200, 0.45),
+  rgba(8, 55, 122, 0.25)
+);
+
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Ensure footer content stays above the overlay */
+.main-footer > * {
+  position: relative;
+  z-index: 1;
+}
+
+
+.footer-brand {
+  text-align: left;
+}
+
+.footer-logo-img {
+  width: 140px;
+  height: 90px;
+  margin-bottom: 15px;
+}
+
+.footer-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #38bdf8;
+  margin-bottom: 10px;
+}
+
+.footer-tagline {
+  font-size: 14px;
+  color: #94a3b8;
+  max-width: 250px;
+}
+
+.footer-links h4,
+.footer-contact h4,
+.footer-social h4 {
+  color: #38bdf8;
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 15px;
+}
+
+.footer-links ul,
+.footer-contact ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-links ul li,
+.footer-contact ul li {
+  margin-bottom: 8px;
+  font-size: 14px;
+  color: #cbd5e1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.footer-links ul li a {
+  color: #cbd5e1;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.footer-links ul li a:hover {
+  color: #38bdf8;
+}
+
+/* Icons */
+.footer-contact i {
+  color: #38bdf8;
+}
+
+.footer-social .social-icons {
+  display: flex;
+  gap: 15px;
+  margin-top: 10px;
+}
+
+.footer-social .social-icons a {
+  width: 35px;
+  height: 35px;
+  background: #1e293b;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #e2e8f0;
+  transition: all 0.3s ease;
+}
+
+.footer-social .social-icons a:hover {
+  background: #38bdf8;
+  color: #0f172a;
+  transform: translateY(-3px);
+}
+
+/* Footer Bottom */
+.footer-bottom {
+  border-top: 1px solid #1e293b;
+  text-align: center;
+  margin-top: 40px;
+  padding-top: 15px;
+}
+
+.footer-bottom p {
+  font-size: 13px;
+  color: #94a3b8;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .footer-brand,
+  .footer-links,
+  .footer-contact,
+  .footer-social {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+
+  .footer-social .social-icons {
+    justify-content: center;
+  }
+}
 
 
 
