@@ -105,6 +105,60 @@ useEffect(() => {
         }
       };
 
+
+
+
+
+
+
+
+const [activeIndex, setActiveIndex] = useState(0);
+
+useEffect(() => {
+  const interval = setInterval(() => {
+    setActiveIndex((prev) => (prev + 1) % 5);
+  }, 2500);
+  return () => clearInterval(interval);
+}, []);
+
+useEffect(() => {
+  const cards = document.querySelectorAll("#dev-carousel .dev-card");
+  cards.forEach((card, index) => {
+    const offset = (index - activeIndex + cards.length) % cards.length;
+    let transform = "";
+    let zIndex = 0;
+    let opacity = 1;
+
+    if (offset === 0) {
+      transform = "translateX(0) scale(1.2)";
+      zIndex = 3;
+      opacity = 1;
+    } else if (offset === 1 || offset === cards.length - 1) {
+      transform = `translateX(${offset === 1 ? "220px" : "-220px"}) scale(1)`;
+      zIndex = 2;
+      opacity = 0.8;
+    } else {
+      transform = `translateX(${offset === 2 ? "400px" : "-400px"}) scale(0.9)`;
+      zIndex = 1;
+      opacity = 0.5;
+    }
+
+    card.style.transform = transform;
+    card.style.zIndex = zIndex;
+    card.style.opacity = opacity;
+  });
+}, [activeIndex]);
+
+
+
+
+
+
+
+
+
+
+  
         return (
           <div>
             {/* Header Start */}
@@ -671,6 +725,8 @@ useEffect(() => {
                     </div>
                     {/* Campaign List End */}
 
+
+
                     {/* Section Footer Text Start */}
                     <div
                       className="section-footer-text wow fadeInUp"
@@ -688,84 +744,159 @@ useEffect(() => {
             </div>
 
 
+{/* Developer Carousel Section */}
+{/* Developer Carousel */}
+<div id="dev-carousel-section">
+  <h2 id="dev-carousel-title">Meet Our Developers</h2>
+
+  <div id="dev-carousel">
+    {[
+      {
+        name: "Durvankur Gajanan Sonar",
+        img: "/assets/images/members/durvankur.jpg",
+        linkedin: "https://www.linkedin.com/in/durvankursonar",
+        github: "https://github.com/durvankursonar",
+      },
+      {
+        name: "Pranav Prahlad Patil",
+        img: "/assets/images/members/pranav.jpg",
+        linkedin: "https://www.linkedin.com/in/pranav-patil-4003b9210/",
+        github: "https://github.com/pranavpatil005",
+      },
+      {
+        name: "Nikita Mahesh Kurkure",
+        img: "/assets/images/members/nikita.jpg",
+        linkedin: "https://www.linkedin.com/in/nikita-kurkure-08a7a1345/",
+        github: "https://github.com/nikitakurkure-2004",
+      },
+      {
+        name: "Liji Mohan Varghese",
+        img: "/assets/images/members/liji.jpg",
+        linkedin: "https://www.linkedin.com/in/liji-varghese",
+        github: "https://github.com/Lizz6780",
+      },
+      {
+        name: "Vivek Vijay Chaudhari",
+        img: "/assets/images/members/vivek.jpg",
+        linkedin: "https://www.linkedin.com/in/vivek-chaudhari",
+        github: "https://github.com/vvcvivek",
+      },
+    ].map((member, i) => (
+      <div id={`dev-card-${i}`} className="dev-card" key={i}>
+        <img src={member.img} alt={member.name} id="dev-photo" />
+        <h3 id="dev-name">{member.name}</h3>
+        <div id="dev-links">
+          <a
+            id="dev-linkedin"
+            href={member.linkedin}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <img
+              id="dev-icon"
+              src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linkedin/linkedin-original.svg"
+              alt="LinkedIn"
+            />
+            LinkedIn
+          </a>
+          <a
+            id="dev-github"
+            href={member.github}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <img
+              id="dev-icon"
+              src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg"
+              alt="GitHub"
+            />
+            GitHub
+          </a>
+        </div>
+      </div>
+    ))}
+  </div>
+</div>
+
+
 
 
             {/* Footer Start */}
-            <footer className="main-footer">
-              <div className="container">
-                <div className="row">
-                  <div className="col-lg-12">
-                    {/* Footer Header Start */}
-                    <div className="footer-header">
-                      <div className="section-title dark-section">
-                        <h2 className="text-anime-style-2" >
-                          <span> BLOCKCHAIN</span> based E-Voting System
-                        </h2>
+           <footer className="main-footer">
+  <div className="container">
+    <div className="row">
+      {/* Logo and Title */}
+      <div className="col-lg-4 col-md-6">
+        <div className="footer-brand">
+          <img
+            src={`${process.env.PUBLIC_URL}/assets/images/logo.png`}
+            alt="Logo"
+            className="footer-logo-img"
+          />
+          
+          <p className="footer-tagline">
+            Empowering democracy through blockchain-based transparency, security, and trust.
+          </p>
+        </div>
+      </div>
 
-                      </div>
+      {/* Quick Links */}
+      <div className="col-lg-2 col-md-6">
+        <div className="footer-links">
+          <h4>Quick Links</h4>
+          <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/about">About</a></li>
+            <li><a href="/contact">Contact</a></li>
+            <li><a href="/faq">FAQs</a></li>
+            <li><a href="/privacy">Privacy Policy</a></li>
+          </ul>
+        </div>
+      </div>
 
+      {/* Contact Info */}
+      <div className="col-lg-3 col-md-6">
+        <div className="footer-contact">
+          <h4>Contact Us</h4>
+          <ul>
+            <li><i className="fas fa-map-marker-alt"></i> Maharashtra, India</li>
+            <li><i className="fas fa-envelope"></i> xyz@gmail.com</li>
+            <li><i className="fas fa-phone-alt"></i> +91 1234567890</li>
+          </ul>
+        </div>
+      </div>
 
-                    </div>
-                    
-                    {/* Footer Header End */}
-                  </div>
-                  <div className="col-lg-4 col-md-4">
-                    <img
-                      src={`${process.env.PUBLIC_URL}/assets/images/logo.png`}
-                      alt="Logo"
-                    />
-                  </div>
-                  <div className="col-lg-1 col-md-1"></div>
+      {/* Social Media */}
+      <div className="col-lg-3 col-md-6">
+        <div className="footer-social">
+          <h4>Follow Us</h4>
+          <div className="social-icons">
+            <a href="https://github.com/" target="_blank" rel="noopener noreferrer">
+              <i className="fab fa-github"></i>
+            </a>
+            <a href="https://linkedin.com/" target="_blank" rel="noopener noreferrer">
+              <i className="fab fa-linkedin-in"></i>
+            </a>
+            <a href="https://twitter.com/" target="_blank" rel="noopener noreferrer">
+              <i className="fab fa-twitter"></i>
+            </a>
+            <a href="mailto:support@votechain.in">
+              <i className="fas fa-envelope"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-                  <div className="col-lg-3 col-md-3">
-                    {/* About Footer Start */}
-                    <div className="about-footer">
-                      <div className="footer-logo">
-                        <img src="images/footer-logo.svg" alt="" />
-                      </div>
-                      <div className="about-footer-content">
-                        <p style={{ textAlign: 'justify' }}>
-                          A Blockchain-based E-Voting System ensures secure, transparent, and tamper-proof elections by storing votes on an immutable distributed ledger.
-                          It enhances trust, prevents fraud, and enables verifiable results while maintaining voter privacy.
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="col-lg-1 col-md-1"></div>
+  {/* Footer bottom */}
+  <div className="footer-bottom">
+    <div className="container">
+      <p>© {new Date().getFullYear()} VoteChain | All Rights Reserved</p>
+    </div>
+  </div>
+</footer>
 
-
-                  <div className="col-lg-3 col-md-3">
-                    <div className="footer-links">
-                      <h3>Developed By :</h3>
-
-                      <ul>
-                        <li><a href="#">Durvankur Gajanan Sonar</a></li>
-                        <li><a href="#">Pranav Prahlad Patil</a></li>
-                        <li><a href="#">Nikita Mahesh Kurkure</a></li>
-                        <li><a href="#">Liji Mohan Varghese</a></li>
-                        <li><a href="#">Vivek Vijay Chaudhari</a></li>
-                      </ul>
-                    </div>
-                  </div>
-                  <div className="col-lg-2 col-md-2">
-
-                  </div>
-
-                </div>
-              </div>
-
-              <div className="footer-copyright">
-                <div className="container">
-                  <div className="row">
-                    <div className="col-md-12">
-                      <div className="copyright-text">
-
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </footer>
             {/* Footer End */}
           </div>
         );
