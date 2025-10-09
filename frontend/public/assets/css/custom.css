@@ -796,8 +796,8 @@ header.main-header .header-sticky.active{
 	background: url('../images/bg9.jpg') no-repeat;
 	background-position: center center;
 	background-size: cover;
-	padding: 10px 0;
-	 margin-top: 300px;
+
+	 margin-top: 435px;
 }
 
 .hero::before{
@@ -814,9 +814,6 @@ header.main-header .header-sticky.active{
     z-index: 1;
 }
 
-.hero.hero-video{
-	padding: 140px 0;
-}
 
 .hero.hero-video::before{
 	opacity: 80%;
@@ -1162,20 +1159,11 @@ header.main-header .header-sticky.active{
 	transition: all 0.4s ease-in-out;
 }
 
-.campaign-item.active .campaign-content-info h3,
-.campaign-item:hover .campaign-content-info h3,
-.campaign-item.active .campaign-content-info p,
-.campaign-item:hover .campaign-content-info p,
-.campaign-item.active .campaign-readmore-btn .readmore-btn,
-.campaign-item:hover .campaign-readmore-btn .readmore-btn{
-	color: var(--white-color);
-}
 
-.campaign-item.active .campaign-readmore-btn .readmore-btn::before,
-.campaign-item:hover .campaign-readmore-btn .readmore-btn::before{
-	background: var(--white-color);
-	color: var(--accent-color);
-}
+
+
+
+
 
 .section-footer-text{
 	margin-top: 60px;
@@ -1209,7 +1197,7 @@ header.main-header .header-sticky.active{
 	background: url(../images/supporters-bg-image.jpg) no-repeat;
 	background-position: center center;
 	background-size: cover;
-	padding: 100px 0;
+	padding: 150px 0;
 }
 
 .our-supporters::before{
@@ -1217,7 +1205,7 @@ header.main-header .header-sticky.active{
 	position: absolute;
 	top: 0;
 	left: 0;
-	right: 0;
+	right: 0;	
 	bottom: 0;
 	background: linear-gradient(90deg, rgba(3, 38, 66, 0.9) 58.4%, rgba(210, 57, 62, 0.9) 100%);
 	height: 100%;
@@ -1229,10 +1217,7 @@ header.main-header .header-sticky.active{
 	margin-bottom: 0;
 }
 
-.supporters-btn{
-	margin-top: 40px;
-	text-align: center;
-}
+
 
 .supporters-counter-list{
 	position: relative;
@@ -4070,9 +4055,7 @@ header.main-header .header-sticky.active{
         display: block;
     }
 
-	.header-btn{
-		display: none;
-	}
+	
 
 	.section-row{
 		margin-bottom: 40px;
@@ -4106,10 +4089,7 @@ header.main-header .header-sticky.active{
 		margin-top: 10px;
 	}
 
-	.section-btn{
-		text-align: left;
-		margin-top: 15px;
-	}
+
 
 	.hero{
 		padding: 50px 0;
@@ -4220,9 +4200,7 @@ header.main-header .header-sticky.active{
 		padding: 50px 0;
 	}
 
-	.supporters-btn{
-		margin-top: 30px;
-	}
+
 
 	.supporters-counter-list{
         gap: 30px 50px;
@@ -5224,7 +5202,7 @@ header.main-header .header-sticky.active{
 		width: 65%;
 	}
 
-	.footer-newsletter-form .form-group .btn-default.btn-highlighted{
+	.footer-newsletter-form .form-group {
 		width: 35%;
 		padding: 17px 12px;
 	}
