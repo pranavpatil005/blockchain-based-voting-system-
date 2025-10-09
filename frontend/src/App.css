@@ -8,6 +8,7 @@
   height: 40vmin;
   pointer-events: none;
 }
+
 /* Base button */
 .btn-default {
   padding: 10px 22px;
@@ -19,7 +20,6 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
- 
   font-size: 15px;
   border: 2px solid transparent;
   transition: all 0.2s ease-in-out;
@@ -28,9 +28,9 @@
 
 /* Register button - minimal */
 .btn-register {
-  width: auto;        /* allow width to fit content */
-  min-width: 125px;    /* optional: ensure a minimum clickable area */
-  padding: 10px; 
+  width: auto;
+  min-width: 125px;
+  padding: 10px;
   background-color: #ffffff;
   color: #1abc9c;
   border: 2px solid #1abc9c;
@@ -44,10 +44,10 @@
 
 /* Wallet button - minimal */
 .btn-wallet {
-  width: auto;        /* allow width to fit content */
-  min-width: 160px;    /* optional: ensure a minimum clickable area */
-  padding: 10px;      /* keep padding consistent */
-  overflow: visible;  
+  width: auto;
+  min-width: 160px;
+  padding: 10px;
+  overflow: visible;
   background-color: #ffffff;
   color: #f39c12;
   border: 2px solid #f39c12;
@@ -69,7 +69,6 @@
   transform: translateX(3px);
 }
 
-
 /* Connected wallet state */
 .btn-wallet.connected {
   background-color: #2ecc71;
@@ -77,12 +76,64 @@
   border-color: #27ae60;
 }
 
-/* Container */
-.winner-section {
-  max-width: 700px;
-  margin: 40px auto;
-  text-align: center;
+/* Countdown minimalist */
+.countdown-wrapper {
+  display: flex;
+  justify-content: center;
+ 
+  gap: 10px;
+  margin: 15px 0;
   font-family: "Poppins", sans-serif;
+  color: #333;
+  font-weight: 600;
+  font-size: 6px;
+}
+
+.countdown-unit {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 5px 8px;
+  border-radius: 4px;
+  background: #f1f1f1;
+}
+
+.countdown-unit span {
+  font-size: 18px;
+  font-weight: 700;
+  color: #3498db;
+}
+
+/* Wrapper to visually separate from other sections */
+/* Enhanced results-wrapper to stand out */
+.results-wrapper {
+  width: 100%;
+
+  margin: 60px auto;
+  padding: 60px 30px;
+  background: linear-gradient(135deg, #f0f9ff, #e0f2fe); /* soft gradient */
+  border: 1px solid #38bff870; /* subtle border accent */
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12); /* lifted look */
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+
+
+/* Dark mode variant */
+body.dark-mode .results-wrapper {
+  background: linear-gradient(135deg, #111827, #1e293b);
+  border-color: #3b82f6;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+}
+
+
+/* Winner Section itself */
+.winner-section {
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
 }
 
 /* Title */
@@ -235,7 +286,7 @@
 }
 
 .results-heading {
-  font-size: 20px;              /* Bigger subtitle */
+  font-size: 20px;
   font-weight: 500;
   color: #5c5c5c;
   letter-spacing: 2px;
@@ -244,7 +295,7 @@
 }
 
 .election-name {
-  font-size: 48px;              /* ✅ Large and bold */
+  font-size: 48px;
   font-weight: 700;
   color: #111;
   margin-bottom: 35px;
@@ -254,7 +305,6 @@
   letter-spacing: 0.5px;
 }
 
-/* Underline accent with clean gradient */
 .election-name::after {
   content: "";
   display: block;
@@ -279,35 +329,25 @@
     width: 60%;
     height: 3px;
   }
+  .countdown-wrapper {
+    gap: 6px;
+    font-size: 14px;
+  }
 }
 
-
-
-/* Wrapper to visually separate from other sections */
-.results-wrapper {
-  width: 100%;
-  padding: 80px 20px;           /* spacing above and below */
-  background: #f8f9fa;          /* soft neutral background */
-  border-top: 1px solid #e5e5e5;
-  border-bottom: 1px solid #e5e5e5;
+/* Minimalist Countdown units */
+.countdown-unit {
+  padding: 4px 6px;
+  border-radius: 4px;
+  background: #f1f1f1;
 }
 
-/* Winner Section itself */
-.winner-section {
-  max-width: 800px;
-  margin: 0 auto;
-  text-align: center;
-  background: transparent;
-}
-
-/* Make it feel clean on dark backgrounds too */
+/* Dark mode support */
 body.dark-mode .results-wrapper {
   background: #1b1b1b;
   border-color: #333;
 }
 
-
-/* Responsive */
 @media (max-width: 480px) {
   .winner-section {
     max-width: 90%;
