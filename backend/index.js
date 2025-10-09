@@ -207,19 +207,22 @@ app.get('/api/active-election-candidates', (req, res) => {
 app.get('/api/latest-ended-election', (req, res) => {
   const now = new Date();
 
+  // Get the last election that has already ended
   const electionSql = `
-    SELECT * FROM election
-    WHERE to_date < ?
+    SELECT *
+    FROM election
+    WHERE to_date <= ?
     ORDER BY to_date DESC
     LIMIT 1
   `;
+
   db.query(electionSql, [now], (err, electionResult) => {
     if (err) return res.status(500).json({ success: false, message: err.message });
     if (electionResult.length === 0) return res.json({ success: true, election: null });
 
     const election = electionResult[0];
 
-    // ✅ Fetch full candidate info including photo and party_logo
+    // Fetch candidates belonging to that election
     const candidatesSql = `
       SELECT id, name, party, votes, photo, party_logo
       FROM candidates
@@ -252,49 +255,86 @@ app.get('/api/latest-ended-election', (req, res) => {
 });
 
 
-// ---------------------------
-// Get Current Election Status
-// ---------------------------
+// Get current or upcoming election
 app.get('/api/active-election', (req, res) => {
-  const today = new Date().toISOString().split('T')[0];
+  // 1) Try to find an ongoing election (use server time / MySQL NOW())
+  const ongoingSql = `
+    SELECT *
+    FROM election
+    WHERE from_date <= NOW() AND to_date >= NOW()
+    ORDER BY from_date ASC
+    LIMIT 1
+  `;
 
-  const sql = `SELECT * FROM election WHERE from_date <= ? AND to_date >= ? LIMIT 1`;
-  db.query(sql, [today, today], (err, result) => {
+  db.query(ongoingSql, (err, ongoingResult) => {
     if (err) return res.status(500).json({ success: false, message: err.message });
 
-    if (result.length === 0) {
-      return res.json({ success: true, status: 'Election Ended', election: null });
+    if (ongoingResult.length > 0) {
+      const election = ongoingResult[0];
+      // fetch candidates too (optional)
+      const candidatesSql = `
+        SELECT id, name, party, votes, photo, party_logo
+        FROM candidates
+        WHERE election_id = ?
+        ORDER BY votes DESC
+      `;
+      db.query(candidatesSql, [election.id], (err, candidatesResult) => {
+        if (err) return res.status(500).json({ success: false, message: err.message });
+
+        return res.json({
+          success: true,
+          status: 'Ongoing',
+          election: {
+            id: election.id,
+            name: election.name,
+            from_date: election.from_date,
+            to_date: election.to_date,
+            description: election.description,
+            candidates: candidatesResult.map(c => ({
+              id: c.id,
+              name: c.name,
+              party: c.party,
+              votes: Number(c.votes || 0),
+              photo: c.photo,
+              party_logo: c.party_logo
+            }))
+          }
+        });
+      });
+      return;
     }
 
-    const election = result[0];
-    const candidatesSql = `SELECT id, name, party, votes FROM candidates WHERE election_id = ? ORDER BY votes DESC`;
-
-    db.query(candidatesSql, [election.id], (err, candidatesResult) => {
+    // 2) If no ongoing, return the closest upcoming election (next starting)
+    const upcomingSql = `
+      SELECT *
+      FROM election
+      WHERE from_date > NOW()
+      ORDER BY from_date ASC
+      LIMIT 1
+    `;
+    db.query(upcomingSql, (err, upcomingResult) => {
       if (err) return res.status(500).json({ success: false, message: err.message });
 
-      const candidates = candidatesResult.map(c => ({
-        id: c.id,
-        name: c.name,
-        party: c.party,
-        votes: Number(c.votes) || 0
-      }));
+      if (upcomingResult.length > 0) {
+        const election = upcomingResult[0];
+        return res.json({
+          success: true,
+          status: 'Upcoming',
+          election: {
+            id: election.id,
+            name: election.name,
+            from_date: election.from_date,
+            to_date: election.to_date,
+            description: election.description
+          }
+        });
+      }
 
-      res.json({
-        success: true,
-        status: 'Election Ongoing',
-        election: {
-          id: election.id,
-          name: election.name,
-          from_date: election.from_date,
-          to_date: election.to_date,
-          description: election.description,
-          candidates
-        }
-      });
+      // 3) none found
+      return res.json({ success: true, status: 'No Elections Scheduled', election: null });
     });
   });
 });
-
 
 
 
@@ -413,64 +453,73 @@ app.get('/api/voters', (req, res) => {
 
 
 
-// /api/latest-ended-election
-app.get('/api/latest-ended-election', (req, res) => {
-  const now = new Date();
+// ---------------------------
+// Get Election Status (Ongoing / Upcoming / None)
+// ---------------------------
+app.get('/api/election-status', (req, res) => {
+  const today = new Date();
 
-  const electionSql = `
+  // 1️⃣ Find ongoing election (today is between from_date and to_date)
+  const ongoingSql = `
     SELECT * FROM election 
-    WHERE to_date < ? 
-    ORDER BY to_date DESC 
+    WHERE from_date <= ? AND to_date >= ? 
+    ORDER BY from_date ASC 
     LIMIT 1
   `;
-  db.query(electionSql, [now], (err, electionResult) => {
+
+  db.query(ongoingSql, [today, today], (err, ongoingResult) => {
     if (err) return res.status(500).json({ success: false, message: err.message });
 
-    if (electionResult.length === 0) {
-      return res.json({ success: true, election: null });
+    if (ongoingResult.length > 0) {
+      const ongoing = ongoingResult[0];
+      return res.json({
+        success: true,
+        status: 'Ongoing',
+        election: {
+          id: ongoing.id,
+          name: ongoing.name,
+          from_date: ongoing.from_date,
+          to_date: ongoing.to_date,
+          description: ongoing.description
+        }
+      });
     }
 
-    const election = electionResult[0];
-    const candidatesSql = `
-      SELECT id, name, votes, party, photo, party_logo
-      FROM candidates 
-      WHERE election_id = ? 
-      ORDER BY votes DESC
+    // 2️⃣ If no ongoing, find the next upcoming election (closest from_date > today)
+    const upcomingSql = `
+      SELECT * FROM election 
+      WHERE from_date > ? 
+      ORDER BY from_date ASC 
       LIMIT 1
     `;
-    db.query(candidatesSql, [election.id], (err, candidatesResult) => {
+
+    db.query(upcomingSql, [today], (err, upcomingResult) => {
       if (err) return res.status(500).json({ success: false, message: err.message });
 
-      const winner = candidatesResult[0]; // top voted candidate
+      if (upcomingResult.length > 0) {
+        const upcoming = upcomingResult[0];
+        return res.json({
+          success: true,
+          status: 'Upcoming',
+          election: {
+            id: upcoming.id,
+            name: upcoming.name,
+            from_date: upcoming.from_date,
+            to_date: upcoming.to_date,
+            description: upcoming.description
+          }
+        });
+      }
 
-      res.json({
+      // 3️⃣ No ongoing or upcoming
+      return res.json({
         success: true,
-        election: {
-          id: election.id,
-          name: election.name,
-          from_date: election.from_date,
-          to_date: election.to_date,
-          description: election.description,
-          winner
-        }
+        status: 'No Elections Scheduled',
+        election: null
       });
     });
   });
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
