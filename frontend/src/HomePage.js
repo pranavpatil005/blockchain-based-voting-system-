@@ -433,7 +433,7 @@ useEffect(() => {
                       {/* About Image Start */}
                       <div className="about-image">
                         <figure className="image-anime">
-                          <img src="/assets/images/blockchain.jpeg" alt="About Us" />
+                          <img src="/assets/images/Vote.png" alt="About Us" />
                         </figure>
                       </div>
                       {/* About Image End */}
@@ -536,8 +536,7 @@ useEffect(() => {
                           <div className="campaign-content-info">
                             <h3>Economic</h3>
                             <p>
-                              Efficiently orchestrate resource sucking human capital
-                              whereas future-proof outsourcing. Credibly actualize one.
+                              VoteChain brings transparency to economic decisions, reducing corruption and ensuring public trust in how resources and trade policies are managed.
                             </p>
                           </div>
 
@@ -561,8 +560,7 @@ useEffect(() => {
                           <div className="campaign-content-info">
                             <h3>Medical</h3>
                             <p>
-                              Seamlessly redefine standard compliant ROI for seamless web-readiness.
-                              Collab transition sticky testing procedures.
+                              By securing health-related voting, VoteChain ensures fair, data-driven decisions on funding, research, and public healthcare priorities.
                             </p>
                           </div>
 
@@ -585,8 +583,7 @@ useEffect(() => {
                           <div className="campaign-content-info">
                             <h3>Social</h3>
                             <p>
-                              Continually foster inexpensive systems with principle-centered value.
-                              Interactively matrix cross-media methods of empowerment.
+                              VoteChain empowers communities to shape social justice and welfare policies through transparent, bias-free participation.
                             </p>
                           </div>
 
@@ -609,8 +606,7 @@ useEffect(() => {
                           <div className="campaign-content-info">
                             <h3>Foreign policy</h3>
                             <p>
-                              Monotonically provide access to superior outsourcing after cross-media convergence.
-                              Interactively incentivize open source.
+                              It ensures citizen voices guide foreign relations and global cooperation through trusted, accountable voting processes.
                             </p>
                           </div>
 
@@ -633,8 +629,7 @@ useEffect(() => {
                           <div className="campaign-content-info">
                             <h3>Education</h3>
                             <p>
-                              Efficiently orchestrate resource sucking human capital whereas
-                              future-proof outsourcing. Credibly actualize.
+                              It enables students, educators, and citizens to influence education policies with secure, verifiable, and inclusive voting.
                             </p>
                           </div>
 
@@ -657,8 +652,7 @@ useEffect(() => {
                           <div className="campaign-content-info">
                             <h3>Family</h3>
                             <p>
-                              Efficiently implement user-centric for cross-media relationship.
-                              Authoritatively productive turnkey functionality.
+                              VoteChain promotes transparent decision-making on family welfare, childcare, and community support programs.
                             </p>
                           </div>
 
