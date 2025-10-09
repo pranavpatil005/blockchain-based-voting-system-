@@ -399,3 +399,176 @@ body.dark-mode .results-wrapper {
     transform: rotate(360deg);
   }
 }
+
+
+
+
+
+
+
+
+/*caraousal*/
+/* ===============================
+   Developer Carousel Section
+   =============================== */
+#dev-carousel-section {
+  margin: 120px auto;
+  text-align: center;
+  padding: 60px 20px;
+  background: linear-gradient(135deg, #e0f7fa, #e1f5fe00);
+  border-radius: 20px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+  overflow: hidden;
+  position: relative;
+}
+
+#dev-carousel-title {
+  font-size: 36px;
+  font-weight: 700;
+  color: #0077b6;
+  margin-bottom: 60px;
+  text-shadow: 0 2px 5px rgba(0, 119, 182, 0.3);
+}
+
+/* Carousel container */
+#dev-carousel {
+  position: relative;
+  width: 100%;
+  height: 420px; /* slightly taller to fit the lowered buttons */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  perspective: 1000px;
+}
+
+/* Each card */
+#dev-carousel .dev-card {
+  position: absolute;
+  width: 260px;
+  height: 330px;
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 10px 25px rgba(0, 119, 182, 0.2);
+  transition: all 0.8s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding-top: 35px;
+  overflow: hidden;
+  border: 3px solid transparent;
+}
+
+#dev-carousel .dev-card:hover {
+  border-color: #0077b6;
+  box-shadow: 0 15px 35px rgba(0, 119, 182, 0.3);
+}
+
+/* Image */
+#dev-photo {
+  width: 140px; /* slightly larger */
+  height: 140px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #0076b6de;
+  margin-bottom: 20px;
+  transition: transform 0.3s ease;
+}
+
+#dev-carousel .dev-card:hover #dev-photo {
+  transform: scale(1.07);
+}
+
+/* Name */
+#dev-name {
+  font-size: 18px;
+  font-weight: 600;
+  color: #222;
+  margin-bottom: 30px; /* moved name higher to make room for buttons below */
+}
+
+/* Buttons Container */
+#dev-links {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 14px;
+  margin-top: 10px; /* pushes the buttons lower */
+  margin-bottom: 25px; /* spacing from bottom edge */
+}
+
+/* Buttons Base */
+#dev-linkedin,
+#dev-github {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: 8px;
+  color: white;
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+/* LinkedIn Button */
+#dev-linkedin {
+  background-color: #0077b6;
+}
+
+#dev-linkedin:hover {
+  background-color: #0096c7;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0, 150, 199, 0.3);
+}
+
+/* GitHub Button */
+#dev-github {
+  background-color: #24292ee0;
+}
+
+#dev-github:hover {
+  background-color: #00000067;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* Icon */
+#dev-icon {
+  width: 18px;
+  height: 18px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  #dev-carousel {
+    height: 350px;
+  }
+
+  #dev-carousel .dev-card {
+    width: 220px;
+    height: 300px;
+  }
+
+  #dev-photo {
+    width: 110px;
+    height: 110px;
+  }
+
+  #dev-name {
+    margin-bottom: 25px;
+  }
+
+  #dev-links {
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+}
+
+
+
+
+
