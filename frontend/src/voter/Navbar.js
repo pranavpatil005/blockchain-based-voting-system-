@@ -104,6 +104,13 @@ const Navbar = () => {
           >
             Vote
           </li>
+
+          <li
+            className={isActive("/voterhelpdesk")}
+            onClick={() => navigate("/voterhelpdesk")}
+          >
+            Help
+          </li>
         </ul>
 
         {/* Right Buttons */}

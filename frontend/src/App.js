@@ -10,7 +10,7 @@ import ViewCandidates from './voter/ViewCandidates';
 import ResultsPg from './voter/ResultsPg';
 import About from './About';
 import VoterDashboard from './voter/VoterDashboard';
-
+import VHelpDesk from './voter/VHelpDesk';
 // Admin Pages
 import AdminLayout from './admin/AdminLayout';
 import AdminDashboard from './admin/AdminDashboard';
@@ -67,6 +67,7 @@ function App() {
           <Route path="/castvote" element={<Votepage />} />
           <Route path="/candidates" element={<ViewCandidates />} />
           <Route path="/results" element={<ResultsPg />} />
+          <Route path="/voterhelpdesk" element={<VHelpDesk />} />
         </Route>
       </Routes>
     </Router>

@@ -201,38 +201,33 @@ app.get('/api/active-election-candidates', (req, res) => {
 // ---------------------------
 // Get Latest Ended Election
 // ---------------------------
+// ---------------------------
+// Get Latest Ended Election
+// ---------------------------
 app.get('/api/latest-ended-election', (req, res) => {
   const now = new Date();
 
   const electionSql = `
-    SELECT * FROM election 
-    WHERE to_date < ? 
-    ORDER BY to_date DESC 
+    SELECT * FROM election
+    WHERE to_date < ?
+    ORDER BY to_date DESC
     LIMIT 1
   `;
   db.query(electionSql, [now], (err, electionResult) => {
     if (err) return res.status(500).json({ success: false, message: err.message });
-
-    if (electionResult.length === 0) {
-      return res.json({ success: true, election: null });
-    }
+    if (electionResult.length === 0) return res.json({ success: true, election: null });
 
     const election = electionResult[0];
+
+    // ✅ Fetch full candidate info including photo and party_logo
     const candidatesSql = `
-      SELECT id, name, votes, party
-      FROM candidates 
-      WHERE election_id = ? 
+      SELECT id, name, party, votes, photo, party_logo
+      FROM candidates
+      WHERE election_id = ?
       ORDER BY votes DESC
     `;
     db.query(candidatesSql, [election.id], (err, candidatesResult) => {
       if (err) return res.status(500).json({ success: false, message: err.message });
-
-      const candidates = candidatesResult.map(c => ({
-        id: c.id,
-        name: c.name,
-        party: c.party,
-        votes: Number(c.votes) || 0
-      }));
 
       res.json({
         success: true,
@@ -242,12 +237,20 @@ app.get('/api/latest-ended-election', (req, res) => {
           from_date: election.from_date,
           to_date: election.to_date,
           description: election.description,
-          candidates
+          candidates: candidatesResult.map(c => ({
+            id: c.id,
+            name: c.name,
+            party: c.party,
+            votes: Number(c.votes || 0),
+            photo: c.photo,
+            party_logo: c.party_logo
+          }))
         }
       });
     });
   });
 });
+
 
 // ---------------------------
 // Get Current Election Status
@@ -405,6 +408,67 @@ app.get('/api/voters', (req, res) => {
     res.json({ success: true, voters: result });
   });
 });
+
+
+
+
+
+// /api/latest-ended-election
+app.get('/api/latest-ended-election', (req, res) => {
+  const now = new Date();
+
+  const electionSql = `
+    SELECT * FROM election 
+    WHERE to_date < ? 
+    ORDER BY to_date DESC 
+    LIMIT 1
+  `;
+  db.query(electionSql, [now], (err, electionResult) => {
+    if (err) return res.status(500).json({ success: false, message: err.message });
+
+    if (electionResult.length === 0) {
+      return res.json({ success: true, election: null });
+    }
+
+    const election = electionResult[0];
+    const candidatesSql = `
+      SELECT id, name, votes, party, photo, party_logo
+      FROM candidates 
+      WHERE election_id = ? 
+      ORDER BY votes DESC
+      LIMIT 1
+    `;
+    db.query(candidatesSql, [election.id], (err, candidatesResult) => {
+      if (err) return res.status(500).json({ success: false, message: err.message });
+
+      const winner = candidatesResult[0]; // top voted candidate
+
+      res.json({
+        success: true,
+        election: {
+          id: election.id,
+          name: election.name,
+          from_date: election.from_date,
+          to_date: election.to_date,
+          description: election.description,
+          winner
+        }
+      });
+    });
+  });
+});
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

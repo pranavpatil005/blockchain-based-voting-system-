@@ -1,3 +1,5 @@
+/* src/App.css */
+
 .App {
   text-align: center;
 }
@@ -26,6 +28,9 @@
 
 /* Register button - minimal */
 .btn-register {
+  width: auto;        /* allow width to fit content */
+  min-width: 125px;    /* optional: ensure a minimum clickable area */
+  padding: 10px; 
   background-color: #ffffff;
   color: #1abc9c;
   border: 2px solid #1abc9c;
@@ -39,6 +44,10 @@
 
 /* Wallet button - minimal */
 .btn-wallet {
+  width: auto;        /* allow width to fit content */
+  min-width: 160px;    /* optional: ensure a minimum clickable area */
+  padding: 10px;      /* keep padding consistent */
+  overflow: visible;  
   background-color: #ffffff;
   color: #f39c12;
   border: 2px solid #f39c12;
@@ -68,7 +77,258 @@
   border-color: #27ae60;
 }
 
+/* Container */
+.winner-section {
+  max-width: 700px;
+  margin: 40px auto;
+  text-align: center;
+  font-family: "Poppins", sans-serif;
+}
 
+/* Title */
+.winner-title h1 {
+  margin-bottom: 5px;
+  color: #4cbf0e;
+  font-weight: 500;
+  font-size: 25px;
+}
+
+.winner-title h2 {
+  margin-bottom: 20px;
+  color: #222;
+  font-size: 25px;
+  font-weight: 600;
+}
+
+/* Winner Card */
+.winner-card-vertical {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px;
+  margin-bottom: 30px;
+}
+
+/* Winner Photo with glowing border */
+.winner-photo-wrapper {
+  display: inline-block;
+  position: relative;
+}
+
+.winner-photo-vertical {
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #3498db;
+  transition: box-shadow 0.4s ease, transform 0.3s ease;
+}
+
+/* Glow effect around photo */
+.glow-photo {
+  box-shadow: 0 0 12px rgba(52, 152, 219, 0.6);
+}
+
+.glow-photo:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 20px rgba(52, 152, 219, 0.9), 0 0 40px rgba(52, 152, 219, 0.5);
+}
+
+/* Winner Name */
+.winner-name-vertical {
+  font-size: 1.6em;
+  font-weight: 600;
+  color: #222;
+  margin: 10px 0 6px;
+}
+
+/* Party info horizontal */
+.winner-party-horizontal,
+.candidate-party-horizontal {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.party-logo-horizontal,
+.candidate-party-logo-horizontal {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  object-fit: contain;
+}
+
+.winner-party-name-horizontal,
+.candidate-party-name-horizontal {
+  font-size: 1em;
+  font-weight: 500;
+  color: #3498db;
+}
+
+/* Votes */
+.winner-votes-vertical,
+.candidate-votes-mini {
+  font-size: 1em;
+  color: #555;
+}
+
+.winner-votes-vertical span,
+.candidate-votes-mini span {
+  font-weight: 600;
+  color: #e74c3c;
+}
+
+/* Winner label */
+.winner-text-label {
+  margin-top: 6px;
+  font-size: 0.95em;
+  color: #ff0000;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+
+/* Other Candidates */
+.other-candidates {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 15px;
+}
+
+.candidate-card-mini {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 8px;
+  transition: transform 0.2s ease;
+}
+
+/* Hover effect on other candidates */
+.hover-up:hover {
+  transform: translateY(-3px);
+}
+
+/* Candidate Photo */
+.candidate-photo-mini {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 6px;
+}
+
+/* Candidate Name */
+.candidate-name-mini {
+  font-size: 14px;
+  font-weight: 500;
+  color: #222;
+  margin-bottom: 3px;
+}
+
+/* Placeholder */
+.winner-placeholder {
+  color: #888;
+  font-size: 16px;
+  margin-top: 20px;
+}
+
+.results-heading {
+  font-size: 20px;              /* Bigger subtitle */
+  font-weight: 500;
+  color: #5c5c5c;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.election-name {
+  font-size: 48px;              /* ✅ Large and bold */
+  font-weight: 700;
+  color: #111;
+  margin-bottom: 35px;
+  position: relative;
+  display: inline-block;
+  line-height: 1.2;
+  letter-spacing: 0.5px;
+}
+
+/* Underline accent with clean gradient */
+.election-name::after {
+  content: "";
+  display: block;
+  width: 70%;
+  height: 4px;
+  background: linear-gradient(90deg, #3498db, #6dd5fa);
+  margin: 12px auto 0;
+  border-radius: 4px;
+  opacity: 0.9;
+  box-shadow: 0 0 10px rgba(52, 152, 219, 0.5);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .results-heading {
+    font-size: 16px;
+  }
+  .election-name {
+    font-size: 34px;
+  }
+  .election-name::after {
+    width: 60%;
+    height: 3px;
+  }
+}
+
+
+
+/* Wrapper to visually separate from other sections */
+.results-wrapper {
+  width: 100%;
+  padding: 80px 20px;           /* spacing above and below */
+  background: #f8f9fa;          /* soft neutral background */
+  border-top: 1px solid #e5e5e5;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+/* Winner Section itself */
+.winner-section {
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
+  background: transparent;
+}
+
+/* Make it feel clean on dark backgrounds too */
+body.dark-mode .results-wrapper {
+  background: #1b1b1b;
+  border-color: #333;
+}
+
+
+/* Responsive */
+@media (max-width: 480px) {
+  .winner-section {
+    max-width: 90%;
+  }
+
+  .winner-photo-vertical {
+    width: 100px;
+    height: 100px;
+  }
+
+  .candidate-photo-mini {
+    width: 50px;
+    height: 50px;
+  }
+
+  .party-logo-horizontal,
+  .candidate-party-logo-horizontal {
+    width: 24px;
+    height: 24px;
+  }
+}
 
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
