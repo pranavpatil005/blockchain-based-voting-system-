@@ -147,19 +147,90 @@ app.get('/api/candidates', (req, res) => {
 // ---------------------------
 // Cast Vote
 // ---------------------------
-app.post('/api/cast-vote', (req, res) => {
-  const { candidate_id } = req.body;
+// ---------------------------
+// Cast Vote (Updated)
+// ---------------------------
+app.post("/api/cast-vote", (req, res) => {
+  const { voter_id, candidate_id, election_id } = req.body;
 
-  if (!candidate_id) {
-    return res.status(400).json({ success: false, message: 'Candidate ID is required' });
+  if (!voter_id || !candidate_id || !election_id) {
+    return res.status(400).json({ success: false, message: "Missing fields" });
   }
 
-  const sql = `UPDATE candidates SET votes = votes + 1 WHERE id = ?`;
-  db.query(sql, [candidate_id], (err, result) => {
+  // 1️⃣ Check if voter already voted in this election
+  const checkSql = `SELECT * FROM votes WHERE voter_id = ? AND election_id = ?`;
+  db.query(checkSql, [voter_id, election_id], (err, result) => {
     if (err) return res.status(500).json({ success: false, message: err.message });
-    res.json({ success: true, message: 'Vote recorded successfully' });
+
+    if (result.length > 0) {
+      return res.json({
+        success: false,
+        message: "You have already voted in this election.",
+      });
+    }
+
+    // 2️⃣ Record the vote
+    const insertVote = `INSERT INTO votes (voter_id, election_id, candidate_id) VALUES (?, ?, ?)`;
+    db.query(insertVote, [voter_id, election_id, candidate_id], (err, voteResult) => {
+      if (err) return res.status(500).json({ success: false, message: err.message });
+
+      // 3️⃣ Increment candidate vote count
+      const updateVotes = `UPDATE candidates SET votes = votes + 1 WHERE id = ?`;
+      db.query(updateVotes, [candidate_id], (err2) => {
+        if (err2) return res.status(500).json({ success: false, message: err2.message });
+
+        res.json({ success: true, message: "Vote recorded successfully" });
+      });
+    });
   });
 });
+
+
+
+
+
+// ---------------------------
+// Check if voter already voted in active election
+// ---------------------------
+app.post("/api/check-vote-status", (req, res) => {
+  const { voter_id, election_id } = req.body;
+
+  if (!voter_id || !election_id) {
+    return res.status(400).json({ success: false, message: "Missing parameters" });
+  }
+
+  const sql = `SELECT * FROM votes WHERE voter_id = ? AND election_id = ? LIMIT 1`;
+  db.query(sql, [voter_id, election_id], (err, result) => {
+    if (err) return res.status(500).json({ success: false, message: err.message });
+
+    if (result.length > 0) {
+      return res.json({ success: true, voted: true });
+    } else {
+      return res.json({ success: true, voted: false });
+    }
+  });
+});
+
+
+// ✅ Fetch voter details by Aadhaar
+app.post("/api/get-voter-by-aadhaar", (req, res) => {
+  const { aadhaar } = req.body;
+  if (!aadhaar) {
+    return res.status(400).json({ success: false, message: "Aadhaar required" });
+  }
+
+  const sql = "SELECT id, name, aadhaar, voterId FROM users WHERE aadhaar = ? LIMIT 1";
+  db.query(sql, [aadhaar], (err, result) => {
+    if (err) return res.status(500).json({ success: false, message: "Database error" });
+    if (result.length === 0)
+      return res.json({ success: false, message: "Voter not found" });
+
+    res.json({ success: true, voter: result[0] });
+  });
+});
+
+
+
 
 // ---------------------------
 // Get Active Election + Candidates
@@ -402,6 +473,37 @@ app.put('/api/start-election/:id', (req, res) => {
 
 
 
+// Check if Aadhaar or Voter ID already exists
+
+app.post('/api/check-duplicates', (req, res) => {
+  const { aadhaar, voterId } = req.body;
+
+  if (!aadhaar && !voterId) {
+    return res.status(400).json({ success: false, message: 'Missing Aadhaar or Voter ID' });
+  }
+
+  const sql = `
+    SELECT aadhaar, voterId 
+    FROM users 
+    WHERE aadhaar = ? OR voterId = ? 
+    LIMIT 1
+  `;
+
+  db.query(sql, [aadhaar, voterId], (err, result) => {
+    if (err) return res.status(500).json({ success: false, message: err.message });
+    if (result.length > 0) {
+      const existing = result[0];
+      if (existing.aadhaar === aadhaar && existing.voterId === voterId) {
+        return res.json({ success: false, message: 'Both Aadhaar and Voter ID already exist.' });
+      } else if (existing.aadhaar === aadhaar) {
+        return res.json({ success: false, message: 'Aadhaar already exists.' });
+      } else if (existing.voterId === voterId) {
+        return res.json({ success: false, message: 'Voter ID already exists.' });
+      }
+    }
+    res.json({ success: true });
+  });
+});
 
 
 
@@ -419,14 +521,19 @@ app.post('/api/add-voter', (req, res) => {
     return res.status(400).json({ success: false, message: 'Required fields missing' });
   }
 
+  const formattedPhone = phone.startsWith('+91') ? phone : `+91${phone}`;
+  const ageValue = Number(age);
+
+  if (ageValue < 18 || ageValue > 100) {
+    return res.status(400).json({ success: false, message: 'Age must be between 18 and 100' });
+  }
+
   const sql = `
     INSERT INTO users (name, voterId, aadhaar, mobile_number, age, role, photo)
     VALUES (?, ?, ?, ?, ?, 'user', ?)
   `;
 
-  const ageValue = age ? Number(age) : null;
-
-  db.query(sql, [name, voterId, aadhaar, phone, ageValue, photo || null], (err, result) => {
+  db.query(sql, [name, voterId, aadhaar, formattedPhone, ageValue, photo || null], (err, result) => {
     if (err) {
       console.error('DB Error:', err);
       return res.status(500).json({ success: false, message: err.message });
@@ -434,6 +541,7 @@ app.post('/api/add-voter', (req, res) => {
     res.json({ success: true, message: 'Voter added successfully', voterId: result.insertId });
   });
 });
+
 
 // Get All Voters
 app.get('/api/voters', (req, res) => {

@@ -73,7 +73,7 @@
 /* Right Buttons Container (now on left side) */
 .header-buttons-container {
   position: absolute;  /* Pin inside header */
-  left: 1100px;          /* Distance from left edge (opposite side) */
+  left: 1000px;          /* Distance from left edge (opposite side) */
   top: 50%;            /* Vertically center */
   transform: translateY(-50%);
   display: flex;

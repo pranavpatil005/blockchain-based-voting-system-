@@ -796,7 +796,11 @@ header.main-header .header-sticky.active{
 	background: url('../images/bg9.jpg') no-repeat;
 	background-position: center center;
 	background-size: cover;
+ min-height: 150vh;
+  display: flex;
+  align-items: center;
 
+  
 	 margin-top: 1400px;
 }
 

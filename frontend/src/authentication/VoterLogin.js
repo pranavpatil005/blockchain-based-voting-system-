@@ -87,7 +87,25 @@ const VoterLogin = () => {
 
 
 
-    localStorage.setItem("aadhaar", aadhaar);
+   // ✅ Fetch voter details to get their numeric ID
+axios.post("http://localhost:5000/api/get-voter-by-aadhaar", { aadhaar })
+  .then((res) => {
+    if (res.data.success) {
+      const voter = res.data.voter;
+      localStorage.setItem("voter_id", voter.id);
+      localStorage.setItem("aadhaar", voter.aadhaar);
+      userLogin();
+      showToastMessage("Login Successful!", "success");
+      setTimeout(() => navigate("/voter"), 1000);
+    } else {
+      showToastMessage("Voter not found", "error");
+    }
+  })
+  .catch((err) => {
+    console.error(err);
+    showToastMessage("Server error", "error");
+  });
+
 
 
 
