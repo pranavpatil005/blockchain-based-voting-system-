@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
+import { FaVoteYea, FaUserPlus } from "react-icons/fa"; 
+
 import "../css/AdminLayout.css";
 
 const AdminLayout = () => {
@@ -11,7 +13,7 @@ const AdminLayout = () => {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem("token"); // Replace with your auth logic
+    localStorage.removeItem("token");
     window.location.href = "/";
   };
 
@@ -36,20 +38,22 @@ const AdminLayout = () => {
             <span className="header-title">Admin Panel</span>
           </div>
 
-          {/* Right: Buttons Container */}
+       
          <div className="header-buttons-container">
-  <button
-    className="btn-default btn-register"
-    onClick={() => navigate("/admin/createelection")}
-  >
-    ➕ Election
-  </button>
-  <button
-    className="btn-default btn-register"
-    onClick={() => navigate("/admin/candidates")}
-  >
-    ➕ Candidates
-  </button>
+<button
+  className="btn-default btn-register"
+  onClick={() => navigate("/admin/createelection")}
+>
+  <FaVoteYea style={{ marginRight: "5px" }} /> Election
+</button>
+
+<button
+  className="btn-default btn-register"
+  onClick={() => navigate("/admin/candidates")}
+>
+  <FaUserPlus style={{ marginRight: "5px" }} /> Candidates
+</button>
+
   <button
     className="btn-default btn-wallet"
     onClick={handleLogout}
