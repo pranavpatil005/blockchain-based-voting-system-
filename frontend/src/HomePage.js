@@ -193,13 +193,15 @@ useEffect(() => {
         <a onClick={handleLogin} className="btn-default btn-register">
           Register to Vote
         </a>
-    <a
-    onClick={connectWallet}
-    className={`btn-default btn-wallet ${account ? 'connected' : ''}`}
-    style={{ cursor: "pointer", display: "inline-flex", alignItems: "center" }}
-  >
-    <FaWallet />connect wallet
-  </a>
+   <a
+  onClick={connectWallet}
+  className={`btn-default btn-wallet ${account ? 'connected' : ''}`}
+  style={{ cursor: "pointer", display: "inline-flex", alignItems: "center" }}
+>
+  <FaWallet style={{ marginRight: "5px" }} />
+  {account ? `${account.slice(0, 6)}...${account.slice(-4)}` : "Connect Wallet"}
+</a>
+
 
 
       </div>
