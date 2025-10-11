@@ -5,7 +5,7 @@
       import './App.css';
 
 
-      import { FaWallet } from "react-icons/fa";
+      import { FaWallet ,FaVoteYea} from "react-icons/fa";
 
       const App = () => {
         const navigate = useNavigate();
@@ -189,16 +189,16 @@ useEffect(() => {
 
 
                   </div>
-            <div className="header-btn" style={{ display: 'flex', justifyContent: 'space-between', width: '280px' }}>
+            <div className="header-btn" style={{ display: 'flex', justifyContent: 'space-between', width: '380px' }}>
         <a onClick={handleLogin} className="btn-default btn-register">
-          Register to Vote
+         <FaVoteYea  /> Login to Vote
         </a>
    <a
   onClick={connectWallet}
   className={`btn-default btn-wallet ${account ? 'connected' : ''}`}
   style={{ cursor: "pointer", display: "inline-flex", alignItems: "center" }}
 >
-  <FaWallet style={{ marginRight: "5px" }} />
+  <FaWallet  />
   {account ? `${account.slice(0, 6)}...${account.slice(-4)}` : "Connect Wallet"}
 </a>
 
