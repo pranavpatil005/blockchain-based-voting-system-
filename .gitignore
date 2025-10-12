@@ -6,3 +6,4 @@ node_modules
 "backend/.env" 
 .env
 *.env
+/backend/.env
