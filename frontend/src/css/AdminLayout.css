@@ -73,7 +73,7 @@
 /* Right Buttons Container (now on left side) */
 .header-buttons-container {
   position: absolute;  /* Pin inside header */
-  left: 1000px;          /* Distance from left edge (opposite side) */
+  left: 900px;          /* Distance from left edge (opposite side) */
   top: 50%;            /* Vertically center */
   transform: translateY(-50%);
   display: flex;
@@ -118,6 +118,19 @@
 .btn-wallet:hover {
   background-color: #f39c12;
   color: #ffffff;
+  transform: translateY(-2px);
+}
+
+
+.btn-default.btn-logout {
+  background-color: #fff;
+  color: #e74c3c;
+  border: 2px solid #e74c3c;
+}
+
+.btn-default.btn-logout:hover {
+  background-color: #e74c3c;
+  color: #fff;
   transform: translateY(-2px);
 }
 

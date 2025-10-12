@@ -77,6 +77,9 @@ app.post('/api/check-voter', (req, res) => {
 // ---------------------------
 // Create Election
 // ---------------------------
+// ---------------------------
+// Create Election (No Overlap)
+// ---------------------------
 app.post('/api/create-election', (req, res) => {
   const { name, from_date, to_date, description } = req.body;
 
@@ -84,13 +87,37 @@ app.post('/api/create-election', (req, res) => {
     return res.status(400).json({ success: false, message: 'All fields are required' });
   }
 
-  const sql = 'INSERT INTO election (name, from_date, to_date, description) VALUES (?, ?, ?, ?)';
-  db.query(sql, [name, from_date, to_date, description], (err, result) => {
+  // Ensure start date is before end date
+  if (new Date(from_date) >= new Date(to_date)) {
+    return res.status(400).json({ success: false, message: 'Start date must be before end date' });
+  }
+
+  // Check for overlapping elections
+  const overlapSql = `
+    SELECT * FROM election 
+    WHERE NOT (to_date <= ? OR from_date >= ?)
+    LIMIT 1
+  `;
+  db.query(overlapSql, [from_date, to_date], (err, overlapResult) => {
     if (err) return res.status(500).json({ success: false, message: 'Database error' });
 
-    res.json({ success: true, message: 'Election created successfully', electionId: result.insertId });
+    if (overlapResult.length > 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'Election overlaps with an existing election. Please choose different dates.'
+      });
+    }
+
+    // Insert new election
+    const insertSql = 'INSERT INTO election (name, from_date, to_date, description) VALUES (?, ?, ?, ?)';
+    db.query(insertSql, [name, from_date, to_date, description], (err, result) => {
+      if (err) return res.status(500).json({ success: false, message: 'Database error' });
+
+      res.json({ success: true, message: 'Election created successfully', electionId: result.insertId });
+    });
   });
 });
+
 
 // ---------------------------
 // Get All Elections
@@ -235,9 +262,11 @@ app.post("/api/get-voter-by-aadhaar", (req, res) => {
 // ---------------------------
 // Get Active Election + Candidates
 // ---------------------------
+// Get Active Election + Candidates (live vote count from votes table)
 app.get('/api/active-election-candidates', (req, res) => {
   const today = new Date().toISOString().split('T')[0];
 
+  // 1️⃣ Find active election
   const electionSql = `SELECT * FROM election WHERE from_date <= ? AND to_date >= ? LIMIT 1`;
   db.query(electionSql, [today, today], (err, electionResult) => {
     if (err) return res.status(500).json({ success: false, message: err.message });
@@ -247,7 +276,16 @@ app.get('/api/active-election-candidates', (req, res) => {
     }
 
     const election = electionResult[0];
-    const candidatesSql = `SELECT id, name, votes FROM candidates WHERE election_id = ? ORDER BY votes DESC`;
+
+    // 2️⃣ Fetch candidates and count votes dynamically
+    const candidatesSql = `
+      SELECT c.id, c.name, COUNT(v.id) AS votes
+      FROM candidates c
+      LEFT JOIN votes v ON c.id = v.candidate_id
+      WHERE c.election_id = ?
+      GROUP BY c.id
+      ORDER BY votes DESC
+    `;
 
     db.query(candidatesSql, [election.id], (err, candidatesResult) => {
       if (err) return res.status(500).json({ success: false, message: err.message });
@@ -268,6 +306,7 @@ app.get('/api/active-election-candidates', (req, res) => {
     });
   });
 });
+
 
 // ---------------------------
 // Get Latest Ended Election
@@ -515,9 +554,9 @@ app.post('/api/check-duplicates', (req, res) => {
 // ---------------------------
 // Add Voter
 app.post('/api/add-voter', (req, res) => {
-  const { name, voterId, aadhaar, phone, age, photo } = req.body;
+  const { name, voterId, aadhaar, phone, age, photo, walletAddress } = req.body;
 
-  if (!name || !voterId || !aadhaar || !phone) {
+  if (!name || !voterId || !aadhaar || !phone || !walletAddress) {
     return res.status(400).json({ success: false, message: 'Required fields missing' });
   }
 
@@ -529,17 +568,21 @@ app.post('/api/add-voter', (req, res) => {
   }
 
   const sql = `
-    INSERT INTO users (name, voterId, aadhaar, mobile_number, age, role, photo)
-    VALUES (?, ?, ?, ?, ?, 'user', ?)
+    INSERT INTO users (name, voterId, aadhaar, mobile_number, age, role, photo, wallet_address)
+    VALUES (?, ?, ?, ?, ?, 'user', ?, ?)
   `;
 
-  db.query(sql, [name, voterId, aadhaar, formattedPhone, ageValue, photo || null], (err, result) => {
-    if (err) {
-      console.error('DB Error:', err);
-      return res.status(500).json({ success: false, message: err.message });
+  db.query(
+    sql,
+    [name, voterId, aadhaar, formattedPhone, ageValue, photo || null, walletAddress],
+    (err, result) => {
+      if (err) {
+        console.error('DB Error:', err);
+        return res.status(500).json({ success: false, message: err.message });
+      }
+      res.json({ success: true, message: 'Voter added successfully', voterId: result.insertId });
     }
-    res.json({ success: true, message: 'Voter added successfully', voterId: result.insertId });
-  });
+  );
 });
 
 
@@ -557,6 +600,26 @@ app.get('/api/voters', (req, res) => {
   });
 });
 
+// Check if connected wallet is allowed to vote
+app.post("/api/check-wallet", (req, res) => {
+  const { walletAddress } = req.body;
+
+  if (!walletAddress) {
+    return res.status(400).json({ success: false, message: "Wallet address is required" });
+  }
+
+  const sql = "SELECT id, name FROM users WHERE wallet_address = ? LIMIT 1";
+  db.query(sql, [walletAddress], (err, result) => {
+    if (err) return res.status(500).json({ success: false, message: "Database error" });
+
+    if (result.length === 0) {
+      return res.json({ success: false, message: "Your wallet is not allowed to vote" });
+    }
+
+    // Wallet is valid
+    res.json({ success: true, voterId: result[0].id, name: result[0].name });
+  });
+});
 
 
 

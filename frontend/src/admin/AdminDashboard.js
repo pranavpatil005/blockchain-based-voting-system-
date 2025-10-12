@@ -1,33 +1,15 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom"; 
 import "../css/AdminDashboard.css";
-import useSessionState from "../hooks/useSessionState"; 
 import { useAuth } from "../context/AuthContext";
-
-// Dummy data for demonstration
-const defaultElections = [
-  { id: 1, name: "Presidential 2025", status: "Running" },
-  { id: 2, name: "Local Election", status: "Upcoming" },
-  { id: 3, name: "Board Election", status: "Finished" },
-];
-
-const defaultVoters = {
-  total: 1200,
-  voted: 850,
-  verified: 1100,
-};
-
-const defaultNotifications = [
-  "New voter added: John Doe",
-  "Election 'Presidential 2025' started",
-  "Smart contract updated successfully",
-  "Failed transaction detected",
-  "Election 'Board Election' ending soon",
-];
+import axios from "axios";
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
   const { adminLoggedIn, logout } = useAuth();
+
+  const [totalVoters, setTotalVoters] = useState(0);
+  const [currentElection, setCurrentElection] = useState(null);
 
   // Redirect to login if not logged in
   useEffect(() => {
@@ -36,10 +18,26 @@ const AdminDashboard = () => {
     }
   }, [adminLoggedIn, navigate]);
 
-  // Session state for dashboard data
-  const [elections] = useSessionState("adminElections", defaultElections);
-  const [voters] = useSessionState("adminVoters", defaultVoters);
-  const [notifications] = useSessionState("adminNotifications", defaultNotifications);
+  // Fetch dashboard data
+  useEffect(() => {
+    // 1️⃣ Fetch total voters
+    axios.get("http://localhost:5000/api/voters")
+      .then(res => {
+        if (res.data.success) setTotalVoters(res.data.voters.length);
+      })
+      .catch(err => console.error("Error fetching voters:", err));
+
+    // 2️⃣ Fetch ongoing election
+    axios.get("http://localhost:5000/api/election-status")
+      .then(res => {
+        if (res.data.success && res.data.status === "Ongoing") {
+          setCurrentElection(res.data.election.name);
+        } else {
+          setCurrentElection("No ongoing election");
+        }
+      })
+      .catch(err => console.error("Error fetching election status:", err));
+  }, []);
 
   const handleLogout = () => {
     logout(); 
@@ -58,13 +56,10 @@ const AdminDashboard = () => {
           <li onClick={() => navigate("/admin/management")}>Add Voter</li>
           <li onClick={() => navigate("/admin/monitor")}>Live Monitor</li>
           <li onClick={() => navigate("/admin/results")}>Election Result</li>
-          <li onClick={() => navigate("/admin/blockchain")}>Blockchain Explorer</li>
           <li onClick={() => navigate("/admin/helpdesk")}>Help Desk</li>
-           
         </ul>
       </aside>
 
-      {/* Main content */}
       <main className="dashboard-main">
         {/* Welcome Banner */}
         <section className="dashboard-welcome">
@@ -72,26 +67,22 @@ const AdminDashboard = () => {
           <p>Manage elections, voters, and monitor blockchain status in real-time.</p>
         </section>
 
-        {/* Voter Overview */}
+        {/* Voter & Election Overview */}
         <section className="dashboard-section voter-section">
-          <h2>Voter Overview</h2>
+          <h2>Overview</h2>
           <div className="voter-stats">
             <div className="voter-card">
               <h3>Total Voters</h3>
-              <p>{voters.total}</p>
+              <p>{totalVoters}</p>
             </div>
             <div className="voter-card">
-              <h3>Voted</h3>
-              <p>{voters.voted}</p>
-            </div>
-            <div className="voter-card">
-              <h3>Verified</h3>
-              <p>{voters.verified}</p>
+              <h3>Current Election</h3>
+              <p>{currentElection}</p>
             </div>
           </div>
         </section>
 
-        {/* Quick Actions as Chips */}
+        {/* Quick Actions */}
         <section className="dashboard-section actions-section">
           <h2>Quick Actions</h2>
           <div className="action-chips">
@@ -101,9 +92,7 @@ const AdminDashboard = () => {
             <div className="chip" onClick={() => navigate("/admin/management")}>Add Voter</div>
             <div className="chip" onClick={() => navigate("/admin/monitor")}>Live Monitor</div>
             <div className="chip" onClick={() => navigate("/admin/results")}>Election Result</div>
-            <div className="chip" onClick={() => navigate("/admin/blockchain")}>Blockchain Explorer</div>
             <div className="chip" onClick={() => navigate("/admin/helpdesk")}>Help Desk</div>
-            
           </div>
         </section>
       </main>
