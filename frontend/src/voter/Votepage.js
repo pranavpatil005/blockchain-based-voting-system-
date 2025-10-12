@@ -1,17 +1,23 @@
+// src/voter/Votepage.js
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useUserAuth } from "../context/UserAuthContext";
 import Navbar from "./Navbar";
+import { castVoteOnChain } from "../blockchain/votingContract";
+import { FaWallet } from "react-icons/fa";
 
 const Votepage = () => {
   const [candidates, setCandidates] = useState([]);
   const [electionName, setElectionName] = useState("");
   const [selected, setSelected] = useState(null);
   const [hasVoted, setHasVoted] = useState(false);
-  const [justVoted, setJustVoted] = useState(false); // ✅ new state
+  const [justVoted, setJustVoted] = useState(false);
   const [timer, setTimer] = useState(10);
   const [activeElectionId, setActiveElectionId] = useState(null);
+  const [account, setAccount] = useState(null);
+  const [networkCorrect, setNetworkCorrect] = useState(false);
+
   const navigate = useNavigate();
   const { userLogout } = useUserAuth();
 
@@ -20,7 +26,26 @@ const Votepage = () => {
     navigate("/");
   };
 
-  // ✅ Fetch election + candidates + check vote status
+  // Wallet connect
+  const connectWallet = async () => {
+    if (!window.ethereum) return alert("MetaMask not detected. Please install it.");
+    try {
+      const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
+      setAccount(accounts[0]);
+
+      const chainId = await window.ethereum.request({ method: "eth_chainId" });
+      setNetworkCorrect(chainId === "0x7a69");
+      if (chainId !== "0x7a69") alert("Switch MetaMask network to Hardhat localhost (31337)");
+
+      window.ethereum.on("chainChanged", (newChainId) => setNetworkCorrect(newChainId === "0x7a69"));
+      window.ethereum.on("accountsChanged", (accounts) => setAccount(accounts[0] || null));
+    } catch (err) {
+      console.error(err);
+      alert("Failed to connect MetaMask.");
+    }
+  };
+
+  // Fetch elections and candidates
   useEffect(() => {
     const fetchElectionAndCandidates = async () => {
       try {
@@ -42,58 +67,52 @@ const Votepage = () => {
         setActiveElectionId(activeElection.id);
 
         const candRes = await axios.get("http://localhost:5000/api/candidates");
-        const filteredCandidates = candRes.data.filter(
-          (c) => c.election_id === activeElection.id
-        );
+        const filteredCandidates = candRes.data.filter((c) => c.election_id === activeElection.id);
         setCandidates(filteredCandidates);
 
-        // ✅ Check if voter already voted
         const voterId = localStorage.getItem("voter_id");
         if (voterId) {
-          const voteCheck = await axios.post(
-            "http://localhost:5000/api/check-vote-status",
-            {
-              voter_id: voterId,
-              election_id: activeElection.id,
-            }
-          );
-          if (voteCheck.data.voted) {
-            setHasVoted(true);
-          }
+          const voteCheck = await axios.post("http://localhost:5000/api/check-vote-status", {
+            voter_id: voterId,
+            election_id: activeElection.id,
+          });
+          if (voteCheck.data.voted) setHasVoted(true);
         }
       } catch (err) {
         console.error("Error fetching election/candidates:", err);
       }
     };
-
     fetchElectionAndCandidates();
   }, []);
 
-  // 🔥 Timer effect — runs only after a *new* vote
+  // Auto logout timer after voting
   useEffect(() => {
-    if (justVoted) {
-      const countdown = setInterval(() => {
-        setTimer((prev) => {
-          if (prev === 1) {
-            clearInterval(countdown);
-            handleLogout();
-          }
-          return prev - 1;
-        });
-      }, 1000);
-
-      return () => clearInterval(countdown);
-    }
+    if (!justVoted) return;
+    const countdown = setInterval(() => {
+      setTimer((prev) => {
+        if (prev === 1) {
+          clearInterval(countdown);
+          handleLogout();
+        }
+        return prev - 1;
+      });
+    }, 1000);
+    return () => clearInterval(countdown);
   }, [justVoted]);
 
-  // ✅ Cast vote handler
+  // Confirm vote
   const confirmVote = async () => {
-    if (selected === null || !activeElectionId) return;
+    if (selected === null || !activeElectionId) return alert("Select a candidate first!");
+    if (!account) return alert("Connect your MetaMask wallet first!");
+    if (!networkCorrect) return alert("Switch MetaMask to Hardhat localhost network (31337)");
 
     const candidateId = candidates[selected].id;
     const voterId = localStorage.getItem("voter_id");
 
     try {
+      const tx = await castVoteOnChain(activeElectionId, candidateId);
+      console.log("Blockchain TX:", tx);
+
       const res = await axios.post("http://localhost:5000/api/cast-vote", {
         candidate_id: candidateId,
         voter_id: voterId,
@@ -101,209 +120,135 @@ const Votepage = () => {
       });
 
       if (res.data.success) {
-        alert(
-          `✅ Your vote for ${candidates[selected].name} has been recorded on blockchain!`
-        );
+        alert(`✅ Your vote for ${candidates[selected].name} is recorded on blockchain and backend!`);
         setHasVoted(true);
-        setJustVoted(true); // ✅ Start timer only now
+        setJustVoted(true);
       } else {
         alert(`❌ ${res.data.message || "Failed to cast vote"}`);
       }
     } catch (err) {
       console.error(err);
-      alert("❌ Error occurred while casting vote");
+      alert("❌ Error during voting — blockchain transaction failed.");
     }
   };
 
   return (
     <div style={{ fontFamily: "Arial, sans-serif" }}>
       <Navbar />
+    {/* Wallet Button top-right */}
+<div style={{ position: "absolute", top: "100px", right: "-1350px", zIndex: 1000 }}>
+  <a
+    onClick={connectWallet}
+    className={`btn-default btn-wallet ${account ? "connected" : ""}`}
+    style={{ cursor: "pointer" }}
+  >
+    <FaWallet className="wallet-icon" />
+    {account ? `${account.slice(0, 6)}...${account.slice(-4)}` : "Connect Wallet"}
+  </a>
+</div>
 
-      {!hasVoted ? (
-        <>
-          <h1
-            style={{
-              textAlign: "center",
-              fontWeight: "bold",
-              marginTop: "100px",
-            }}
-          >
-            {electionName}
-          </h1>
-          {candidates.length === 0 ? (
-            <p style={{ textAlign: "center" }}>No candidates for this election</p>
-          ) : (
-            <>
-              <h2 style={{ textAlign: "center", marginTop: "10px" }}>
-                Cast Your Vote
-              </h2>
-              <div
-                style={{
+      <div style={{ textAlign: "center", marginTop: "40px" }}>
+        <h1 style={{ fontWeight: "bold" }}>{electionName}</h1>
+
+       
+
+        {!hasVoted ? (
+          <>
+            {candidates.length === 0 ? (
+              <p>No candidates for this election</p>
+            ) : (
+              <>
+                <h2>Cast Your Vote</h2>
+                <div style={{
                   display: "grid",
                   gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
                   gap: "20px",
                   width: "60%",
-                  margin: "20px auto",
-                }}
-              >
-                {candidates.map((c, idx) => (
-                  <div
-                    key={idx}
-                    onClick={() => setSelected(idx)}
-                    style={{
-                      border:
-                        selected === idx ? "3px solid #2980b9" : "1px solid #ccc",
-                      borderRadius: "10px",
-                      padding: "15px",
-                      textAlign: "center",
-                      boxShadow:
-                        selected === idx
-                          ? "0 4px 15px rgba(41, 128, 185, 0.4)"
-                          : "0 2px 8px rgba(0,0,0,0.1)",
-                      cursor: "pointer",
-                      transition: "0.3s",
-                      backgroundColor: selected === idx ? "#d1f2eb" : "white",
-                    }}
-                  >
+                  margin: "20px auto"
+                }}>
+                  {candidates.map((c, idx) => (
                     <div
+                      key={idx}
+                      onClick={() => setSelected(idx)}
                       style={{
-                        border:
-                          selected === idx ? "3px solid #2980b9" : "1px solid #ccc",
+                        border: selected === idx ? "3px solid #2980b9" : "1px solid #ccc",
                         borderRadius: "10px",
                         padding: "15px",
                         textAlign: "center",
-                        boxShadow:
-                          selected === idx
-                            ? "0 4px 15px rgba(41, 128, 185, 0.4)"
-                            : "0 2px 8px rgba(0,0,0,0.1)",
                         cursor: "pointer",
-                        transition: "0.3s",
-                        backgroundColor:
-                          selected === idx ? "#91dfceff" : "white",
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "center",
+                        backgroundColor: selected === idx ? "#d1f2eb" : "white",
+                        boxShadow: selected === idx ? "0 4px 15px rgba(41,128,185,0.4)" : "0 2px 8px rgba(0,0,0,0.1)",
+                        transition: "0.3s"
                       }}
                     >
                       {/* Party Logo + Party Name */}
-                      <div
-                        style={{
-                          display: "flex",
-                          flexDirection: "column",
-                          alignItems: "center",
-                          marginBottom: "15px",
-                        }}
-                      >
-                        <img
-                          src={c.party_logo}
-                          alt={c.party}
-                          style={{
-                            width: "50px",
-                            height: "50px",
-                            objectFit: "contain",
-                            marginBottom: "5px",
-                          }}
-                        />
-                        <span
-                          style={{
-                            display: "inline-block",
-                            padding: "4px 12px",
-                            backgroundColor: "#407fddff",
-                            color: "black",
-                            borderRadius: "12px",
-                            fontSize: "12px",
-                            fontWeight: "bold",
-                          }}
-                        >
-                          {c.party}
-                        </span>
+                      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", marginBottom: "10px" }}>
+                        {c.party_logo && (
+                          <img src={c.party_logo} alt={c.party} style={{ width: "50px", height: "50px", objectFit: "contain", marginBottom: "5px" }} />
+                        )}
+                        <span style={{
+                          display: "inline-block",
+                          padding: "4px 10px",
+                          backgroundColor: "#407fddff",
+                          borderRadius: "12px",
+                          fontSize: "12px",
+                          fontWeight: "bold"
+                        }}>{c.party}</span>
                       </div>
 
-                      {/* Candidate Image */}
-                      <img
-                        src={c.photo}
-                        alt={c.name}
-                        style={{
-                          width: "100px",
-                          height: "100px",
-                          borderRadius: "50%",
-                          objectFit: "cover",
-                          marginBottom: "10px",
-                        }}
-                      />
+                      {/* Candidate Photo */}
+                      <img src={c.photo} alt={c.name} style={{ width: "100px", height: "100px", borderRadius: "50%", objectFit: "cover", marginBottom: "10px" }} />
 
                       {/* Candidate Name */}
-                      <h3 style={{ margin: "5px 0", fontWeight: "bold" }}>
-                        {c.name}
-                      </h3>
+                      <h3>{c.name}</h3>
                     </div>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
 
-              <div style={{ textAlign: "center", margin: "20px" }}>
                 <button
                   onClick={confirmVote}
-                  disabled={selected === null}
+                  disabled={!account || !networkCorrect || selected === null}
                   style={{
-                    backgroundColor: selected !== null ? "#2980b9" : "gray",
+                    backgroundColor: !account || !networkCorrect || selected === null ? "gray" : "#2980b9",
                     color: "white",
                     border: "none",
                     padding: "12px 20px",
                     borderRadius: "6px",
-                    cursor: selected !== null ? "pointer" : "not-allowed",
+                    cursor: !account || !networkCorrect || selected === null ? "not-allowed" : "pointer",
                     fontSize: "16px",
+                    marginTop: "20px"
                   }}
                 >
                   🗳️ Cast Your Vote
                 </button>
-              </div>
-            </>
-          )}
-        </>
-      ) : (
-        <div style={{ textAlign: "center", marginTop: "120px" }}>
-          <h1
-            style={{
-              fontSize: "36px",
-              color: "#27ae60",
-              lineHeight: "1.5",
-            }}
-          >
-            🎉 Thank You for Voting! 🎉
-            <br />
-            Your vote has been recorded on blockchain for <br />
-            <strong>{electionName}</strong>.
-          </h1>
-
-          {justVoted ? (
-            <p style={{ fontSize: "20px", marginTop: "20px" }}>
-              ⏳ You will be logged out automatically in{" "}
-              <strong>{timer}</strong> seconds...
-            </p>
-          ) : (
-            <p style={{ fontSize: "20px", marginTop: "20px" }}>
-              ✅ You have already voted in this election.
-            </p>
-          )}
-
-          <button
-            onClick={handleLogout}
-            style={{
-              marginTop: "20px",
-              backgroundColor: "#e74c3c",
-              color: "white",
-              border: "none",
-              padding: "10px 18px",
-              borderRadius: "6px",
-              cursor: "pointer",
-              fontSize: "16px",
-            }}
-          >
-            🚪 Logout Now
-          </button>
-        </div>
-      )}
+              </>
+            )}
+          </>
+        ) : (
+          <div style={{ marginTop: "50px" }}>
+            <h1 style={{ fontSize: "28px", color: "#27ae60" }}>
+              🎉 Thank You for Voting! 🎉<br />
+              Your vote has been recorded on blockchain for <strong>{electionName}</strong>.
+            </h1>
+            {justVoted && <p>⏳ You will be logged out automatically in <strong>{timer}</strong> seconds...</p>}
+            <button
+              onClick={handleLogout}
+              style={{
+                marginTop: "20px",
+                backgroundColor: "#e74c3c",
+                color: "white",
+                border: "none",
+                padding: "10px 18px",
+                borderRadius: "6px",
+                cursor: "pointer",
+                fontSize: "16px",
+              }}
+            >
+              🚪 Logout Now
+            </button>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
