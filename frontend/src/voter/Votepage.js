@@ -20,6 +20,7 @@ const Votepage = () => {
   const [walletAllowed, setWalletAllowed] = useState(false);
 
   const navigate = useNavigate();
+  
   const { userLogout } = useUserAuth();
 
   const handleLogout = () => {

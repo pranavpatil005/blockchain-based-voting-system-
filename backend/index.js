@@ -6,6 +6,18 @@ const mysql = require('mysql2');
 const app = express();
 const PORT = 5000;
 
+
+// Twilio setup
+
+require('dotenv').config();
+console.log("SID:", process.env.TWILIO_ACCOUNT_SID);
+console.log("Token:", process.env.TWILIO_AUTH_TOKEN ? "Loaded" : "Missing");
+
+const twilio = require('twilio');
+const client = new twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
+
+// Temporary in-memory OTP store
+const otpStore = {}; // { aadhaar: { otp, expires } }
 // Middleware
 app.use(cors());
 app.use(bodyParser.json({ limit: '10mb' }));
@@ -53,6 +65,7 @@ app.post('/api/admin-login', (req, res) => {
 // ---------------------------
 // Voter Aadhaar Check + OTP
 // ---------------------------
+// ✅ Send OTP using Twilio
 app.post('/api/check-voter', (req, res) => {
   const { aadhaar } = req.body;
 
@@ -61,18 +74,78 @@ app.post('/api/check-voter', (req, res) => {
   }
 
   const sql = 'SELECT * FROM users WHERE aadhaar = ? LIMIT 1';
-  db.query(sql, [aadhaar], (err, result) => {
+  db.query(sql, [aadhaar], async (err, result) => {
     if (err) return res.status(500).json({ success: false, message: 'Database error' });
 
-    if (result.length > 0) {
-      // ✅ Generate OTP in backend
-      const otp = Math.floor(100000 + Math.random() * 900000).toString();
-      return res.json({ success: true, message: 'Voter found', otp });
-    } else {
+    if (result.length === 0) {
       return res.json({ success: false, message: 'You are not registered' });
+    }
+
+    const user = result[0];
+    const phone = user.mobile_number;
+    if (!phone) {
+      return res.json({ success: false, message: 'Mobile number not found for this Aadhaar' });
+    }
+
+    const formattedPhone = phone.startsWith('+91') ? phone : `+91${phone}`;
+
+    // Generate OTP
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    const expiry = Date.now() + 5 * 60 * 1000; // valid for 5 minutes
+
+    otpStore[aadhaar] = { otp, expires: expiry };
+
+    try {
+      await client.messages.create({
+        body: `Your One Time Password (OTP) for voting system login is: ${otp}. It is valid for 5 minutes.`,
+        from: process.env.TWILIO_PHONE_NUMBER,
+        to: formattedPhone,
+      });
+
+      console.log(`✅ OTP sent to ${formattedPhone}: ${otp}`);
+      res.json({ success: true, message: 'OTP sent to registered mobile number' });
+    } catch (twilioErr) {
+      console.error('Twilio Error:', twilioErr);
+      res.status(500).json({ success: false, message: 'Failed to send OTP. Please try again later.' });
     }
   });
 });
+
+// ✅ Verify OTP
+app.post('/api/verify-otp', (req, res) => {
+  const { aadhaar, otp } = req.body;
+
+  if (!aadhaar || !otp) {
+    return res.status(400).json({ success: false, message: 'Aadhaar and OTP are required' });
+  }
+
+  const stored = otpStore[aadhaar];
+  if (!stored) {
+    return res.status(400).json({ success: false, message: 'No OTP found. Please request a new one.' });
+  }
+
+  if (Date.now() > stored.expires) {
+    delete otpStore[aadhaar];
+    return res.status(400).json({ success: false, message: 'OTP expired. Please request a new one.' });
+  }
+
+  if (stored.otp !== otp) {
+    return res.status(400).json({ success: false, message: 'Invalid OTP' });
+  }
+
+  // OTP valid
+  delete otpStore[aadhaar];
+
+  const sql = 'SELECT id, name, aadhaar, voterId FROM users WHERE aadhaar = ? LIMIT 1';
+  db.query(sql, [aadhaar], (err, result) => {
+    if (err) return res.status(500).json({ success: false, message: 'Database error' });
+    if (result.length === 0)
+      return res.json({ success: false, message: 'Voter not found' });
+
+    res.json({ success: true, voter: result[0], message: 'OTP verified successfully' });
+  });
+});
+
 
 // ---------------------------
 // Create Election

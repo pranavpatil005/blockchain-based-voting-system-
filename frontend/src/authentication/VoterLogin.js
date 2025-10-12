@@ -16,6 +16,21 @@ const VoterLogin = () => {
   const [showToast, setShowToast] = useSessionState('voter_show_toast', false);
 
   const navigate = useNavigate();
+
+
+// ✅ Clear any leftover data when component mounts
+useEffect(() => {
+  clearAadhaar();
+  clearOtp();
+  clearOtpSent();
+  clearGeneratedOtp();
+  setShowToast(false);
+  setToastMsg('');
+  setToastType('success');
+}, []);
+
+
+
   const { userLogin } = useUserAuth();
 
   // ✅ Clear any leftover toast when component mounts
@@ -52,14 +67,14 @@ const VoterLogin = () => {
     try {
       const res = await axios.post('http://localhost:5000/api/check-voter', { aadhaar });
 
-      if (!res.data.success) {
-        showToastMessage(res.data.message, 'error');
-        return;
-      }
+if (!res.data.success) {
+  showToastMessage(res.data.message, 'error');
+  return;
+}
 
-      setGeneratedOtp(res.data.otp); // OTP from backend
-      setOtpSent(true);
-      showToastMessage('OTP sent (shown here for testing)', 'success');
+setOtpSent(true);
+showToastMessage('OTP sent to your registered mobile number', 'success');
+
     } catch (error) {
       console.error(error);
       showToastMessage('Server error. Try again later.', 'error');
@@ -67,29 +82,17 @@ const VoterLogin = () => {
   };
 
   // ✅ Submit login
-  const handleSubmit = (e) => {
-    e.preventDefault();
+const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    if (!aadhaar || !otp) {
-      showToastMessage('Please fill in all fields', 'error');
-      return;
-    }
+  if (!aadhaar || !otp) {
+    showToastMessage('Please fill in all fields', 'error');
+    return;
+  }
 
-    if (otp !== generatedOtp) {
-      showToastMessage('Invalid OTP. Please try again.', 'error');
-      return;
-    }
+  try {
+    const res = await axios.post('http://localhost:5000/api/verify-otp', { aadhaar, otp });
 
-    userLogin();
-    showToastMessage('Login Successful!', 'success');
-
-
-
-
-
-   // ✅ Fetch voter details to get their numeric ID
-axios.post("http://localhost:5000/api/get-voter-by-aadhaar", { aadhaar })
-  .then((res) => {
     if (res.data.success) {
       const voter = res.data.voter;
       localStorage.setItem("voter_id", voter.id);
@@ -98,27 +101,13 @@ axios.post("http://localhost:5000/api/get-voter-by-aadhaar", { aadhaar })
       showToastMessage("Login Successful!", "success");
       setTimeout(() => navigate("/voter"), 1000);
     } else {
-      showToastMessage("Voter not found", "error");
+      showToastMessage(res.data.message || 'Invalid OTP', 'error');
     }
-  })
-  .catch((err) => {
-    console.error(err);
-    showToastMessage("Server error", "error");
-  });
-
-
-
-
-
-    
-    // ✅ Clear session storage after login
-    clearAadhaar();
-    clearOtpSent();
-    clearOtp();
-    clearGeneratedOtp();
-
-    setTimeout(() => navigate('/voter'), 1000);
-  };
+  } catch (error) {
+    console.error(error);
+    showToastMessage('Server error. Try again later.', 'error');
+  }
+};
 
   return (
     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
