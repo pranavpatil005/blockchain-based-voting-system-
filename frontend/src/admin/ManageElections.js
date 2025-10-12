@@ -1,17 +1,19 @@
 import React, { useEffect, useState } from "react";
 import "../css/ManageElections.css";
+import { startElectionOnChain, finishElectionOnChain } from "../blockchain/votingContract";
+import axios from "axios";
 
 const ManageElections = () => {
   const [elections, setElections] = useState([]);
   const [candidates, setCandidates] = useState([]);
   const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
 
   // Fetch elections
   const fetchElections = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/elections");
-      const data = await res.json();
-      if (data.success) setElections(data.elections);
+      const res = await axios.get("http://localhost:5000/api/elections");
+      if (res.data.success) setElections(res.data.elections);
     } catch (err) {
       console.error(err);
     }
@@ -20,9 +22,8 @@ const ManageElections = () => {
   // Fetch candidates
   const fetchCandidates = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/candidates");
-      const data = await res.json();
-      setCandidates(data);
+      const res = await axios.get("http://localhost:5000/api/candidates");
+      setCandidates(res.data);
     } catch (err) {
       console.error(err);
     }
@@ -32,46 +33,6 @@ const ManageElections = () => {
     fetchElections();
     fetchCandidates();
   }, []);
-
-  const handleFinishElection = async (id) => {
-    try {
-      const now = new Date().toISOString().slice(0, 19).replace("T", " ");
-      const res = await fetch(`http://localhost:5000/api/finish-election/${id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ to_date: now }),
-      });
-      const data = await res.json();
-      if (data.success) {
-        setMessage("Election closed successfully");
-        fetchElections();
-      } else {
-        setMessage(data.message);
-      }
-    } catch (err) {
-      setMessage("Server error");
-    }
-  };
-
-  const handleStartElection = async (id) => {
-    try {
-      const now = new Date().toISOString().slice(0, 19).replace("T", " ");
-      const res = await fetch(`http://localhost:5000/api/start-election/${id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ from_date: now }),
-      });
-      const data = await res.json();
-      if (data.success) {
-        setMessage("Election started successfully");
-        fetchElections();
-      } else {
-        setMessage(data.message);
-      }
-    } catch (err) {
-      setMessage("Server error");
-    }
-  };
 
   const getCandidatesForElection = (electionId) => {
     return candidates.filter(c => c.election_id === electionId);
@@ -87,6 +48,72 @@ const ManageElections = () => {
     return "Ended";
   };
 
+  // Start election both on blockchain & backend
+  const handleStartElection = async (id) => {
+    try {
+      setLoading(true);
+      setMessage("Starting election...");
+
+      // -----------------
+      // Blockchain call
+      // -----------------
+      await startElectionOnChain(id);
+
+      // -----------------
+      // Backend call
+      // -----------------
+      const now = new Date().toISOString().slice(0, 19).replace("T", " ");
+      const res = await axios.put(`http://localhost:5000/api/start-election/${id}`, {
+        from_date: now,
+      });
+
+      if (res.data.success) {
+        setMessage("✅ Election started!");
+        fetchElections();
+      } else {
+        setMessage("❌ Backend failed: " + res.data.message);
+      }
+    } catch (err) {
+      console.error(err);
+      setMessage("❌ Error starting election: " + err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Finish election both on blockchain & backend
+  const handleFinishElection = async (id) => {
+    try {
+      setLoading(true);
+      setMessage("Finishing election...");
+
+      // -----------------
+      // Blockchain call
+      // -----------------
+      await finishElectionOnChain(id);
+
+      // -----------------
+      // Backend call
+      // -----------------
+      const now = new Date().toISOString().slice(0, 19).replace("T", " ");
+      const res = await axios.put(`http://localhost:5000/api/finish-election/${id}`, {
+        to_date: now,
+      });
+
+      if (res.data.success) {
+        setMessage("✅ Election finished on blockchain and backend!");
+        fetchElections();
+      } else {
+        setMessage("❌ Backend failed: " + res.data.message);
+      }
+    } catch (err) {
+      console.error(err);
+      setMessage("❌ Error finishing election: " + err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="manage-elections-container">
       <h2>Manage Elections</h2>
@@ -100,7 +127,7 @@ const ManageElections = () => {
             <div key={e.id} className="election-card">
               <div className="election-header">
                 <h3>{e.name}</h3>
-                <span className={`status ${status}`}>{status}</span>
+                <span className={`status ${status.toLowerCase()}`}>{status}</span>
               </div>
               <p>{e.description}</p>
               <p>
@@ -124,10 +151,14 @@ const ManageElections = () => {
 
               {/* Buttons */}
               {status === "Ongoing" && (
-                <button onClick={() => handleFinishElection(e.id)}>Finish Election</button>
+                <button onClick={() => handleFinishElection(e.id)} disabled={loading}>
+                  {loading ? "Processing..." : "Finish Election"}
+                </button>
               )}
               {status === "Upcoming" && (
-                <button onClick={() => handleStartElection(e.id)}>Start Election</button>
+                <button onClick={() => handleStartElection(e.id)} disabled={loading}>
+                  {loading ? "Processing..." : "Start Election"}
+                </button>
               )}
             </div>
           );

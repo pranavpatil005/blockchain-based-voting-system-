@@ -17,6 +17,7 @@ const Votepage = () => {
   const [activeElectionId, setActiveElectionId] = useState(null);
   const [account, setAccount] = useState(null);
   const [networkCorrect, setNetworkCorrect] = useState(false);
+  const [walletAllowed, setWalletAllowed] = useState(false);
 
   const navigate = useNavigate();
   const { userLogout } = useUserAuth();
@@ -31,7 +32,25 @@ const Votepage = () => {
     if (!window.ethereum) return alert("MetaMask not detected. Please install it.");
     try {
       const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
-      setAccount(accounts[0]);
+      const wallet = accounts[0];
+
+      // Check if wallet is in users table
+      const res = await axios.post("http://localhost:5000/api/check-wallet", {
+        walletAddress: wallet
+      });
+
+      if (!res.data.success) {
+        alert(res.data.message);
+        setAccount(null);
+        setWalletAllowed(false);
+        return;
+      }
+
+      // Wallet allowed
+      setAccount(wallet);
+      setWalletAllowed(true);
+      localStorage.setItem("voter_id", res.data.voterId); // save voter id
+      console.log("Wallet allowed for voting:", res.data.name);
 
       const chainId = await window.ethereum.request({ method: "eth_chainId" });
       setNetworkCorrect(chainId === "0x7a69");
@@ -105,6 +124,7 @@ const Votepage = () => {
     if (selected === null || !activeElectionId) return alert("Select a candidate first!");
     if (!account) return alert("Connect your MetaMask wallet first!");
     if (!networkCorrect) return alert("Switch MetaMask to Hardhat localhost network (31337)");
+    if (!walletAllowed) return alert("Your wallet Address is not Qualified to vote.");
 
     const candidateId = candidates[selected].id;
     const voterId = localStorage.getItem("voter_id");
@@ -135,22 +155,20 @@ const Votepage = () => {
   return (
     <div style={{ fontFamily: "Arial, sans-serif" }}>
       <Navbar />
-    {/* Wallet Button top-right */}
-<div style={{ position: "absolute", top: "100px", right: "-1350px", zIndex: 1000 }}>
-  <a
-    onClick={connectWallet}
-    className={`btn-default btn-wallet ${account ? "connected" : ""}`}
-    style={{ cursor: "pointer" }}
-  >
-    <FaWallet className="wallet-icon" />
-    {account ? `${account.slice(0, 6)}...${account.slice(-4)}` : "Connect Wallet"}
-  </a>
-</div>
+      {/* Wallet Button top-right */}
+      <div style={{ position: "absolute", top: "100px", right: "-1350px", zIndex: 1000 }}>
+        <a
+          onClick={connectWallet}
+          className={`btn-default btn-wallet ${account ? "connected" : ""}`}
+          style={{ cursor: "pointer" }}
+        >
+          <FaWallet className="wallet-icon" />
+          {account ? `${account.slice(0, 6)}...${account.slice(-4)}` : "Connect Wallet"}
+        </a>
+      </div>
 
       <div style={{ textAlign: "center", marginTop: "40px" }}>
         <h1 style={{ fontWeight: "bold" }}>{electionName}</h1>
-
-       
 
         {!hasVoted ? (
           <>
@@ -175,13 +193,12 @@ const Votepage = () => {
                         borderRadius: "10px",
                         padding: "15px",
                         textAlign: "center",
-                        cursor: "pointer",
+                        cursor: walletAllowed ? "pointer" : "not-allowed",
                         backgroundColor: selected === idx ? "#d1f2eb" : "white",
                         boxShadow: selected === idx ? "0 4px 15px rgba(41,128,185,0.4)" : "0 2px 8px rgba(0,0,0,0.1)",
                         transition: "0.3s"
                       }}
                     >
-                      {/* Party Logo + Party Name */}
                       <div style={{ display: "flex", flexDirection: "column", alignItems: "center", marginBottom: "10px" }}>
                         {c.party_logo && (
                           <img src={c.party_logo} alt={c.party} style={{ width: "50px", height: "50px", objectFit: "contain", marginBottom: "5px" }} />
@@ -196,10 +213,7 @@ const Votepage = () => {
                         }}>{c.party}</span>
                       </div>
 
-                      {/* Candidate Photo */}
                       <img src={c.photo} alt={c.name} style={{ width: "100px", height: "100px", borderRadius: "50%", objectFit: "cover", marginBottom: "10px" }} />
-
-                      {/* Candidate Name */}
                       <h3>{c.name}</h3>
                     </div>
                   ))}
@@ -207,14 +221,14 @@ const Votepage = () => {
 
                 <button
                   onClick={confirmVote}
-                  disabled={!account || !networkCorrect || selected === null}
+                  disabled={!account || !networkCorrect || selected === null || !walletAllowed}
                   style={{
-                    backgroundColor: !account || !networkCorrect || selected === null ? "gray" : "#2980b9",
+                    backgroundColor: !account || !networkCorrect || selected === null || !walletAllowed ? "gray" : "#2980b9",
                     color: "white",
                     border: "none",
                     padding: "12px 20px",
                     borderRadius: "6px",
-                    cursor: !account || !networkCorrect || selected === null ? "not-allowed" : "pointer",
+                    cursor: !account || !networkCorrect || selected === null || !walletAllowed ? "not-allowed" : "pointer",
                     fontSize: "16px",
                     marginTop: "20px"
                   }}

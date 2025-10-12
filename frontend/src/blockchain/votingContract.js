@@ -34,3 +34,12 @@ export const castVoteOnChain = async (electionId, candidateId) => {
   await tx.wait();
   console.log("✅ Vote cast successfully:", tx.hash);
 };
+
+
+
+export const registerVoterOnChain = async (electionId, voterAddress) => {
+  const contract = await getContract();
+  const tx = await contract.registerVoter(electionId, voterAddress);
+  await tx.wait();
+  console.log("✅ Voter registered on blockchain:", tx.hash);
+};
