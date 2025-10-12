@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
-import { FaVoteYea, FaUserPlus } from "react-icons/fa"; 
+import { FaVoteYea, FaUserPlus ,FaSignOutAlt} from "react-icons/fa"; 
 
 import "../css/AdminLayout.css";
 
@@ -57,7 +57,8 @@ const AdminLayout = () => {
   <button
     className="btn-default btn-wallet"
     onClick={handleLogout}
-  >
+    
+  ><FaSignOutAlt />
     Logout
   </button>
 </div>

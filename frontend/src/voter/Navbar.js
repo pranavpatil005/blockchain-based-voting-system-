@@ -1,7 +1,7 @@
 // src/voter/Navbar.js
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { FaWallet } from "react-icons/fa";
+import { FaSignOutAlt } from "react-icons/fa";
 import { useUserAuth } from "../context/UserAuthContext";
 import axios from "axios";
 import "./Navbar.css";
@@ -32,21 +32,7 @@ const Navbar = () => {
     }
   }, []);
 
-  // ✅ Wallet connect
-  const connectWallet = async () => {
-    if (window.ethereum) {
-      try {
-        const accounts = await window.ethereum.request({
-          method: "eth_requestAccounts",
-        });
-        setAccount(accounts[0]);
-      } catch (err) {
-        console.error("Wallet connection failed", err);
-      }
-    } else {
-      alert("MetaMask not installed. Please install it to connect.");
-    }
-  };
+ 
 
   const handleLogout = () => {
     userLogout();
@@ -115,22 +101,23 @@ const Navbar = () => {
 
         {/* Right Buttons */}
         <div className="navbar-buttons">
-          <a
-            onClick={connectWallet}
-            className={`btn-default btn-wallet ${account ? "connected" : ""}`}
-            style={{ cursor: "pointer" }}
-          >
-            <FaWallet className="wallet-icon" />
-            {account
-              ? `${account.slice(0, 6)}...${account.slice(-4)}`
-              : "Connect Wallet"}
-          </a>
+         
 
           <a
             onClick={handleLogout}
             className="btn-default btn-register"
-            style={{ cursor: "pointer" }}
-          >
+            style={{ marginTop: "5px",
+    
+    
+   
+    padding: "10px 18px",
+    borderRadius: "6px",
+    cursor: "pointer",
+    fontSize: "16px",
+    display: "flex",
+    alignItems: "center",
+    gap: "8px"}}
+          ><FaSignOutAlt />
             Logout
           </a>
         </div>
